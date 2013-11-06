@@ -194,13 +194,10 @@ var pageTest2 = {
 
 exports.globalSetUp = function(test, assert){
 
-  cleanDatabase(assert, function(err){
+  initDatabase(assert, function(err){
     assert.isNull(err);
-    setUpDatabase(assert, function(err){
-      assert.isNull(err);
 
-      test.finish(); //Database set up will all data needed for tests.
-    });
+    test.finish();
   });
 
 }
@@ -245,25 +242,25 @@ function setUpDatabase(assert, cb){
       db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {}, function(err, ok){
         assert.isNull(err);
 
-        //User added, add the data
+        db.close(cb);
 
-        addTestData(db, function(err){
-          assert.isUndefined(err);
-
-          db.close(cb);
-        });
       });
     });
   });
 }
 
-function addTestData(db, cb){
+function initDatabase(assert, cb){
+  cleanDatabase(assert, function(err){
+    assert.isNull(err);
 
-  //Get mongoose connection,
-  //Set up models
-  //var connection = mongoose._getConnection()
+    setUpDatabase(assert, function(err){
+      assert.isNull(err);
 
-  return cb();
+      return cb(err);
+    });
+  });
 }
+
+module.exports.initDatabase = initDatabase;
 
 
