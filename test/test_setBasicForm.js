@@ -36,6 +36,7 @@ module.exports.testUpdateForm = function(test, assert){
 
   async.series([
     function(cb) {
+      console.log('testUpdateForm() - 1 ');
       formModel.findOne({name: emptyForm.name}, function (err, data) {
         assert.ok(!err, 'should not returned error: ' + util.inspect(err));
         assert.isNull(data, 'should not have found form - haven\'t added it yet - found: ' + util.inspect(data));
@@ -43,13 +44,15 @@ module.exports.testUpdateForm = function(test, assert){
       });
     },
     function(cb) {
-      forms.updateForm(emptyForm, function(err){
+      console.log('testUpdateForm() - 2 ');
+      forms.updateForm(options, emptyForm, function(err){
         console.log("testUpdateForm() - in callback");
         assert.isUndefined(err);
         cb();
       });
     },
     function(cb) {
+      console.log('testUpdateForm() - 3 ');
       formModel.findOne({name: emptyForm.name}, function (err, data) {
         assert.ok(!err, 'should have found form');
         assert.assert.strictEqual(data.formDescription, emptyForm.formDescription, "new description should ahve been added");
