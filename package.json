@@ -4,12 +4,15 @@
   "description": "Cloud Forms API for form submission",
   "main": "lib/fhforms.js",
   "scripts": {
-    "test": "whiskey --timeout 30000 --failfast --tests \"test/test_getForm.js test/test_getForms.js\" --global-setup-teardown \"test/setup.js\""
-  },
+    "test": "listing=$(ls -1 test/test_*); teststorun=$(echo $listing | tr -d '\n'); whiskey --timeout 30000 --failfast --tests \"$teststorun\" --global-setup-teardown \"test/setup.js\""
+},
   "repository": {
     "type": "git",
     "url": "https://github.com/fheng/fh-forms.git"
   },
+  "keywords": [
+    "appforms"
+  ],
   "author": "Feedhenry",
   "license": "BSD",
   "bugs": {
