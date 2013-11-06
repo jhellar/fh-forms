@@ -6,7 +6,7 @@ var models = require('../lib/common/models.js')();
 var forms = require('../lib/forms.js');
 var initDatabase = require('./setup.js').initDatabase;
 
-var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
+var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
 var emptyForm = require('./Fixtures/emptyform.json');
 
@@ -39,7 +39,7 @@ module.exports.tearDown = function(test, assert){
   });
 };
 
-module.exports.testUpdateForm = function(test, assert){
+module.exports.testAddForm = function(test, assert){
   //console.log(forms);
 
   var formModel = models.get(connection, models.MODELNAMES.FORM);
@@ -66,6 +66,7 @@ module.exports.testUpdateForm = function(test, assert){
       formModel.findOne({name: emptyForm.name}, function (err, data) {
         assert.ok(!err, 'should have found form');
         assert.strictEqual(data.formDescription, emptyForm.formDescription, "new description should ahve been added");
+        assert.strictEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
         cb();
       });
     },
