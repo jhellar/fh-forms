@@ -6,7 +6,13 @@ var DB = require('mongodb').Db;
 var Server = require('mongodb').Server;
 var async = require('async');
 var testEnv = require('./Fixtures/env.js');
-var testsConfig = {"dbUser": "appformsuser", "dbPassword": "appformspass", "dbAddress" : "localhost", "dbPort": 27017, "dbForTests": "testAppFormsDb"};
+var testsConfig = {
+  "dbUser": "appformsuser",
+  "dbPassword": "appformspass",
+  "dbAddress" : "localhost",
+  "dbPort": 27017,
+  "dbForTests": "testAppFormsDb"
+};
 
 var models = require('../lib/common/models.js')();
 
