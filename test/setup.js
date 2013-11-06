@@ -5,16 +5,39 @@ var testAppFormsDb = "testAppFormsDb";
 var DB = require('mongodb').Db;
 var Server = require('mongodb').Server;
 var async = require('async');
-require('./Fixtures/env.js');
+var testEnv = require('./Fixtures/env.js');
+var testsConfig = {"dbUser": "appformsuser", "dbPassword": "appformspass", "dbAddress" : "localhost", "dbPort": 27017, "dbForTests": "testAppFormsDb"};
+
 var models = require('../lib/common/models.js')();
 
-//var fieldCollection = {[
-//  "_id": "1234566783455463",
-//  "label": String,
-//  "helpText": String,
-//  "type": String,
-//  "required": Boolean
-//}];
+//Need test data for fields, pages, forms, themes, appforms, appthemes,
+
+var fieldSchemaText = {
+  "_id": "123456789",
+  "label": "SingleText",
+  "helpText": "This is test single text Field 1.",
+  "type": "singleText",
+  "options": [{"key": "maxLength", "val": "100"}],
+  "required": false
+};
+
+var fieldSchemaMultiText = {
+  "_id": "123456788",
+  "label": "MultiText",
+  "helpText": "This is multi text Field 1.",
+  "type": "multiText",
+  "options": [{"key": "maxLength", "val": "900"}],
+  "required": false
+};
+
+var fieldSchemaMultiText = {
+  "_id": "123456787",
+  "label": "testField1",
+  "helpText": "This is test Field 1.",
+  "type": "multiText",
+  "options": [{"key": "maxLength", "val": "900"}],
+  "required": false
+};
 
 exports.globalSetUp = function(test, assert){
 
@@ -38,7 +61,7 @@ exports.globalTearDown = function(test, assert){
 }
 
 function cleanDatabase(assert, cb){
-  var db = new DB(testAppFormsDb, new Server("localhost", 27017), {"w": 1, j: false});
+  var db = new DB(testAppFormsDb, new Server(testsConfig.dbAddress, testsConfig.dbPort), {"w": 1, j: false});
 
   db.open(function(err, db){
     assert.isNull(err);
@@ -57,7 +80,7 @@ function cleanDatabase(assert, cb){
 }
 
 function setUpDatabase(assert, cb){
-  var db = new DB(testAppFormsDb, new Server("localhost", 27017), {"w": 1, j: false});
+  var db = new DB(testAppFormsDb, new Server(testsConfig.dbAddress, testsConfig.dbPort), {"w": 1, j: false});
 
   db.open(function(err, db){
     assert.isNull(err);
@@ -65,7 +88,7 @@ function setUpDatabase(assert, cb){
     db.authenticate("admin", "admin", {"authSource": "admin"}, function(err, ok){
       assert.isNull(err);
 
-      db.addUser("appformsuser", "appformspass", {}, function(err, ok){
+      db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {}, function(err, ok){
         assert.isNull(err);
 
         //User added, add the data
