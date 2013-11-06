@@ -20,13 +20,23 @@ module.exports.initialize = function(test, assert){
   });
 };
 
+module.exports.finalize = function(test, assert){
+  connection.close(function(err) {
+    assert.ok(!err);
+    test.finish();
+  });
+};
+
 module.exports.setUp = function(test, assert){
   test.finish();
 };
 
 module.exports.tearDown = function(test, assert){
   console.log('tearDown');
-  test.finish();
+  forms.tearDownConnection(options, function (err) {
+    assert.ok(!err);
+    test.finish();
+  });
 };
 
 module.exports.testUpdateForm = function(test, assert){
@@ -45,9 +55,9 @@ module.exports.testUpdateForm = function(test, assert){
     },
     function(cb) {
       console.log('testUpdateForm() - 2 ');
-      forms.updateForm(options, emptyForm, function(err){
+      forms.updateForm(options, emptyForm, function(err, doc){
         console.log("testUpdateForm() - in callback");
-        assert.isUndefined(err);
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
         cb();
       });
     },
@@ -55,12 +65,12 @@ module.exports.testUpdateForm = function(test, assert){
       console.log('testUpdateForm() - 3 ');
       formModel.findOne({name: emptyForm.name}, function (err, data) {
         assert.ok(!err, 'should have found form');
-        assert.assert.strictEqual(data.formDescription, emptyForm.formDescription, "new description should ahve been added");
+        assert.strictEqual(data.formDescription, emptyForm.formDescription, "new description should ahve been added");
         cb();
       });
     },
   ], function(err){
-    assert.isUndefined(err);
+    assert.ok(!err);
     test.finish();
   });
 };
