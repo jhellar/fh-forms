@@ -43,6 +43,23 @@ var TEST_FORM_NO_DESCR = {
 };
 var TEST_FORM_EMPTY_OBJ = {};
 
+var TEST_PAGE_NAME1 = 'page1';
+var TEST_PAGE_NAME2 = 'page2';
+var TEST_PAGE_NAMES = [TEST_PAGE_NAME1, TEST_PAGE_NAME2];
+var TEST_FORM_2EMPTY_PAGES = {
+    "name": "Simple Form with 2 empty pages",
+    "description": "This is my form. It has no fields!",
+    "lastUpdated": "2013-10-16 06:13:52",
+    "pages": [{
+      name: TEST_PAGE_NAME1,
+      description: 'this is page 1'
+    }, {
+      name: TEST_PAGE_NAME2,
+      description: 'this is page 2'
+    }],
+    "fieldRules": [],
+    "pageRules": []
+};
 
 module.exports.initialize = function(test, assert){
   initDatabase(assert, function(err) {
@@ -123,13 +140,7 @@ module.exports.testUpdateForm = function(test, assert){
 
 module.exports.testAddForm = function(test, assert) {
   async.series([
-    function(cb) {
-      formModel.findOne({name: TEST_FORM_SIMPLE.name}, function (err, data) {
-        assert.ok(!err, 'should not returned error: ' + util.inspect(err));
-        assert.isNull(data, 'should not have found form - haven\'t added it yet - found: ' + util.inspect(data));
-        cb();
-      });
-    },
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_SIMPLE.name, 'should not have found form - not added yet - found: '),
     function(cb) {
       forms.updateForm(options, TEST_FORM_SIMPLE, function(err, doc){
         assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
@@ -146,6 +157,37 @@ module.exports.testAddForm = function(test, assert) {
     }
   ], function(err){
     assert.ok(!err);
+    test.finish();
+  });
+};
+
+module.exports.testAddFormWith2EmptyPages = function(test, assert) {
+  async.waterfall([
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2EMPTY_PAGES.name, 'should not have found form - not added yet - found: '),
+    function(cb) {
+      forms.updateForm(options, TEST_FORM_2EMPTY_PAGES, function(err, doc){
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function(cb) {
+      formModel.findOne({name: TEST_FORM_2EMPTY_PAGES.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assert.strictEqual(data.formDescription, TEST_FORM_2EMPTY_PAGES.formDescription, "new description should ahve been added");
+        assert.strictEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");  
+        cb(undefined, data);
+      });
+    },
+    function(populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      assert.strictEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length, 'Incorrect number of pages in created form');
+      assert.includes(TEST_PAGE_NAMES, populatedFormDoc.pages[0].name, 'Unexpected page name in created form');
+      assert.includes(TEST_PAGE_NAMES, populatedFormDoc.pages[1].name, 'Unexpected page name in created form');
+      assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
+      return cb();
+    }
+  ], function(err){
+    assert.ok(!err, "received error: " + util.inspect(err));
     test.finish();
   });
 };
