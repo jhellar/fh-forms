@@ -215,14 +215,14 @@ function cleanDatabase(assert, cb){
   var db = new DB(testAppFormsDb, new Server(testsConfig.dbAddress, testsConfig.dbPort), {"w": 1, j: false});
 
   db.open(function(err, db){
-    assert.isNull(err);
+   assert.ok(!err);
     assert.isDefined(db);
 
     db.authenticate("admin", "admin", {"authSource": "admin"}, function(err, ok){
-      assert.isNull(err);
+     assert.ok(!err);
 
       db.dropDatabase(function(err, ok){
-        assert.isNull(err);
+       assert.ok(!err);
 
         db.close(cb);
       });
@@ -234,13 +234,13 @@ function setUpDatabase(assert, cb){
   var db = new DB(testAppFormsDb, new Server(testsConfig.dbAddress, testsConfig.dbPort), {"w": 1, j: false});
 
   db.open(function(err, db){
-    assert.isNull(err);
+   assert.ok(!err);
 
     db.authenticate("admin", "admin", {"authSource": "admin"}, function(err, ok){
-      assert.isNull(err);
+     assert.ok(!err);
 
       db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {}, function(err, ok){
-        assert.isNull(err);
+       assert.ok(!err);
 
         db.close(cb);
 
@@ -251,10 +251,10 @@ function setUpDatabase(assert, cb){
 
 function initDatabase(assert, cb){
   cleanDatabase(assert, function(err){
-    assert.isNull(err);
+   assert.ok(!err);
 
     setUpDatabase(assert, function(err){
-      assert.isNull(err);
+     assert.ok(!err);
 
       return cb(err);
     });
