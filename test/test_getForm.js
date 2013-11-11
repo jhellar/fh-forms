@@ -8,75 +8,6 @@ var initDatabase = require('./setup.js').initDatabase;
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var appId = "123456789";
 
-var output = {
-  "updatedBy":"test@example.com",
-  "name":"Test Form 1",
-  "description":"This is a test form 1.",
-  "_id":"527b9101892f01072500000b",
-  "pageRules":[
-    {
-      "targetPage":"527b9101892f010725000012",
-      "sourceField":"527b9101892f01072500000d",
-      "type":"skip",
-      "restriction":"contains",
-      "sourceValue":"None",
-      "_id":"527b9102892f010725000014"
-    }
-  ],
-  "fieldRules":[
-    {
-      "targetField":"527b9101892f01072500000f",
-      "sourceField":"527b9101892f01072500000d",
-      "type":"hide",
-      "restriction":"contains",
-      "sourceValue":"asd",
-      "_id":"527b9101892f010725000013"
-    }
-  ],
-  "pages":[
-    {
-      "name":"page1",
-      "description":"Page1 Description",
-      "_id":"527b9101892f010725000012",
-      "fields":[
-        {
-          "label":"field1",
-          "helpText":"field1 Help Text",
-          "type":"text",
-          "required":true,
-          "_id":"527b9101892f01072500000d",
-          "fieldOptions":[
-            {
-              "key":"someNiceKey",
-              "val":"someNiceVal"
-            }
-          ],
-          "repeating":false
-        },
-        {
-          "label":"field2",
-          "helpText":"field2 Help Text",
-          "type":"textarea",
-          "required":false,
-          "_id":"527b9101892f01072500000f",
-          "fieldOptions":[
-            {
-              "key":"someNiceKey",
-              "val":"someNiceVal"
-            },
-            {
-              "key":"someNiceKey2",
-              "val":"someNiceVal2"
-            }
-          ],
-          "repeating":true
-        }
-      ]
-    }
-  ],
-  "lastUpdated":"2013-11-07T13:09:21.967Z",
-  "dateCreated":"2013-11-07T13:09:21.965Z"
-};
 
 module.exports.initialize = function(test, assert){
   initDatabase(assert, function(err){
@@ -101,13 +32,38 @@ module.exports.testGetFormWorksSinglePage = function(test, assert){
     assert.ok(!err);
     assert.isDefined(result);
 
+
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "formId" : result.forms[0].formId}, function(err, result){
+      assert.ok(!err);
+      assert.isDefined(result);
+      test.finish();
+    });
+  });
+};
+
+module.exports.testGetFormWorksMultiplePages = function(test, assert){
+  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+    assert.ok(!err);
+    assert.isDefined(result);
+
+
     forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "formId" : result.forms[0].formId}, function(err, result){
       assert.ok(!err);
       assert.isDefined(result);
 
-      console.log("Test Finished");
       test.finish();
     });
+  });
+};
+
+module.exports.testGetFormWorksAllForms = function(test, assert){
+  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+    assert.ok(!err);
+    assert.isDefined(result);
+    assert.isDefined(result.forms);
+    assert.eql(2, result.forms.length);
+    test.finish();
+
   });
 };
 
@@ -133,10 +89,37 @@ function createTestData(assert, cb){
   var form1 = new Form({"updatedBy": "test@example.com", "name": "Test Form 1", "description": "This is a test form 1."});
   var form2 = new Form({"updatedBy": "test@example.com", "name": "Test Form 2", "description": "This is a test form 2."});
 
-  var field1 = new Field({"label": "field1", "helpText": "field1 Help Text", "type": "text", "repeating": false, "fieldOptions": [{"key": "someNiceKey", "val": "someNiceVal"}], "required": true});
-  var field2 = new Field({"label": "field2", "helpText": "field2 Help Text", "type": "textarea", "repeating": true, "fieldOptions": [{"key": "someNiceKey", "val": "someNiceVal"}, {"key": "someNiceKey2", "val": "someNiceVal2"}], "required": false});
+  var field1 = new Field({
+    "name":"field1",
+    "helpText":"field1 Help Text",
+    "type":"text",
+    "repeating":false,
+    "fieldOptions": {
+      "definition" : {
+        "maxRepeat":6,
+        "minRepeat":1
+      },
+      "validation" : {}
+    },
+    "required":true
+  });
+  var field2 = new Field({
+    "name":"field2",
+    "helpText":"field2 Help Text",
+    "type":"textarea",
+    "repeating":true,
+    "fieldOptions": {
+      "definition" : {
+        "maxRepeat":6,
+        "minRepeat":1
+      },
+      "validation" : {}
+    },
+    "required":false
+  });
 
   var page1 = new Page({"name" : "page1", "description" : "Page1 Description"});
+  var page2 = new Page({"name" : "page2", "description" : "Page2 Description"});
 
   var fieldRule1;
   var pageRule1;
@@ -175,10 +158,18 @@ function createTestData(assert, cb){
     page1.fields.push(field1);
     page1.fields.push(field2);
 
+    page2.fields.push(field1);
+    page2.fields.push(field2);
+
     page1.save(function(err){
       assert.ok(!err);
-      console.log("Pages Saved");
-      cb(err);
+
+      page2.save(function(err){
+        assert.ok(!err);
+
+        console.log("Pages Saved");
+        cb(err);
+      });
     });
   }
 
@@ -212,6 +203,7 @@ function createTestData(assert, cb){
     //Save the forms
 
     form1.pages.push(page1);
+    form2.pages.push(page1);
     form1.fieldRules.push(fieldRule1);
     form1.pageRules.push(pageRule1);
 
