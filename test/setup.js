@@ -6,6 +6,7 @@ var DB = require('mongodb').Db;
 var Server = require('mongodb').Server;
 var async = require('async');
 var testEnv = require('./Fixtures/env.js');
+var assert = require('assert');
 var testsConfig = {
   "dbUser": "appformsuser",
   "dbPassword": "appformspass",
@@ -192,23 +193,22 @@ var pageTest2 = {
 //////////////////////FORMS ///////////////////////////
 
 
-exports.globalSetUp = function(test, assert){
+exports.setUp = function(finish){
 
   initDatabase(assert, function(err){
-    assert.isNull(err);
+    assert.ok(!err);
 
-    test.finish();
+    finish();
   });
 
 }
 
-exports.globalTearDown = function(test, assert){
+exports.tearDown = function(finish){
   console.log("tearDown Called");
-//  cleanDatabase(assert, function(err){
-//    if(err) console.log(err);
-//    test.finish();
-//  });
-  test.finish();
+  cleanDatabase(assert, function(err){
+    if(err) console.log(err);
+    finish();
+  });
 }
 
 function cleanDatabase(assert, cb){
@@ -216,7 +216,7 @@ function cleanDatabase(assert, cb){
 
   db.open(function(err, db){
    assert.ok(!err);
-    assert.isDefined(db);
+    assert.ok(db);
 
     db.authenticate("admin", "admin", {"authSource": "admin"}, function(err, ok){
      assert.ok(!err);

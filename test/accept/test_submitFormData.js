@@ -1,10 +1,11 @@
-require('./Fixtures/env.js');
-var forms = require('../lib/forms.js');
+require('./../Fixtures/env.js');
+var forms = require('../../lib/forms.js');
 var mongoose = require('mongoose');
-var models = require('../lib/common/models.js')();
+var models = require('../../lib/common/models.js')();
 var async = require('async');
-var initDatabase = require('./setup.js').initDatabase;
+var initDatabase = require('./../setup.js').initDatabase;
 var lodash = require('lodash');
+var assert = require('assert');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var testBigFormId = undefined;
@@ -15,6 +16,8 @@ var requiredFieldIds = {};
 
 var required2FieldIds = {};
 var requiredForm2Id = undefined;
+
+
 
 
 var testSubmitFormBaseInfo = {
@@ -36,21 +39,21 @@ var testSubmitFormBaseInfo = {
   }]
 }
 
-module.exports.initialize = function(test, assert){
+module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
     createTestData(assert, function(err){
       assert.ok(!err);
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.finalize = function(test, assert){
+module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    test.finish();
+    finish();
   });
 };
 
@@ -58,7 +61,7 @@ module.exports.finalize = function(test, assert){
 
 //////////////////////// Testing all of the field types for valid and invalid parameters
 
-module.exports.testSubmitText = function(test, assert){
+module.exports.testSubmitText = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -71,11 +74,11 @@ module.exports.testSubmitText = function(test, assert){
 
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitTextTooShort = function(test, assert){
+module.exports.testSubmitTextTooShort = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -87,11 +90,11 @@ module.exports.testSubmitTextTooShort = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testSubmitTextTooLong = function(test, assert){
+module.exports.testSubmitTextTooLong = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -103,7 +106,7 @@ module.exports.testSubmitTextTooLong = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
@@ -111,7 +114,7 @@ module.exports.testSubmitTextTooLong = function(test, assert){
 
 
 
-module.exports.testSubmitTextArea = function(test, assert){
+module.exports.testSubmitTextArea = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -123,11 +126,11 @@ module.exports.testSubmitTextArea = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitTextAreaTooLong = function(test, assert){
+module.exports.testSubmitTextAreaTooLong = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -139,11 +142,11 @@ module.exports.testSubmitTextAreaTooLong = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitTextAreaTooShort = function(test, assert){
+module.exports.testSubmitTextAreaTooShort = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -155,14 +158,14 @@ module.exports.testSubmitTextAreaTooShort = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
 
 
 
-module.exports.testSubmitFile = function(test, assert){
+module.exports.testSubmitFile = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -175,11 +178,11 @@ module.exports.testSubmitFile = function(test, assert){
 
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitFileWrongPlaceholder = function(test, assert){
+module.exports.testSubmitFileWrongPlaceholder = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -192,13 +195,13 @@ module.exports.testSubmitFileWrongPlaceholder = function(test, assert){
 
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
 
 
-module.exports.testSubmitRadio = function(test, assert){
+module.exports.testSubmitRadio = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -220,11 +223,11 @@ module.exports.testSubmitRadio = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitRadioWrongOption = function(test, assert){
+module.exports.testSubmitRadioWrongOption = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -246,7 +249,7 @@ module.exports.testSubmitRadioWrongOption = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
@@ -257,7 +260,7 @@ module.exports.testSubmitRadioWrongOption = function(test, assert){
 
 
 
-module.exports.testSubmitCheckBox = function(test, assert){
+module.exports.testSubmitCheckBox = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -291,11 +294,11 @@ module.exports.testSubmitCheckBox = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitCheckBoxWrongOption = function(test, assert){
+module.exports.testSubmitCheckBoxWrongOption = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -329,11 +332,11 @@ module.exports.testSubmitCheckBoxWrongOption = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitCheckBoxTooFewOptions = function(test, assert){
+module.exports.testSubmitCheckBoxTooFewOptions = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -361,11 +364,11 @@ module.exports.testSubmitCheckBoxTooFewOptions = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitCheckBoxTooManyOptions = function(test, assert){
+module.exports.testSubmitCheckBoxTooManyOptions = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -402,7 +405,7 @@ module.exports.testSubmitCheckBoxTooManyOptions = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
@@ -412,7 +415,7 @@ module.exports.testSubmitCheckBoxTooManyOptions = function(test, assert){
 
 
 
-module.exports.testSubmitNumber = function(test, assert){
+module.exports.testSubmitNumber = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -428,11 +431,11 @@ module.exports.testSubmitNumber = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitNumberNotANumber = function(test, assert){
+module.exports.testSubmitNumberNotANumber = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -446,11 +449,11 @@ module.exports.testSubmitNumberNotANumber = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitNumberTooBig = function(test, assert){
+module.exports.testSubmitNumberTooBig = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -464,11 +467,11 @@ module.exports.testSubmitNumberTooBig = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitNumberTooSmall = function(test, assert){
+module.exports.testSubmitNumberTooSmall = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -482,14 +485,14 @@ module.exports.testSubmitNumberTooSmall = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
 
 
 
-module.exports.testSubmitLocationLatLong = function(test, assert){
+module.exports.testSubmitLocationLatLong = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -517,11 +520,11 @@ module.exports.testSubmitLocationLatLong = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitLocationLatLongInvalid = function(test, assert){
+module.exports.testSubmitLocationLatLongInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -549,7 +552,7 @@ module.exports.testSubmitLocationLatLongInvalid = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
@@ -557,7 +560,7 @@ module.exports.testSubmitLocationLatLongInvalid = function(test, assert){
 
 
 
-module.exports.testSubmitLocationNorthEast = function(test, assert){
+module.exports.testSubmitLocationNorthEast = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -585,11 +588,11 @@ module.exports.testSubmitLocationNorthEast = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitLocationNorthEastInvalid = function(test, assert){
+module.exports.testSubmitLocationNorthEastInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -617,13 +620,13 @@ module.exports.testSubmitLocationNorthEastInvalid = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
 
 
-module.exports.testSubmitDate = function(test, assert){
+module.exports.testSubmitDate = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -635,11 +638,11 @@ module.exports.testSubmitDate = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitDateInvalid = function(test, assert){
+module.exports.testSubmitDateInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -651,14 +654,14 @@ module.exports.testSubmitDateInvalid = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
 
 
 
-module.exports.testSubmitDateTime = function(test, assert){
+module.exports.testSubmitDateTime = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -670,11 +673,11 @@ module.exports.testSubmitDateTime = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitDateTimeInvalid = function(test, assert){
+module.exports.testSubmitDateTimeInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -686,7 +689,7 @@ module.exports.testSubmitDateTimeInvalid = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
@@ -696,7 +699,7 @@ module.exports.testSubmitDateTimeInvalid = function(test, assert){
 
 
 
-//module.exports.testSubmitMatrix = function(test, assert){
+//module.exports.testSubmitMatrix = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -730,11 +733,11 @@ module.exports.testSubmitDateTimeInvalid = function(test, assert){
 //  submission.formFields = testValues;
 //
 //  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-//    test.finish();
+//    finish();
 //  });
 //};
 //
-//module.exports.testSubmitMatrixInvalidRow = function(test, assert){
+//module.exports.testSubmitMatrixInvalidRow = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -768,11 +771,11 @@ module.exports.testSubmitDateTimeInvalid = function(test, assert){
 //  submission.formFields = testValues;
 //
 //  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-//    test.finish();
+//    finish();
 //  });
 //};
 //
-//module.exports.testSubmitMatrixInvalidCol = function(test, assert){
+//module.exports.testSubmitMatrixInvalidCol = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -806,11 +809,11 @@ module.exports.testSubmitDateTimeInvalid = function(test, assert){
 //  submission.formFields = testValues;
 //
 //  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-//    test.finish();
+//    finish();
 //  });
 //};
 //
-//module.exports.testSubmitMatrixInvalidMissingValue = function(test, assert){
+//module.exports.testSubmitMatrixInvalidMissingValue = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -841,14 +844,14 @@ module.exports.testSubmitDateTimeInvalid = function(test, assert){
 //  submission.formFields = testValues;
 //
 //  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-//    test.finish();
+//    finish();
 //  });
 //};
 
 
 
 
-module.exports.testSaveRequiredFields = function(test, assert){
+module.exports.testSaveRequiredFields = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredFormId;
 
@@ -863,12 +866,12 @@ module.exports.testSaveRequiredFields = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
 
-module.exports.testDidNotSaveRequiredField = function(test, assert){
+module.exports.testDidNotSaveRequiredField = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredFormId;
 
@@ -880,11 +883,11 @@ module.exports.testDidNotSaveRequiredField = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testDidNotSaveRequiredFieldFormUpdated = function(test, assert){
+module.exports.testDidNotSaveRequiredFieldFormUpdated = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredFormId;
 
@@ -910,13 +913,13 @@ module.exports.testDidNotSaveRequiredFieldFormUpdated = function(test, assert){
 
       //New page is now saved. Try the submission again -- should fail and return the current form definition
       submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true, "newFormDefinition": true}, function(){
-        test.finish();
+        finish();
       });
     });
   });
 };
 
-module.exports.testSaveRequiredFieldsFormUpdated = function(test, assert){
+module.exports.testSaveRequiredFieldsFormUpdated = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredForm2Id;
 
@@ -936,7 +939,7 @@ module.exports.testSaveRequiredFieldsFormUpdated = function(test, assert){
       assert.ok(!err);
 
       submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-        test.finish();
+        finish();
       });
     });
   });
@@ -979,10 +982,10 @@ function addNewField(assert, formId, fieldRequired, cb){
 
     Form.findOne({"_id" : formId}).populate("pages").exec(function(err, result){
       assert.ok(!err);
-      assert.isDefined(result);
-      assert.isDefined(result.pages);
+      assert.ok(result);
+      assert.ok(result.pages);
       assert.ok(Array.isArray(result.pages));
-      assert.isDefined(result.pages[0]);
+      assert.ok(result.pages[0]);
 
       //Update the page
       Page.findOne({"_id": result.pages[0]._id}, function(err, foundPage){
@@ -1015,10 +1018,10 @@ function verifyFieldExists(assert, formId, newRequiredFieldId, cb){
 
   Form.findOne({"_id" : formId}).populate("pages").exec(function(err, result){
     assert.ok(!err);
-    assert.isDefined(result);
-    assert.isDefined(result.pages);
+    assert.ok(result);
+    assert.ok(result.pages);
     assert.ok(Array.isArray(result.pages));
-    assert.isDefined(result.pages[0]);
+    assert.ok(result.pages[0]);
 
     Form.populate(result, {"path": "pages.fields", "model": Field, "select": "-__v -fieldOptions._id"}, function(err, updatedResult){
       assert.ok(!err);
@@ -1028,7 +1031,7 @@ function verifyFieldExists(assert, formId, newRequiredFieldId, cb){
   });
 }
 
-module.exports.testSubmitSelect = function(test, assert){
+module.exports.testSubmitSelect = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -1050,11 +1053,11 @@ module.exports.testSubmitSelect = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testSubmitSelectWrongOption = function(test, assert){
+module.exports.testSubmitSelectWrongOption = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -1076,7 +1079,7 @@ module.exports.testSubmitSelectWrongOption = function(test, assert){
   submission.formFields = testValues;
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-    test.finish();
+    finish();
   });
 };
 
@@ -1092,12 +1095,12 @@ function checkSubmissionExists(assert, submissionId, options, cb){
 
   FormSubmission.findOne({"_id": submissionId}, function(subErr, result){
     assert.ok(!subErr);
-    assert.isDefined(result);
+    assert.ok(result);
 
     //submissionId, timestamp are dynamic, need to check they exist first.
-    assert.isDefined(result.masterFormTimestamp); //Checking for the masterFormTimestamp
-    assert.isDefined(result.deviceFormTimestamp); //Checking for the masterFormTimestamp
-    assert.isDefined(result.submissionStartedTimestamp); //Checking for the masterFormTimestamp
+    assert.ok(result.masterFormTimestamp); //Checking for the masterFormTimestamp
+    assert.ok(result.deviceFormTimestamp); //Checking for the masterFormTimestamp
+    assert.ok(result.submissionStartedTimestamp); //Checking for the masterFormTimestamp
 
     var submissionJSON = result.toJSON();
 
@@ -1131,11 +1134,11 @@ function submitAndCheckForm(assert, submission, options, cb ){
     } else {
       if(err) console.log(err);
       assert.ok(!err);
-      assert.isDefined(result);
-      assert.isDefined(result.submissionId);
+      assert.ok(result);
+      assert.ok(result.submissionId);
 
       if(options.newFormDefinition){
-        assert.isDefined(result.updatedFormDefinition);
+        assert.ok(result.updatedFormDefinition);
       }
 
       checkSubmissionExists(assert, result.submissionId, options, function(err){
@@ -1220,7 +1223,7 @@ function createTestData(assert, cb){
 
     saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
       assert.ok(!err);
-      assert.isDefined(formId);
+      assert.ok(formId);
 
       required2FieldIds = fieldIds;
       requiredForm2Id = formId;
@@ -1232,7 +1235,7 @@ function createTestData(assert, cb){
     var testFieldsForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
     var testPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
-    var testData = require("./Fixtures/formSubmissions.js");
+    var testData = require("./../Fixtures/formSubmissions.js");
 
     var textField = new Field(testData.textFieldData);
     var textAreaField = new Field(testData.textAreaFieldData);
@@ -1312,8 +1315,8 @@ function createTestData(assert, cb){
 
     saveSingleForm(fields, testPage, testFieldsForm, function(err, formId, fieldIds){
       assert.ok(!err);
-      assert.isDefined(formId);
-      assert.isDefined(fieldIds);
+      assert.ok(formId);
+      assert.ok(fieldIds);
 
       bigFieldIds = fieldIds;
       testBigFormId = formId;
@@ -1365,8 +1368,8 @@ function createTestData(assert, cb){
 
     saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
       assert.ok(!err);
-      assert.isDefined(formId);
-      assert.isDefined(fieldIds);
+      assert.ok(formId);
+      assert.ok(fieldIds);
 
       requiredFieldIds = fieldIds;
       requiredFormId = formId;
@@ -1388,7 +1391,7 @@ function createTestData(assert, cb){
         if(err) console.log(err);
         assert.ok(!err);
 
-        assert.isDefined(testFieldsForm._id);
+        assert.ok(testFieldsForm._id);
         globalFormId = testFieldsForm._id;
 
         cb(err);
@@ -1411,7 +1414,7 @@ function createTestData(assert, cb){
         field.save(function(err){
           if(err) console.log(err);
           assert.ok(!err);
-          assert.isDefined(field._id);
+          assert.ok(field._id);
 
           fieldIds[field.name] = field._id;
 

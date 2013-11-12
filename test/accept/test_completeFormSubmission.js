@@ -1,11 +1,11 @@
-require('./Fixtures/env.js');
-var forms = require('../lib/forms.js');
+require('./../Fixtures/env.js');
+var forms = require('../../lib/forms.js');
 var mongoose = require('mongoose');
-var models = require('../lib/common/models.js')();
+var models = require('../../lib/common/models.js')();
 var async = require('async');
-var initDatabase = require('./setup.js').initDatabase;
-var fs = require('fs');
+var initDatabase = require('./../setup.js').initDatabase;
 var async = require("async");
+var assert = require('assert');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -33,18 +33,18 @@ var testSubmitFormBaseInfo = {
 };
 
 
-module.exports.initialize = function(test, assert){
+module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
     createTestData(assert, function(err){
       assert.ok(!err);
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.testCompleteSubmissionWorks = function(test, assert){
+module.exports.testCompleteSubmissionWorks = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submissionId}}, function(err, result){
@@ -53,53 +53,53 @@ module.exports.testCompleteSubmissionWorks = function(test, assert){
       assert.ok(result);
 
       checkSubmissionComplete(assert, submissionId, function(){
-        test.finish();
+        finish();
       });
     });
   });
 }
 
-module.exports.testCompleteSubmissionNoSubmissionId = function(test, assert){
+module.exports.testCompleteSubmissionNoSubmissionId = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : undefined}}, function(err, result){
       assert.ok(err);
       assert.ok(!result);
 
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.testCompleteSubmissionWrongSubmissionId = function(test, assert){
+module.exports.testCompleteSubmissionWrongSubmissionId = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : "SOMEWRONGID"}}, function(err, result){
       assert.ok(err);
       assert.ok(!result);
 
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.testCompleteSubmissionFileNotUploaded = function(test, assert){
+module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {"skipOne": true}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : "SOMEWRONGID"}}, function(err, result){
       assert.ok(err);
       assert.ok(!result);
 
-      test.finish();
+      finish();
     });
   });
 }
 
 
-module.exports.finalize = function(test, assert){
+module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    test.finish();
+    finish();
   });
 };
 
@@ -115,8 +115,8 @@ function checkSubmissionComplete(assert, submissionId, cb){
     assert.ok(!err);
     assert.ok(foundForm);
 
-    assert.eql(foundForm.status, "complete", "Expected submission to have status completed, but is " + foundForm.status);
-    assert.isDefined(foundForm.submissionCompletedTimestamp);
+    assert.equal(foundForm.status, "complete", "Expected submission to have status completed, but is " + foundForm.status);
+    assert.ok(foundForm.submissionCompletedTimestamp);
 
     connection.close(function(err){
       if(err) console.log(err);
@@ -141,7 +141,7 @@ function createTestData(assert, cb){
   var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
   var testRequiredPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
-  var testData = require("./Fixtures/formSubmissions.js");
+  var testData = require("./../Fixtures/formSubmissions.js");
 
   var fileField = new Field(testData.fileFieldData);
   var photoField = new Field(testData.photoFieldData);
@@ -154,8 +154,8 @@ function createTestData(assert, cb){
 
   saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
     assert.ok(!err);
-    assert.isDefined(formId);
-    assert.isDefined(fieldIds);
+    assert.ok(formId);
+    assert.ok(fieldIds);
 
     globalFormId = formId;
     globalFieldIds = fieldIds;
@@ -180,7 +180,7 @@ function createTestData(assert, cb){
         if(err) console.log(err);
         assert.ok(!err);
 
-        assert.isDefined(testFieldsForm._id);
+        assert.ok(testFieldsForm._id);
         globalFormId = testFieldsForm._id;
 
         cb(err);
@@ -204,7 +204,7 @@ function createTestData(assert, cb){
           if(err) console.log(err);
           assert.ok(!err);
 
-          assert.isDefined(field._id);
+          assert.ok(field._id);
 
           fieldIds[field.name] = field._id;
 
@@ -233,7 +233,7 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
     if(err) console.log(err);
     assert.ok(!err);
-    assert.isDefined(dataSaveResult.submissionId);
+    assert.ok(dataSaveResult.submissionId);
 
 
     //Submission accepted and now have submissionId -- save the file
@@ -250,8 +250,8 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
         } else {
           if(err) console.log(err);
           assert.ok(!err);
-          assert.isDefined(result);
-          assert.isDefined(result.savedFileGroupId);
+          assert.ok(result);
+          assert.ok(result.savedFileGroupId);
         }
 
         //File has been submitted, check the id of the file has been saved to the submission.
@@ -270,7 +270,7 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
             return formField.fieldId.toString() === globalFieldIds[submissionType].toString();
           });
 
-          assert.eql(foundSubmittedFields.length, 1, "Expected single field with id " + globalFieldIds[submissionType] + " but got " + foundSubmittedFields.length);
+          assert.equal(foundSubmittedFields.length, 1, "Expected single field with id " + globalFieldIds[submissionType] + " but got " + foundSubmittedFields.length);
 
           //Field entry found, find the file groupId in the submissions
           var foundFieldSubmission = foundSubmittedFields[0];
@@ -279,7 +279,7 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
             return fieldValue.toString() === result.savedFileGroupId.toString();
           });
 
-          assert.eql(foundFileEntry.length, 1, "Expected single field with fileGroupId " + result.fileGroupId + " but got " + foundFileEntry.length);
+          assert.equal(foundFileEntry.length, 1, "Expected single field with fileGroupId " + result.fileGroupId + " but got " + foundFileEntry.length);
           //Finished with the connection, can close immediately.
           connection.close(function(err){
             if(err) console.log(err);

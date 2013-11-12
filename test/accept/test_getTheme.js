@@ -1,72 +1,73 @@
-require('./Fixtures/env.js');
-var forms = require('../lib/forms.js');
+require('./../Fixtures/env.js');
+var forms = require('../../lib/forms.js');
 var mongoose = require('mongoose');
-var models = require('../lib/common/models.js')();
+var models = require('../../lib/common/models.js')();
 var async = require('async');
-var initDatabase = require('./setup.js').initDatabase;
+var initDatabase = require('./../setup.js').initDatabase;
 var lodash = require('lodash');
+var assert = require('assert');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var appId = "123456789";
 
 var testThemeData;
 
-module.exports.initialize = function(test, assert){
+module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
     createTestData(assert, function(err){
       assert.ok(!err);
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.finalize = function(test, assert){
+module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testGetThemeWorks = function(test, assert){
+module.exports.testGetThemeWorks = function(finish){
   forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
-    assert.isDefined(result);
+    assert.ok(result);
 
     checkTheme(assert, result);
 
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testGetThemeNoUri = function(test, assert){
+module.exports.testGetThemeNoUri = function(finish){
   forms.getTheme({}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testGetThemeNoAppId = function(test, assert){
+module.exports.testGetThemeNoAppId = function(finish){
   forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testGetThemeNoAppExists = function(test, assert){
+module.exports.testGetThemeNoAppExists = function(finish){
   forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
     assert.ok(err);
-    test.finish();
+    finish();
   });
 }
 
 function checkTheme(assert, theme){
-  assert.isDefined(theme);
-  assert.isDefined(theme._id);//Check id exists
-  assert.isDefined(theme.lastUpdated);//Check id exists
+  assert.ok(theme);
+  assert.ok(theme._id);//Check id exists
+  assert.ok(theme.lastUpdated);//Check id exists
 
   delete theme._id;//Should be equal bar the id
   for(var key in testThemeData){

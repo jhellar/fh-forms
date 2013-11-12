@@ -1,78 +1,79 @@
-require('./Fixtures/env.js');
-var forms = require('../lib/forms.js');
+require('./../Fixtures/env.js');
+var forms = require('../../lib/forms.js');
 var mongoose = require('mongoose');
-var models = require('../lib/common/models.js')();
+var models = require('../../lib/common/models.js')();
 var async = require('async');
-var initDatabase = require('./setup.js').initDatabase;
+var initDatabase = require('./../setup.js').initDatabase;
+var assert = require('assert');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var appId = "123456789";
 
-module.exports.initialize = function(test, assert){
+module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
     createTestData(assert, function(err){
       assert.ok(!err);
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.finalize = function(test, assert){
+module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testGetFormsWorks = function(test, assert){
+module.exports.testGetFormsWorks = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
 
-    assert.isDefined(result);
-    assert.isDefined(result.forms);
+    assert.ok(result);
+    assert.ok(result.forms);
     assert.ok(Array.isArray(result.forms));
     assert.ok(result.forms.length === 2);// Should have 2 forms associated with the appId
 
     checkForm(assert, result.forms[0], {"formName": "Test Form 1"});
     checkForm(assert, result.forms[1], {"formName": "Test Form 2"});
 
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testGetFormsNoUri = function(test, assert){
+module.exports.testGetFormsNoUri = function(finish){
   forms.getForms({}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testGetFormsNoAppId = function(test, assert){
+module.exports.testGetFormsNoAppId = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
-    test.finish();
+    finish();
   });
 }
 
-module.exports.testGetFormsNoAppExists = function(test, assert){
+module.exports.testGetFormsNoAppExists = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
     assert.ok(!err);
-    assert.isDefined(result);
-    assert.isDefined(result.forms);
+    assert.ok(result);
+    assert.ok(result.forms);
     assert.ok(Array.isArray(result.forms));
     assert.ok(result.forms.length === 0);
-    test.finish();
+    finish();
   });
 }
 
 function checkForm(assert, form, options){
-  assert.isDefined(form);
-  assert.eql(form.formName, options.formName, "Expected form names to be equal");
-  assert.isDefined(form.formId);
+  assert.ok(form);
+  assert.equal(form.formName, options.formName, "Expected form names to be equal");
+  assert.ok(form.formId);
 }
 
 function createTestData(assert, cb){

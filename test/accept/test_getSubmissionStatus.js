@@ -1,11 +1,11 @@
-require('./Fixtures/env.js');
-var forms = require('../lib/forms.js');
+require('./../Fixtures/env.js');
+var forms = require('../../lib/forms.js');
 var mongoose = require('mongoose');
-var models = require('../lib/common/models.js')();
+var models = require('../../lib/common/models.js')();
 var async = require('async');
-var initDatabase = require('./setup.js').initDatabase;
-var fs = require('fs');
+var initDatabase = require('./../setup.js').initDatabase;
 var async = require("async");
+var assert = require('assert');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -34,18 +34,18 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
-module.exports.initialize = function(test, assert){
+module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
     createTestData(assert, function(err){
       assert.ok(!err);
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.testGetSubmissionStatusWorks = function(test, assert){
+module.exports.testGetSubmissionStatusWorks = function(finish){
 
   async.series([
     async.apply(submitData, assert, ["filePlaceHolder123456", "filePlaceHolder123456789"]),
@@ -57,15 +57,15 @@ module.exports.testGetSubmissionStatusWorks = function(test, assert){
     async.apply(completeSubmission, assert),
     async.apply(checkPending, assert, "complete", [])
   ], function(err){
-    test.finish();
+    finish();
   });
 }
 
 
-module.exports.finalize = function(test, assert){
+module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    test.finish();
+    finish();
   });
 };
 
@@ -78,7 +78,7 @@ function submitData(assert, filesToSubmit, cb){
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
     if(err) console.log(err);
     assert.ok(!err);
-    assert.isDefined(dataSaveResult.submissionId);
+    assert.ok(dataSaveResult.submissionId);
     submissionId = dataSaveResult.submissionId;
     cb();
   });
@@ -89,8 +89,8 @@ function submitFile(assert, placeholderText, filePath, fileName, cb){
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     if(err) console.log(err);
     assert.ok(!err);
-    assert.isDefined(result);
-    assert.isDefined(result.savedFileGroupId);
+    assert.ok(result);
+    assert.ok(result.savedFileGroupId);
 
     cb();
   });
@@ -103,8 +103,8 @@ function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
     assert.ok(!err);
     assert.ok(result);
 
-    assert.eql(expectedStatus, result.status, "Expected a submission status of " + expectedStatus + " but got " + result.status);
-    assert.eql(expectedPendingFiles.length, result.pendingFiles.length, "Expected pending files array of size " + expectedPendingFiles.length + " but got " + result.pendingFiles.length);
+    assert.equal(expectedStatus, result.status, "Expected a submission status of " + expectedStatus + " but got " + result.status);
+    assert.equal(expectedPendingFiles.length, result.pendingFiles.length, "Expected pending files array of size " + expectedPendingFiles.length + " but got " + result.pendingFiles.length);
 
     //Check the array contains the resulting array.
     async.eachSeries(expectedPendingFiles, function(expectedFile){
@@ -140,7 +140,7 @@ function createTestData(assert, cb){
   var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
   var testRequiredPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
-  var testData = require("./Fixtures/formSubmissions.js");
+  var testData = require("./../Fixtures/formSubmissions.js");
 
   var fileField = new Field(testData.fileFieldData);
   var photoField = new Field(testData.photoFieldData);
@@ -153,8 +153,8 @@ function createTestData(assert, cb){
 
   saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
     assert.ok(!err);
-    assert.isDefined(formId);
-    assert.isDefined(fieldIds);
+    assert.ok(formId);
+    assert.ok(fieldIds);
 
     globalFormId = formId;
     globalFieldIds = fieldIds;
@@ -179,7 +179,7 @@ function createTestData(assert, cb){
         if(err) console.log(err);
         assert.ok(!err);
 
-        assert.isDefined(testFieldsForm._id);
+        assert.ok(testFieldsForm._id);
         globalFormId = testFieldsForm._id;
 
         cb(err);
@@ -203,7 +203,7 @@ function createTestData(assert, cb){
           if(err) console.log(err);
           assert.ok(!err);
 
-          assert.isDefined(field._id);
+          assert.ok(field._id);
 
           fieldIds[field.name] = field._id;
 

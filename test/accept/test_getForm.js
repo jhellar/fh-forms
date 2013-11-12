@@ -1,68 +1,68 @@
-require('./Fixtures/env.js');
-var forms = require('../lib/forms.js');
+require('./../Fixtures/env.js');
+var forms = require('../../lib/forms.js');
 var mongoose = require('mongoose');
-var models = require('../lib/common/models.js')();
+var models = require('../../lib/common/models.js')();
 var async = require('async');
-var initDatabase = require('./setup.js').initDatabase;
-
+var initDatabase = require('./../setup.js').initDatabase;
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var appId = "123456789";
+var assert = require('assert');
 
 
-module.exports.initialize = function(test, assert){
+module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
     createTestData(assert, function(err){
       assert.ok(!err);
-      test.finish();
+      finish();
     });
   });
 }
 
-module.exports.finalize = function(test, assert){
+module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    test.finish();
+    finish();
   });
 };
 
-module.exports.testGetFormWorksSinglePage = function(test, assert){
+module.exports.testGetFormWorksSinglePage = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
-    assert.isDefined(result);
+    assert.ok(result);
 
 
     forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "formId" : result.forms[0].formId}, function(err, result){
       assert.ok(!err);
-      assert.isDefined(result);
-      test.finish();
+      assert.ok(result);
+      finish();
     });
   });
 };
 
-module.exports.testGetFormWorksMultiplePages = function(test, assert){
+module.exports.testGetFormWorksMultiplePages = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
-    assert.isDefined(result);
+    assert.ok(result);
 
 
     forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "formId" : result.forms[0].formId}, function(err, result){
       assert.ok(!err);
-      assert.isDefined(result);
+      assert.ok(result);
 
-      test.finish();
+      finish();
     });
   });
 };
 
-module.exports.testGetFormWorksAllForms = function(test, assert){
+module.exports.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err);
-    assert.isDefined(result);
-    assert.isDefined(result.forms);
-    assert.eql(2, result.forms.length);
-    test.finish();
+    assert.ok(result);
+    assert.ok(result.forms);
+    assert.equal(2, result.forms.length);
+    finish();
 
   });
 };
