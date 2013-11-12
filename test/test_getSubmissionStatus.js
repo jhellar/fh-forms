@@ -13,8 +13,8 @@ var globalFormId = undefined;
 var globalFieldIds = undefined;
 var submissionId = undefined;
 var testFilePath = "./test/Fixtures/test.pdf";
-var testPhotoPath = "./test/Fixtures/test.jpg";
-var testSignaturePath = "./test/Fixtures/test.jpg";
+
+
 var testSubmitFormBaseInfo = {
   "appId": "appId123456",
   "appCloudName": "appCloudName123456",
@@ -85,9 +85,7 @@ function submitData(assert, filesToSubmit, cb){
 }
 
 function submitFile(assert, placeholderText, filePath, fileName, cb){
-  var testFileStream = fs.createReadStream(filePath);
-  testFileStream.pause();
-  var testFileSubmission = {"submissionId" : submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"submissionId" : submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     if(err) console.log(err);
     assert.ok(!err);

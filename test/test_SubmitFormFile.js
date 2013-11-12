@@ -73,8 +73,6 @@ module.exports.testSubmitFormSignatureWorks = function(test, assert){
 }
 
 module.exports.testSubmitFormFileNoParams = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : undefined}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -84,9 +82,7 @@ module.exports.testSubmitFormFileNoParams = function(test, assert){
 }
 
 module.exports.testSubmitFormFileNoFieldId = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
-  var testFileSubmission = {"submissionId" : testSubmissionId, "fileName": "test.pdf", "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"submissionId" : testSubmissionId, "fileName": "test.pdf", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -96,9 +92,7 @@ module.exports.testSubmitFormFileNoFieldId = function(test, assert){
 }
 
 module.exports.testSubmitFormFileNoSubmissionId = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
-  var testFileSubmission = {"fileName": "test.pdf", "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"fileName": "test.pdf", "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -108,9 +102,7 @@ module.exports.testSubmitFormFileNoSubmissionId = function(test, assert){
 }
 
 module.exports.testSubmitFormFileBadSubmissionId = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
-  var testFileSubmission = {"submissionId" : "IAMNOTASUBMISSIONID", "fileName": "test.pdf", "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"submissionId" : "IAMNOTASUBMISSIONID", "fileName": "test.pdf", "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -120,9 +112,7 @@ module.exports.testSubmitFormFileBadSubmissionId = function(test, assert){
 }
 
 module.exports.testSubmitFormFileNoFileName = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
-  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -132,9 +122,7 @@ module.exports.testSubmitFormFileNoFileName = function(test, assert){
 }
 
 module.exports.testSubmitFormFileNoFileId = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
-  var testFileSubmission = {"submissionId" : testSubmissionId, "fileName": "test.pdf", "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"submissionId" : testSubmissionId, "fileName": "test.pdf", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -144,9 +132,7 @@ module.exports.testSubmitFormFileNoFileId = function(test, assert){
 }
 
 module.exports.testSubmitFormFileBadFileId = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
-  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "theWrongFileIdSomehow", "fileName": "test.pdf", "fieldId": globalFieldIds["fileField"], "fileStream" : testFileStream};
+  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "theWrongFileIdSomehow", "fileName": "test.pdf", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -156,8 +142,6 @@ module.exports.testSubmitFormFileBadFileId = function(test, assert){
 }
 
 module.exports.testSubmitFormFileFileNoFileStream = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
   var testFileSubmission = {"submissionId" : testSubmissionId, "fileName": "test.pdf", "fileId": ["filePlaceHolder123456", "filePlaceHolder123456789"], "fieldId": globalFieldIds["fileField"]};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -168,8 +152,6 @@ module.exports.testSubmitFormFileFileNoFileStream = function(test, assert){
 }
 
 module.exports.testSubmitFormFileFileBadFileStream = function(test, assert){
-  var testFileStream = fs.createReadStream(testFilePath);
-  testFileStream.pause();
   var testFileSubmission = {"submissionId" : testSubmissionId, "fileName": "test.pdf", "fileId": ["filePlaceHolder123456", "filePlaceHolder123456789"], "fieldId": globalFieldIds["fileField"], "fileStream" : "NOTASTREAM"};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -315,9 +297,7 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
     //Submission accepted and now have submissionId -- save the file
 
     async.eachSeries(placeholderTextArray, function(placeholderText, cb){
-      var testFileStream = fs.createReadStream(filePath);
-      testFileStream.pause();
-      var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds[submissionType], "fileStream" : testFileStream};
+      var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds[submissionType], "fileStream" : filePath, "keepFile" : true};
       forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
         if(options.errorExpected === true){
           assert.ok(err);

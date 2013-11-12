@@ -12,8 +12,7 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var globalFormId = undefined;
 var globalFieldIds = undefined;
 var testFilePath = "./test/Fixtures/test.pdf";
-var testPhotoPath = "./test/Fixtures/test.jpg";
-var testSignaturePath = "./test/Fixtures/test.jpg";
+
 var testSubmitFormBaseInfo = {
   "appId": "appId123456",
   "appCloudName": "appCloudName123456",
@@ -242,9 +241,7 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
       placeholderTextArray = placeholderTextArray.slice(0);//Removing one of the files so it is skipped
     }
     async.eachSeries(placeholderTextArray, function(placeholderText, cb){
-      var testFileStream = fs.createReadStream(filePath);
-      testFileStream.pause();
-      var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds[submissionType], "fileStream" : testFileStream};
+      var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds[submissionType], "fileStream" : filePath, "keepFile": true};
       forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
         if(options.errorExpected === true){
           assert.ok(err);
