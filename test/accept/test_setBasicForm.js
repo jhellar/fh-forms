@@ -201,8 +201,10 @@ module.exports.testAddFormWith2EmptyPages = function(finish) {
     function(populatedFormDoc, cb) {
       assert.ok(populatedFormDoc, 'should have data');
       assert.strictEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length, 'Incorrect number of pages in created form');
-//      assert.includes(TEST_PAGE_NAMES, populatedFormDoc.pages[0].name, 'Unexpected page name in created form');
-//      assert.includes(TEST_PAGE_NAMES, populatedFormDoc.pages[1].name, 'Unexpected page name in created form');
+      
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form');
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form');
+      
       assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
       return cb();
     }
@@ -231,8 +233,10 @@ module.exports.testUpdateFormWith2EmptyPages = function(finish) {
     function(populatedFormDoc, cb) {
       assert.ok(populatedFormDoc, 'should have data');
       assert.strictEqual(populatedFormDoc.pages.length, TEST_FORM_UPDATE_2EMPTY_PAGES.pages.length, 'Incorrect number of pages in created form');
-//      assert.includes(TEST_PAGE_NAMES, populatedFormDoc.pages[0].name, 'Unexpected page name in created form');
-//      assert.includes(TEST_PAGE_NAMES, populatedFormDoc.pages[1].name, 'Unexpected page name in created form');
+
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form');
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form');
+
       assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
 
       return cb(undefined, populatedFormDoc.toJSON());
@@ -264,6 +268,9 @@ module.exports.testUpdateFormWith2EmptyPages = function(finish) {
     function(populatedFormDoc, cb) {
       assert.ok(populatedFormDoc, 'should have data');
       assert.strictEqual(populatedFormDoc.pages.length, TEST_FORM_UPDATE_2EMPTY_PAGES.pages.length, 'Incorrect number of pages in updated form, expected: ' + TEST_FORM_UPDATE_2EMPTY_PAGES.pages.length + ", actual: " + populatedFormDoc.pages.length);
+      assert.ok(TEST_PAGE_NAMES_AFTER_UPDATE.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form: ' + util.inspect(populatedFormDoc.pages[0].name));
+      assert.ok(TEST_PAGE_NAMES_AFTER_UPDATE.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form: ' + util.inspect(populatedFormDoc.pages[1].name));
+      
 //      assert.includes(TEST_PAGE_NAMES_AFTER_UPDATE, populatedFormDoc.pages[0].name, 'Unexpected page name in created form: ' + util.inspect(populatedFormDoc.pages[0].name));
 //      assert.includes(TEST_PAGE_NAMES_AFTER_UPDATE, populatedFormDoc.pages[1].name, 'Unexpected page name in created form: ' + util.inspect(populatedFormDoc.pages[1].name));
       assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
