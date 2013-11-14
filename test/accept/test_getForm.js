@@ -56,16 +56,6 @@ module.exports.testGetFormWorksMultiplePages = function(finish){
   });
 };
 
-module.exports.testGetFormWorksAllForms = function(finish){
-  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
-    assert.ok(!err);
-    assert.ok(result);
-    assert.ok(result.forms);
-    assert.equal(2, result.forms.length);
-    finish();
-  });
-};
-
 //Adding data needed for the test
 function createTestData(assert, cb){
   //Add a form to the database.
