@@ -36,8 +36,8 @@ module.exports.testGetFormsWorks = function(finish){
     assert.ok(Array.isArray(result.forms));
     assert.ok(result.forms.length === 2);// Should have 2 forms associated with the appId
 
-    checkForm(assert, result.forms[0], {"formName": "Test Form 1"});
-    checkForm(assert, result.forms[1], {"formName": "Test Form 2"});
+    checkForm(result.forms[0], {"formName": "Test Form 1", "description" : "This is a test form 1."});
+    checkForm(result.forms[1], {"formName": "Test Form 2", "description" : "This is a test form 2."});
 
     finish();
   });
@@ -70,10 +70,35 @@ module.exports.testGetFormsNoAppExists = function(finish){
   });
 }
 
-function checkForm(assert, form, options){
+//TODO merge back in later when switching to smaller form returns....
+//module.exports.testGetFormWorksAllForms = function(finish){
+//  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+//    assert.ok(!err);
+//    assert.ok(result);
+//    assert.ok(result.forms);
+//    assert.equal(2, result.forms.length);
+//
+//    checkAllForms(result.forms[0], {"formName": "Test Form 1", "description" : "This is a test form 1."});
+//    checkAllForms(result.forms[1], {"formName": "Test Form 2", "description" : "This is a test form 2."});
+//
+//
+//    finish();
+//  });
+//};
+
+function checkAllForms(formToCheck, options){
+  checkForm(formToCheck, options);
+  assert.ok(formToCheck.lastUpdated);
+  assert.ok(formToCheck.appsUsingForm);
+  assert.ok(formToCheck.submissionsToday);
+  assert.ok(formToCheck.submissionsTotal);
+}
+
+function checkForm(form, options){
   assert.ok(form);
-  assert.equal(form.formName, options.formName, "Expected form names to be equal");
+  assert.equal(form.formName, options.formName, "Expected " + options.formName + " got " + form.formName);
   assert.ok(form.formId);
+  assert.equal(form.description, options.description, "Expected " + options.description + " got " + form.description);
 }
 
 function createTestData(assert, cb){

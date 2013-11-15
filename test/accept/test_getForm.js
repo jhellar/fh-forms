@@ -63,10 +63,8 @@ module.exports.testGetFormWorksAllForms = function(finish){
     assert.ok(result.forms);
     assert.equal(2, result.forms.length);
     finish();
-
   });
 };
-
 
 //Adding data needed for the test
 function createTestData(assert, cb){
