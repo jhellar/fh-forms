@@ -1101,6 +1101,7 @@ function checkSubmissionExists(assert, submissionId, options, cb){
     assert.ok(result.masterFormTimestamp); //Checking for the masterFormTimestamp
     assert.ok(result.deviceFormTimestamp); //Checking for the masterFormTimestamp
     assert.ok(result.submissionStartedTimestamp); //Checking for the masterFormTimestamp
+    assert.ok(result.submissionCompletedTimestamp); //Checking for the masterFormTimestamp
 
     var submissionJSON = result.toJSON();
 
@@ -1108,6 +1109,7 @@ function checkSubmissionExists(assert, submissionId, options, cb){
     delete submissionJSON._id;
     delete submissionJSON.masterFormTimestamp;
     delete submissionJSON.submissionStartedTimestamp;
+    delete submissionJSON.submissionCompletedTimestamp;
 
     //Now full comparison with the expected form submission definition.
     var expectedSubmissionJSON = options.expectedSubmissionJSON;
