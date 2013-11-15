@@ -1101,7 +1101,7 @@ function checkSubmissionExists(assert, submissionId, options, cb){
     assert.ok(result.masterFormTimestamp); //Checking for the masterFormTimestamp
     assert.ok(result.deviceFormTimestamp); //Checking for the masterFormTimestamp
     assert.ok(result.submissionStartedTimestamp); //Checking for the masterFormTimestamp
-    assert.ok(result.submissionCompletedTimestamp); //Checking for the masterFormTimestamp
+    assert.ok(result.submissionCompletedTimestamp); //Checking for the submissionCompletedTimestamp -- This will be default 0 as complete has not been called yet
 
     var submissionJSON = result.toJSON();
 
