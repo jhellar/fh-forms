@@ -29,13 +29,10 @@ test_accept: npm_deps
 test_accept_cov: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept --series=true
 
-martin_test_create: npm_deps
-	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/test_createFormWithFields.js --series=true
+martin_test_theme_update: npm_deps
+	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/test_updateTheme.js --series=true
 
-martin_test_update: npm_deps
-	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/test_updateFormWithFields.js --series=true
-
-martin_test: martin_test_create martin_test_update
+martin_test: martin_test_theme_update
 
 
 npm_deps: 
