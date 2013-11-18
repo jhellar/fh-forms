@@ -327,7 +327,7 @@
             }, {
                 "Label": "Third Choice"
             }],
-            "Type": "select",
+            "Type": "dropdown",
             "ID": "Field344",
             "HasOtherField": false
         }, {
@@ -344,7 +344,7 @@
             }, {
                 "Label": "Third Choice"
             }],
-            "Type": "select",
+            "Type": "dropdown",
             "ID": "Field106",
             "HasOtherField": false
         }, {

@@ -97,8 +97,10 @@ function checkAllForms(formToCheck, options){
 function checkForm(form, options){
   assert.ok(form);
   assert.equal(form.formName, options.formName, "Expected " + options.formName + " got " + form.formName);
-  assert.ok(form.formId);
+  assert.ok(form._id);
   assert.equal(form.description, options.description, "Expected " + options.description + " got " + form.description);
+  assert.ok(form.lastUpdated);
+  assert.ok(form.lastUpdatedTimestamp);
 }
 
 function createTestData(assert, cb){
