@@ -32,8 +32,10 @@ module.exports.testGetFormWorksSinglePage = function(finish){
     assert.ok(!err);
     assert.ok(result);
 
+    console.log(result);
 
-    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "formId" : result.forms[0].formId}, function(err, result){
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
+      if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
       finish();
@@ -47,7 +49,7 @@ module.exports.testGetFormWorksMultiplePages = function(finish){
     assert.ok(result);
 
 
-    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "formId" : result.forms[0].formId}, function(err, result){
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
       assert.ok(!err);
       assert.ok(result);
 
