@@ -13,7 +13,7 @@ var testThemeData = getTestData();
 
 
 module.exports.setUp = function(finish){
-    finish();
+  finish();
 }
 
 module.exports.tearDown = function(finish){
@@ -31,6 +31,21 @@ module.exports.testCreateTheme = function(finish){
     checkTheme(assert, testThemeData, result);
 
     finish();
+  });
+};
+
+module.exports.testListTheme = function(finish) {
+  forms.updateTheme(options, testThemeData, function(err, result){
+    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+    assert.ok(result);
+
+    checkTheme(assert, testThemeData, result);
+
+    forms.getThemes(options, function(err, themes) {
+      assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+      assert.notEqual(themes.length, 0, "Expected some themes to exist");
+      finish();
+    });
   });
 };
 
