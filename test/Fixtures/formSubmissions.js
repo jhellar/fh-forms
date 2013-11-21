@@ -13,8 +13,8 @@ module.exports = {
         "minRepeat":2
       },
       "validation":{
-        "min":20,
-        "max":100
+        "min":5,
+        "max":20
       }
     }
   },
@@ -26,6 +26,7 @@ module.exports = {
     "required":false,
     "fieldOptions":{
       "definition":{
+        "file_size": 100,
         "maxRepeat":5,
         "minRepeat":2
       }
@@ -39,6 +40,9 @@ module.exports = {
     "required":false,
     "fieldOptions":{
       "definition":{
+        "photoHeight": 200,
+        "photoWidth": 300,
+        "photoQuality": 50,
         "maxRepeat":5,
         "minRepeat":2
       }
@@ -69,8 +73,8 @@ module.exports = {
         "minRepeat":3
       },
       "validation":{
-        "min":50,
-        "max":100
+        "min":5,
+        "max":20
       }
     }
   },
@@ -86,7 +90,7 @@ module.exports = {
         "minRepeat":2
       },
       "validation":{
-        "min":0,
+        "min":5,
         "max":100
       }
     }
@@ -115,45 +119,53 @@ module.exports = {
       "definition":{
         "maxRepeat":2,
         "minRepeat":2,
-        "radioChoices":[
+        "options":[
           {
-            "radioVal1":20
+            "label": "radio1",
+            "checked": false
           },
           {
-            "radioVal2":10
+            "label": "radio2",
+            "checked": false
           },
           {
-            "radioVal3":130
+            "label": "radio3 checked",
+            "checked": true
           },
           {
-            "radioVal4":12
+            "label": "radio4",
+            "checked": false
           }
         ]
       }
     }
   },
-  "selectFieldData":{
-    "name":"selectField",
-    "helpText":"This is a Select field",
-    "type":"select",
+  "dropdownFieldData":{
+    "name":"dropdownField",
+    "helpText":"This is a dropdown field",
+    "type":"dropdown",
     "repeating":true,
     "required":false,
     "fieldOptions":{
       "definition":{
-        "maxRepeat":2,
+        "maxRepeat":3,
         "minRepeat":2,
-        "selectChoices":[
+        "options":[
           {
-            "selectval1":32
+            "label": "dropdownVal1",
+            "checked": false
           },
           {
-            "selectval2":33
+            "label": "dropdownVal2",
+            "checked": false
           },
           {
-            "selectval3":34
+            "label": "dropdownVal3",
+            "checked": true
           },
           {
-            "selectval4":35
+            "label": "dropdownVal4",
+            "checked": false
           }
         ]
       }
@@ -222,31 +234,31 @@ module.exports = {
           {
             "red":{
               "value":1,
-              "selected":true
+              "checked":true
             }
           },
           {
             "blue":{
               "value":2,
-              "selected":false
+              "checked":false
             }
           },
           {
             "green":{
               "value":3,
-              "selected":false
+              "checked":false
             }
           },
           {
             "purple":{
               "value":4,
-              "selected":false
+              "checked":false
             }
           },
           {
             "black":{
               "value":5,
-              "selected":true
+              "checked":true
             }
           }
         ],
@@ -260,33 +272,31 @@ module.exports = {
       }
     }
   },
-  "locationLatLongFieldData":{
+  "locationLatLongFieldData": {
     "name":"locationLatLongField",
     "helpText":"This is a locationLatLong field",
-    "type":"locationLatLong",
+    "type":"location",
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "definition" : {
-        "maxRepeat":4,
-        "minRepeat":2
-      },
-      "validation" : {}
-    }
+      "locationUnit" : "latLong",
+      "maxRepeat":4,
+      "minRepeat":2
+    },
+    "validation" : {}
   },
-  "locationNorthEastFieldData":{
+  "locationNorthEastFieldData": {
     "name":"locationNorthEastField",
     "helpText":"This is a locationNorthEast field",
-    "type":"locationNorthEast",
+    "type":"location",
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "definition" : {
-        "maxRepeat":2,
-        "minRepeat":2
-      },
-      "validation" : {}
-    }
+      "locationUnit" : "northEast",
+      "maxRepeat":4,
+      "minRepeat":2
+    },
+    "validation" : {}
   },
   "locationMapFieldData":{
     "name":"locationMapField",
@@ -305,11 +315,13 @@ module.exports = {
   "dateFieldData":{
     "name":"dateField",
     "helpText":"This is a date field",
-    "type":"date",
+    "type":"dateTime",
     "repeating":true,
     "required":false,
     "fieldOptions": {
+      "dateTimeUnit": "date",
       "definition" : {
+        "timeAutopopulate":true,
         "maxRepeat":6,
         "minRepeat":1
       },
@@ -319,13 +331,15 @@ module.exports = {
   "timeFieldData":{
     "name":"timeField",
     "helpText":"This is a time field",
-    "type":"time",
+    "type":"dateTime",
     "repeating":true,
     "required":false,
     "fieldOptions": {
+      "dateTimeUnit": "time",
       "definition" : {
+        "timeAutopopulate":false,
         "maxRepeat":6,
-        "minRepeat":3
+        "minRepeat":2
       },
       "validation" : {}
     }
@@ -337,7 +351,9 @@ module.exports = {
     "repeating":true,
     "required":false,
     "fieldOptions": {
+      "dateTimeUnit": "dateTime",
       "definition" : {
+        "timeAutopopulate":true,
         "maxRepeat":6,
         "minRepeat":1
       },
