@@ -126,43 +126,43 @@ function createTestData(assert, cb){
         "fieldInstructions": "#FF0000"
       }
     },
-    "typeography" : {
-      "title": [{
+    "typography" : {
+      "title": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
         "fontSize": "12pt",
         "fontColour": "#FF0000"
-      }],
-      "description": [{
+      },
+      "description": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
         "fontSize": "12pt",
         "fontColour": "#FF0000"
-      }],
-      "fieldTitle": [{
+      },
+      "fieldTitle": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
         "fontSize": "2pt",
         "fontColour": "#FF0000"
-      }],
-      "fieldText": [{
+      },
+      "fieldText": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
         "fontSize": "18pt",
         "fontColour": "#FF0000"
-      }],
-      "instructions": [{
+      },
+      "instructions": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
         "fontSize": "14pt",
         "fontColour": "#FF0000"
-      }],
-      "buttons": [{
+      },
+      "buttons": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
         "fontSize": "17pt",
         "fontColour": "#FF0000"
-      }]
+      }
     },
     "borders": {
       "forms": {
@@ -175,12 +175,18 @@ function createTestData(assert, cb){
         "style": "dotted",
         "colour": "#FF0000"
       }
+    },
+    "formButtons" : {
+      "navigation" : "#FF0ds0",
+      "action" : "#FF0a0",
+      "cancel" : "#FF0ds0"
     }
   };
 
   var testTheme = new Theme(testThemeData);
 
   testTheme.save(function(err, theme){
+    if(err) console.log(err);
     assert.ok(!err);
 
     var AppTheme = models.get(connection, models.MODELNAMES.APP_THEMES);
