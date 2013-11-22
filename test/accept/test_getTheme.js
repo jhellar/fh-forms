@@ -104,7 +104,7 @@ function createTestData(assert, cb){
         "fieldInstructions": "#FF0000"
       }
     },
-    "typeography" : {
+    "typography" : {
       "title": {
         "fontFamily": "SomeFontFamily",
         "fontStyle": "bold",
@@ -153,12 +153,18 @@ function createTestData(assert, cb){
         "style": "dotted",
         "colour": "#FF0000"
       }
+    },
+    "formButtons" : {
+      "navigation" : "#FF0ds0",
+      "action" : "#FF0a0",
+      "cancel" : "#FF0ds0"
     }
   };
 
   var testTheme = new Theme(testThemeData);
 
   testTheme.save(function(err){
+    if(err) console.log(err);
     assert.ok(!err);
 
     var AppTheme = models.get(connection, models.MODELNAMES.APP_THEMES);
