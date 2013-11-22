@@ -7,7 +7,7 @@ var lodash = require('lodash');
 var assert = require('assert');
 var util = require('util');
 
-var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
+var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: 'foo@example.com'};
 
 var testThemeData = getTestData();
 
@@ -44,6 +44,35 @@ module.exports.testListTheme = function(finish) {
     forms.getThemes(options, function(err, themes) {
       assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
       assert.notEqual(themes.length, 0, "Expected some themes to exist");
+      finish();
+    });
+  });
+};
+
+module.exports.testDeleteTheme = function(finish) {
+  forms.updateTheme(options, testThemeData, function(err, result){
+    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+    assert.ok(result);
+
+    checkTheme(assert, testThemeData, result);
+
+    forms.deleteTheme({uri: options.uri, userEmail: options.userEmail, _id: result._id}, function(err, theme) {
+      assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+      finish();
+    });
+  });
+};
+
+module.exports.testGetTheme = function(finish) {
+  forms.updateTheme(options, testThemeData, function(err, result){
+    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+    assert.ok(result);
+
+    checkTheme(assert, testThemeData, result);
+
+    forms.getTheme({uri: options.uri, userEmail: options.userEmail, _id: result._id}, function(err, theme) {
+      assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+      assert.ok(theme, 'Expected theme to be returned');
       finish();
     });
   });
