@@ -6,6 +6,7 @@ var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var async = require("async");
 var assert = require('assert');
+var util = require('util');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -16,6 +17,8 @@ var TEST_UNUSED_APPID = "ThisDidNotSubmit";
 var TEST_SUBMISSION_FORMID; // will be populated by setup
 var TEST_SUBMISSION_ID; // will be populated by setup
 var TEST_UNUSED_FORMID = '123456789012345678901234';
+var TEST_FIELD_NAME_PREFIX = "TestField";
+var TEST_FIELD_VALUE_PREFIX = "TestFieldValue";
 
 var globalFormId;
 var globalFieldIds;
@@ -45,10 +48,10 @@ module.exports.testGetAllSubmissions = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
   
   forms.getSubmissions(options, {}, function (err, results){
-    assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(!err, "should not have returned error: " + util.inspect(err));
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + submissions[0]._id + ", expected: " + TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
@@ -62,9 +65,9 @@ module.exports.testGetAllSubmissionsByApp = function(finish){
   
   forms.getSubmissions(options, {appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
@@ -78,9 +81,9 @@ module.exports.testGetAllSubmissionsByForm = function(finish){
   
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
@@ -89,14 +92,59 @@ module.exports.testGetAllSubmissionsByForm = function(finish){
   });
 };
 
+module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
+// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
+  
+  forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
+    assert.ok(!err, "should not have returned error: " + util.inspect(err));
+    assert.ok(results);  // should have returned results
+    var submissions = results.submissions;
+    assert.ok(submissions);  // should have returned submissions in results
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
+    assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
+    assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
+    assert.strictEqual(submissions[0].formFields.length, 3, "should be 3 fields returned in summary submissions list, actual: " + submissions[0].formFields.length);
+
+    assert.ok(submissions[0].formFields[0].fieldId.name.indexOf(TEST_FIELD_NAME_PREFIX) === 0,
+              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX + 
+              ", but actual name was: " + submissions[0].formFields[0].fieldId.name);
+
+    assert.ok(Array.isArray(submissions[0].formFields[0].fieldValues), "expected an array of values but actual was: " + util.inspect(submissions[0].formFields[0].fieldValues));
+    assert.ok(submissions[0].formFields[0].fieldValues[0].indexOf(TEST_FIELD_VALUE_PREFIX) === 0,
+              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX + 
+              ", but actual name was: " + submissions[0].formFields[0].fieldValues[0]);
+
+    assert.ok(submissions[0].formFields[1].fieldId.name.indexOf(TEST_FIELD_NAME_PREFIX) === 0,
+              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX + 
+              ", but actual name was: " + submissions[0].formFields[1].fieldId.name);
+
+    assert.ok(Array.isArray(submissions[0].formFields[1].fieldValues), "expected an array of values but actual was: " + util.inspect(submissions[0].formFields[0].fieldValues));
+    assert.ok(submissions[0].formFields[1].fieldValues[0].indexOf(TEST_FIELD_VALUE_PREFIX) === 0,
+              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX + 
+              ", but actual name was: " + submissions[0].formFields[1].fieldValues[0]);
+
+    assert.ok(submissions[0].formFields[2].fieldId.name.indexOf(TEST_FIELD_NAME_PREFIX) === 0,
+              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX + 
+              ", but actual name was: " + submissions[0].formFields[2].fieldId.name);
+
+    assert.ok(Array.isArray(submissions[0].formFields[2].fieldValues), "expected an array of values but actual was: " + util.inspect(submissions[0].formFields[0].fieldValues));
+    assert.ok(submissions[0].formFields[2].fieldValues[0].indexOf(TEST_FIELD_VALUE_PREFIX) === 0,
+              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX + 
+              ", but actual name was: " + submissions[0].formFields[2].fieldValues[0]);
+
+    finish();    
+  });
+};
+
 module.exports.testGetAllSubmissionsForNonExistantForm = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, 0);  // should be empty list returned
     finish();
   });
@@ -107,9 +155,9 @@ module.exports.testGetAllSubmissionsForNonExistantApp = function(finish){
   
   forms.getSubmissions(options, {appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, 0); // should be empty list returned
     finish();
   });
@@ -120,9 +168,9 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndApp = function(finish){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID, appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, 0);  // should be empty list returned
     finish();
   });
@@ -133,9 +181,9 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(fi
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID, appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, 0);  // should be empty list returned
     finish();
   });
@@ -146,9 +194,9 @@ module.exports.testGetAllSubmissionsForNonExistantAppAndGoodFormId = function(fi
   
   forms.getSubmissions(options, {appId: TEST_UNUSED_APPID, formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
-    assert.ok(results)  // should have returned results
+    assert.ok(results);  // should have returned results
     var submissions = results.submissions;
-    assert.ok(submissions)  // should have returned submissions in results
+    assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, 0); // should be empty list returned
     finish();
   });
@@ -169,11 +217,12 @@ module.exports.setUp = function(finish){
         async.apply(completeSubmission, assert),
         async.apply(checkPending, assert, "complete", [])
       ], function(err){
+        assert.ok(!err, 'error in setUp - err: ' + util.inspect(err));
         finish();
       });
     });
   });
-}
+};
 
 module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
@@ -183,15 +232,25 @@ module.exports.tearDown = function(finish){
 };
 
 function submitData(assert, filesToSubmit, cb){
+//  console.log("SUBMITDATA()");
   var submission = testSubmitFormBaseInfo;
   var filePlaceHolderEntries = filesToSubmit;
   submission.formId = globalFormId;
   submission.formFields = [{"fieldId" : globalFieldIds["fileField"], "fieldValues" : filePlaceHolderEntries}];
 
+  var testField;
+  var testFieldName;
+  for(var i = 0; i < 6; i += 1) {
+    testFieldName = TEST_FIELD_NAME_PREFIX + i;
+    testFieldValue = TEST_FIELD_VALUE_PREFIX + i;
+    testField = {"fieldId" : globalFieldIds[testFieldName], "fieldValues" : [testFieldValue]};
+    submission.formFields.push(testField);
+  }
+
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
     if(err) console.log(err);
-    assert.ok(!err);
-    assert.ok(dataSaveResult.submissionId);
+    assert.ok(!err, "problem submitting test form data - err: " + util.inspect(err));
+    assert.ok(dataSaveResult.submissionId, "problem submitting test form data - returned submissionId: " + util.inspect(dataSaveResult.submissionId));
     submissionId = dataSaveResult.submissionId;
     TEST_SUBMISSION_ID = submissionId.toString();
     cb();
@@ -199,6 +258,7 @@ function submitData(assert, filesToSubmit, cb){
 }
 
 function submitFile(assert, placeholderText, filePath, fileName, cb){
+  // console.log("SUBMITFILE()");
   var testFileSubmission = {"submissionId" : submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     if(err) console.log(err);
@@ -211,6 +271,7 @@ function submitFile(assert, placeholderText, filePath, fileName, cb){
 }
 
 function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
+  // console.log("CHECKPENDING()");
 
   forms.getSubmissionStatus({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"submissionId" : submissionId}}, function(err, result){
     if(err) console.log(err);
@@ -231,6 +292,8 @@ function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
 }
 
 function completeSubmission(assert, cb){
+  // console.log("COMPLETESUBMISSION()");
+
   forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"submissionId" : submissionId}}, function(err, result){
     if(err) return cb(err);
     assert.ok(!err);
@@ -260,10 +323,21 @@ function createTestData(assert, cb){
   var photoField = new Field(testData.photoFieldData);
   var signatureField = new Field(testData.signatureFieldData);
 
+  var textFieldOrig = testData.textFieldData;
+
   var fields = [];
   fields.push(fileField);
   fields.push(photoField);
   fields.push(signatureField);
+
+  var testField;
+  for(var i = 0; i < 6; i += 1) {
+    testField = JSON.parse(JSON.stringify(textFieldOrig));
+    testField.name = TEST_FIELD_NAME_PREFIX + i;
+    testField.repeating = false;  // fixtures file specifies a repeating field, should add a non repeating field
+    delete testField.fieldOptions.definition;
+    fields.push(new Field(testField));
+  }
 
   saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
     assert.ok(!err);
@@ -281,7 +355,7 @@ function createTestData(assert, cb){
   });
 
   function saveSingleForm(fields, testPage, testFieldsForm, cb){
-    var globalFormId = undefined;
+    var globalFormId;
     var fieldIds = {};
     async.series([saveFields, savePage, saveForm], function(err){
       if(err) console.log(err);
@@ -331,5 +405,5 @@ function createTestData(assert, cb){
         cb(err, globalFormId, fieldIds);
       });
     }
-  };
+  }
 }
