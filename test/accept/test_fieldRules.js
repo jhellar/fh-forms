@@ -181,17 +181,23 @@ module.exports.it_should_save_field_rules = function(finish) {
       assert.ok(populatedFormDoc, 'should have data');
       var fieldRule = {
         type: "show",
-        sourceField: populatedFormDoc.pages[0].fields[0]._id,
-        restriction: 'doesNotContain',
-        sourceValue: 'dammit',
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[0]._id,
+          restriction: 'doesNotContain',
+          sourceValue: 'dammit'
+        }],
         targetField: populatedFormDoc.pages[0].fields[0]._id
       };
 
       var fieldRule2 = {
         type: "show",
-        sourceField: populatedFormDoc.pages[0].fields[1]._id,
-        restriction: 'doesNotContain',
-        sourceValue: 'foo',
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[1]._id,
+          restriction: 'doesNotContain',
+          sourceValue: 'foo'
+        }],
         targetField: populatedFormDoc.pages[0].fields[1]._id
       };
 
@@ -206,21 +212,24 @@ module.exports.it_should_save_field_rules = function(finish) {
       assert.equal(populatedFormDoc.fieldRules.length, 2, 'fieldRule not saved');
 
       var frules = populatedFormDoc.fieldRules;
-      frules[0].sourceValue = 'dammit2';
+      frules[0].ruleConditionalStatements[0].sourceValue = 'dammit2';
 
       // and add another rule
       var fieldRule3 = {
         type: "show",
-        sourceField: populatedFormDoc.pages[0].fields[1]._id,
-        restriction: 'doesNotContain',
-        sourceValue: 'bar',
+        ruleConditionalOperator : "and",
+        ruleConditionalStatements : [{
+          sourceField: populatedFormDoc.pages[0].fields[1]._id,
+          restriction: 'doesNotContain',
+          sourceValue: 'bar'
+        }],
         targetField: populatedFormDoc.pages[0].fields[1]._id
       };
       frules.push(fieldRule3);
 
       forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: frules}, function(err, frs){
         assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-        assert.equal(frs[0].sourceValue, 'dammit2', 'fieldRule not updated correctly, got: ', frs[0].sourceValue);
+        assert.equal(frs[0].ruleConditionalStatements[0].sourceValue, 'dammit2', 'fieldRule not updated correctly, got: ', frs[0].ruleConditionalStatements[0].sourceValue);
         assert.equal(frs.length, 3, 'Expected 3 rules to be saved, got: ' + util.inspect(frs));
         cb(null, populatedFormDoc);
       });

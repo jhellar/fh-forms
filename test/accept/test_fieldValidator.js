@@ -65,8 +65,6 @@ exports.testValidateTextField = function(finish){
 
   testSubmission.fieldValues = testSubmissionData;
 
-  //console.log(testSubmission);
-
   var validator = fieldValidator(testField, testSubmission);
 
   validator.validate(function(err){
@@ -139,8 +137,6 @@ exports.testValidateTextArea = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
-
   validator.validate(function(err){
     assert.ok(!err);
 
@@ -210,8 +206,6 @@ exports.testValidateNumber = function(finish){
   testSubmission.fieldValues = testSubmissionData;
 
   var validator = fieldValidator(testField, testSubmission);
-
-  console.log(testSubmission);
 
   validator.validate(function(err){
     if(err) console.log(err);
@@ -283,8 +277,6 @@ exports.testValidateEmailAddress = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
-
   validator.validate(function(err){
     if(err) console.log(err);
     assert.ok(!err);
@@ -337,8 +329,6 @@ exports.testValidateDropdown = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
-
   validator.validate(function(err){
     if(err) console.log(err);
     assert.ok(!err);
@@ -390,8 +380,6 @@ exports.testValidateRadio = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
-
   validator.validate(function(err){
     assert.ok(!err);
 
@@ -427,8 +415,6 @@ exports.testValidateCheckbox = function(finish){
   testSubmission.fieldValues = testSubmissionData;
 
   var validator = fieldValidator(testField, testSubmission);
-
-  console.log(testSubmission);
 
   validator.validate(function(err){
     if(err) console.log(err);
@@ -498,8 +484,6 @@ exports.testValidateLocationLatLong = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
-
   validator.validate(function(err){
     assert.ok(!err);
 
@@ -551,7 +535,7 @@ exports.testValidateLocationNorthEast = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     if(err) console.log(err);
@@ -605,7 +589,7 @@ exports.testValidatePhoto = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     assert.ok(!err);
@@ -642,7 +626,7 @@ exports.testValidateFile = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     assert.ok(!err);
@@ -679,7 +663,7 @@ exports.testValidateSignature = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     assert.ok(!err);
@@ -717,7 +701,7 @@ exports.testValidateDateTimeTime = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     if(err) console.log(err);
@@ -755,7 +739,7 @@ exports.testValidateDateTimeDate = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     assert.ok(!err);
@@ -793,7 +777,7 @@ exports.testValidateDateTimeDateTime = function(finish){
 
   var validator = fieldValidator(testField, testSubmission);
 
-  console.log(testSubmission);
+
 
   validator.validate(function(err){
     assert.ok(!err);
