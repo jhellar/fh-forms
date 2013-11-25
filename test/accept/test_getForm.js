@@ -32,7 +32,7 @@ module.exports.testGetFormWorksSinglePage = function(finish){
     assert.ok(!err);
     assert.ok(result);
 
-    console.log(result);
+
 
     forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
       if(err) console.log(err);
@@ -174,9 +174,19 @@ function createTestData(assert, cb){
   }
 
   function saveFieldRules(cb){
-    fieldRule1 = new FieldRule({"type": "hide", "restriction": "contains", "sourceValue": "asd"});
 
-    fieldRule1.sourceField = field1;
+    var ruleData = {
+      "type": "hide",
+      "ruleConditionalOperator": "and",
+      "ruleConditionalStatements": [{
+        "sourceField": field1._id,
+        "restriction": "contains",
+        "sourceValue": "asd"
+      }]
+    };
+
+    fieldRule1 = new FieldRule(ruleData);
+
     fieldRule1.targetField = field2;
 
     fieldRule1.save(function(err){
@@ -187,9 +197,18 @@ function createTestData(assert, cb){
   }
 
   function savePageRules(cb){
-    pageRule1 = new PageRule({"type": "skip", "restriction": "contains", "sourceValue": "None"});
 
-    pageRule1.sourceField = field1;
+    var ruleData = {
+      "type": "skip",
+      "ruleConditionalOperator": "and",
+      "ruleConditionalStatements": [{
+        "sourceField": field1._id,
+        "restriction": "contains",
+        "sourceValue": "None"
+      }]
+    };
+
+    pageRule1 = new PageRule(ruleData);
     pageRule1.targetPage = page1;
 
     pageRule1.save(function(err){

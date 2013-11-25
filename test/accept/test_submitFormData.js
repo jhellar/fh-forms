@@ -72,8 +72,6 @@ module.exports.testSubmitText = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
-
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
   });
@@ -126,8 +124,6 @@ module.exports.testSubmitTextArea = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
-
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
   });
@@ -179,7 +175,7 @@ module.exports.testSubmitFile = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -216,7 +212,7 @@ module.exports.testSubmitRadio = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -253,7 +249,7 @@ module.exports.testSubmitCheckBox = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -325,7 +321,7 @@ module.exports.testSubmitNumber = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -394,7 +390,7 @@ module.exports.testSubmitLocationLatLong = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -432,7 +428,7 @@ module.exports.testSubmitLocationNorthEast = function(finish){
 
   submission.formFields = testValues;
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -469,7 +465,7 @@ module.exports.testSubmitDate = function(finish){
   submission.formFields = testValues;
 
 
-  console.log(JSON.stringify(submission));
+
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -504,8 +500,6 @@ module.exports.testSubmitDateTime = function(finish){
 
   submission.formFields = testValues;
 
-
-  console.log(JSON.stringify(submission));
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -1067,40 +1061,6 @@ function createTestData(assert, cb){
     fields.push(fileField);
     fields.push(photoField);
     fields.push(signatureField);
-
-
-    var testPageRule1 = new PageRule({
-      "type": "skip",
-      "restriction": "contains",
-      "sourceValue": "Something"
-    });
-    var testPageRule2 = new PageRule({
-      "type": "skip",
-      "restriction": "isNot",
-      "sourceValue": "Something Else"
-    });
-    var testPageRule3 = new PageRule({
-      "type": "skip",
-      "restriction": "is",
-      "sourceValue": "Some Other Thing"
-    });
-
-
-    var testFieldRule1 = new FieldRule({
-      "type": "show",
-      "restriction": "contains",
-      "sourceValue": "Something"
-    });
-    var testFieldRule2 = new FieldRule({
-      "type": "hide",
-      "restriction": "contains",
-      "sourceValue": "Something"
-    });
-    var testFieldRule3 = new FieldRule({
-      "type": "show",
-      "restriction": "contains",
-      "sourceValue": "Something"
-    });
 
     saveSingleForm(fields, testPage, testFieldsForm, function(err, formId, fieldIds){
       assert.ok(!err);
