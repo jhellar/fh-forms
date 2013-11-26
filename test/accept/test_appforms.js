@@ -86,11 +86,36 @@ module.exports.it_should_save_app_forms = function(finish) {
       });
     },
 
+    // this is effectively the reverse lookup - what apps are using this form
+    function getFormApps(form1, form2, appForms, cb){
+      forms.getFormApps({formId: form1._id, uri: options.uri, userEmail: options.userEmail},function(err, apps) {
+        assert.ok(!err, 'Error in getFormApps: ' + util.inspect(err));
+        assert.equal(apps.length, 1);
+        return cb(err, form1, form2, appForms);
+      });
+    },
+
+    // test getFormApps with bad id
+    function getFormApps(form1, form2, appForms, cb){
+      forms.getFormApps({formId: 123, uri: options.uri, userEmail: options.userEmail},function(err, apps) {
+        assert.ok(err, 'Expected error, not a valid formId!');
+        return cb(null, form1, form2, appForms);
+      });
+    },
+
     function updateAppForms(form1, form2, appForms, cb) {
       forms.updateAppForms(options, {appId: '12345', forms: []}, function(err, appForms){
         assert.ok(!err, 'Error in updateAppForms: ' + util.inspect(err));
         assert.equal(appForms.forms.length, 0);
-        return cb();
+        return cb(null, form1);
+      });
+    },
+
+    function getFormApps2(form1, cb){
+      forms.getFormApps({formId: form1._id, uri: options.uri, userEmail: options.userEmail},function(err, apps) {
+        assert.ok(!err, 'Error in getFormApps: ' + util.inspect(err));
+        assert.equal(apps.length, 0, 'Expected no Forms to be returned, got: ' + util.inspect(apps));
+        return cb(err);
       });
     },
 
