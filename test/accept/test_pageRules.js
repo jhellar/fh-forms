@@ -183,7 +183,7 @@ module.exports.it_should_save_page_rules = function(finish) {
         ruleConditionalOperator: "and",
         ruleConditionalStatements: [{
           sourceField: populatedFormDoc.pages[0].fields[0]._id,
-          restriction: 'doesNotContain',
+          restriction: 'does not contain',
           sourceValue: 'dammit'
         }],
         targetPage: populatedFormDoc.pages[0]._id

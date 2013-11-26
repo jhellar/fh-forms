@@ -184,7 +184,7 @@ module.exports.it_should_save_field_rules = function(finish) {
         ruleConditionalOperator: "and",
         ruleConditionalStatements: [{
           sourceField: populatedFormDoc.pages[0].fields[0]._id,
-          restriction: 'doesNotContain',
+          restriction: 'does not contain',
           sourceValue: 'dammit'
         }],
         targetField: populatedFormDoc.pages[0].fields[0]._id
@@ -195,7 +195,7 @@ module.exports.it_should_save_field_rules = function(finish) {
         ruleConditionalOperator: "and",
         ruleConditionalStatements: [{
           sourceField: populatedFormDoc.pages[0].fields[1]._id,
-          restriction: 'doesNotContain',
+          restriction: 'does not contain',
           sourceValue: 'foo'
         }],
         targetField: populatedFormDoc.pages[0].fields[1]._id
@@ -220,7 +220,7 @@ module.exports.it_should_save_field_rules = function(finish) {
         ruleConditionalOperator : "and",
         ruleConditionalStatements : [{
           sourceField: populatedFormDoc.pages[0].fields[1]._id,
-          restriction: 'doesNotContain',
+          restriction: 'does not contain',
           sourceValue: 'bar'
         }],
         targetField: populatedFormDoc.pages[0].fields[1]._id

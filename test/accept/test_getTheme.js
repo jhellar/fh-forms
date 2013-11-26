@@ -175,11 +175,6 @@ function createTestData(assert, cb){
         "style": "dotted",
         "colour": "#FF0000"
       }
-    },
-    "formButtons" : {
-      "navigation" : "#FF0ds0",
-      "action" : "#FF0a0",
-      "cancel" : "#FF0ds0"
     }
   };
 
