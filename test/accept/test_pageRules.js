@@ -180,9 +180,12 @@ module.exports.it_should_save_page_rules = function(finish) {
       assert.ok(populatedFormDoc, 'should have data');
       var pageRule = {
         type: "show",
-        sourceField: populatedFormDoc.pages[0].fields[0]._id,
-        restriction: 'doesNotContain',
-        sourceValue: 'dammit',
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[0]._id,
+          restriction: 'does not contain',
+          sourceValue: 'dammit'
+        }],
         targetPage: populatedFormDoc.pages[0]._id
       };
 
@@ -201,10 +204,10 @@ module.exports.it_should_save_page_rules = function(finish) {
       assert.equal(populatedFormDoc.pageRules.length, 1, 'pageRule not saved');
 
       var prules = populatedFormDoc.pageRules;
-      prules[0].sourceValue = 'dammit2';
+      prules[0].ruleConditionalStatements[0].sourceValue = 'dammit2';
       forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: prules}, function(err, prs){
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
-        assert.equal(prs[0].sourceValue, 'dammit2', 'pageRule not updated correctly, got: ', prs[0].sourceValue);
+        assert.equal(prs[0].ruleConditionalStatements[0].sourceValue, 'dammit2', 'pageRule not updated correctly, got: ', prs[0].ruleConditionalStatements[0].sourceValue);
         cb(null, populatedFormDoc);
       });
     },

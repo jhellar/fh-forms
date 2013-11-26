@@ -153,6 +153,19 @@ function assertFormNamedNotFound(assert, name, msg, cb) {
   });
 }
 
+function loadForm(data, cb) {
+  if (!cb) cb = data;
+  formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name}).populate('pages').populate('fieldRules').exec(function (err, data) {
+    assert.ok(!err, 'should have found form');
+
+    //Now populate the fields in each page
+    formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function(err, updatedForm){
+      assert.ok(!err, "Error getting fields for form");
+      return cb(undefined, updatedForm.toJSON());
+    });
+  });
+};
+
 module.exports.it_should_save_field_rules = function(finish) {
 
   async.waterfall([
@@ -163,46 +176,61 @@ module.exports.it_should_save_field_rules = function(finish) {
         cb();
       });
     },
-    function(cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name}).populate('pages').exec(function (err, data) {
-        assert.ok(!err, 'should have found form');
-
-        //Now populate the fields in each page
-        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function(err, updatedForm){
-          assert.ok(!err, "Error getting fields for form");
-          return cb(undefined, updatedForm.toJSON());
-        });
-      });
-    },
+    loadForm,
     function addFieldRule(populatedFormDoc, cb) {
       assert.ok(populatedFormDoc, 'should have data');
       var fieldRule = {
         type: "show",
-        sourceField: populatedFormDoc.pages[0].fields[0]._id,
-        restriction: 'doesNotContain',
-        sourceValue: 'dammit',
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[0]._id,
+          restriction: 'does not contain',
+          sourceValue: 'dammit'
+        }],
         targetField: populatedFormDoc.pages[0].fields[0]._id
       };
 
-      forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function(err, frs){
-        assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+      var fieldRule2 = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[1]._id,
+          restriction: 'does not contain',
+          sourceValue: 'foo'
+        }],
+        targetField: populatedFormDoc.pages[0].fields[1]._id
+      };
 
-        // read our doc from the database again
-        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name}).populate('pages').populate('fieldRules').exec(function (err, data) {
-          return cb(err, data);
-        });
+      forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule, fieldRule2]}, function(err, frs){
+        assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+        return cb();
       });
     },
-
+    loadForm,
     function updateFieldRule(populatedFormDoc, cb) {
       assert.ok(populatedFormDoc, 'should have data');
-      assert.equal(populatedFormDoc.fieldRules.length, 1, 'fieldRule not saved');
+      assert.equal(populatedFormDoc.fieldRules.length, 2, 'fieldRule not saved');
 
       var frules = populatedFormDoc.fieldRules;
-      frules[0].sourceValue = 'dammit2';
+      frules[0].ruleConditionalStatements[0].sourceValue = 'dammit2';
+
+      // and add another rule
+      var fieldRule3 = {
+        type: "show",
+        ruleConditionalOperator : "and",
+        ruleConditionalStatements : [{
+          sourceField: populatedFormDoc.pages[0].fields[1]._id,
+          restriction: 'does not contain',
+          sourceValue: 'bar'
+        }],
+        targetField: populatedFormDoc.pages[0].fields[1]._id
+      };
+      frules.push(fieldRule3);
+
       forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: frules}, function(err, frs){
         assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-        assert.equal(frs[0].sourceValue, 'dammit2', 'fieldRule not updated correctly, got: ', frs[0].sourceValue);
+        assert.equal(frs[0].ruleConditionalStatements[0].sourceValue, 'dammit2', 'fieldRule not updated correctly, got: ', frs[0].ruleConditionalStatements[0].sourceValue);
+        assert.equal(frs.length, 3, 'Expected 3 rules to be saved, got: ' + util.inspect(frs));
         cb(null, populatedFormDoc);
       });
     },
