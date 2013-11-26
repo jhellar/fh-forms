@@ -7,13 +7,6 @@ var forms = require('../../lib/forms.js');
 var initDatabase = require('./../setup.js').initDatabase;
 
 var assert = require('assert');
-
-function assertEqual(actual, expected, message) {
-  var msg = message || "actual not expected: "
-  assert.strictEqual(actual, expected, msg + ", actual: " + util.inspect(actual) + ", expected: " + util.inspect(expected));
-}
-
-
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
 var connection;
