@@ -85,6 +85,14 @@ module.exports.it_should_save_app_forms = function(finish) {
         return cb(err, form1, form2, appForms);
       });
     },
+    // test getAllAppForms
+    function getAllAppForms(form1, form2, appForms, cb) {
+      forms.getAllAppForms(options, function(err, appForms) {
+        assert.ok(!err, 'Error in getAllAppForms: ' + util.inspect(err));
+        assert.equal(appForms[0].forms.length, 2);
+        return cb(err, form1, form2, appForms);
+      });
+    },
 
     // this is effectively the reverse lookup - what apps are using this form
     function getFormApps(form1, form2, appForms, cb){
@@ -119,8 +127,8 @@ module.exports.it_should_save_app_forms = function(finish) {
       });
     },
 
-    function getAppForms(cb) {
-      forms.getAppForms(options, '12345', function(err, appForms) {
+    function getAppFormsForApp(cb) {
+      forms.getAppFormsForApp(options, '12345', function(err, appForms) {
         assert.ok(!err, 'Error in updateAppForms: ' + util.inspect(err));
         assert.equal(appForms.forms.length, 0);
         return cb();
