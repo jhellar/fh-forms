@@ -225,7 +225,7 @@ module.exports = {
   "checkboxFieldData":{
     "name":"checkboxField",
     "helpText":"This is a Checkbox field",
-    "type":"checkbox",
+    "type":"checkboxes",
     "repeating":true,
     "required":false,
     "fieldOptions" : {
