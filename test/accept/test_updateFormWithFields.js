@@ -13,7 +13,6 @@ function assertEqual(actual, expected, message) {
   assert.strictEqual(actual, expected, msg + ", actual: " + util.inspect(actual) + ", expected: " + util.inspect(expected));
 }
 
-
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
 var connection;
@@ -124,6 +123,26 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
     "pageRules": []
 };
 
+var TEST_NEW_PAGE_TO_ADD = {
+  name: TEST_PAGE_NAME2,
+  description: TEST_PAGE_DESCRIPTION2,
+  "fields": [
+    {
+       "name":"field_p3_f1",
+       "helpText":"This is a text field on new page",
+       "type":"text",
+       "required":false,
+       "fieldOptions":[
+          {
+             "min":20,
+             "max":100
+          }
+       ],
+       "repeating":true
+    }
+  ]
+};
+
 var TEST_PAGE1_NEW_FIELD = {
   "name":"field_p1_newField",
   "helpText":"This is a new text field",
@@ -231,26 +250,19 @@ module.exports.testUpdateFormWithPagesWithFields = function(finish) {
       populatedFormDoc.pages[0].fields.splice(0, 1);  // delete field1
       populatedFormDoc.pages[0].fields.push(TEST_PAGE1_NEW_FIELD);
 
+      populatedFormDoc.pages.push(TEST_NEW_PAGE_TO_ADD);
+
       var allFields = populatedFormDoc.pages[0].fields.concat(populatedFormDoc.pages[1].fields);
-      async.each(allFields, function(item, cb) {
-        // if("object" === typeof item._id) {
-        //   console.log('converting item: ', item);
-        //   item._id = item._id.toString();
-        // }
-        return cb();
-      }, function(err) {
-        assert.ok(!err);
-        forms.updateForm(options, populatedFormDoc, function(err, doc){
-          assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
-          return cb(err, populatedFormDoc);
-        });
+      forms.updateForm(options, populatedFormDoc, function(err, doc){
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        return cb(err, populatedFormDoc);
       });
 
     },
 
     function(populatedFormDoc, cb) {
       assert.ok(populatedFormDoc, 'should have data');
-      assertEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length, 'Incorrect number of pages in created form');
+      assertEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length + 1, 'Incorrect number of pages in created form');  // have add a new page
       
       assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[0].name);
       assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[1].name);
