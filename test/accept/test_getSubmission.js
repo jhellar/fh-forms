@@ -50,9 +50,9 @@ module.exports.testGetSubmission = function(finish){
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
-    assert.strictEqual(results._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + results._id + ", expected: " + TEST_SUBMISSION_ID);
-    assert.strictEqual(results.appId, TEST_SUBMISSION_APPID);
-    assert.strictEqual(results.formId, TEST_SUBMISSION_FORMID);
+    assert.equal(results._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + results._id + ", expected: " + TEST_SUBMISSION_ID);
+    assert.equal(results.appId, TEST_SUBMISSION_APPID);
+    assert.equal(results.formId, TEST_SUBMISSION_FORMID);
     finish();
   });
 };
@@ -63,9 +63,9 @@ module.exports.testGetSubmissionsAndCheckFields = function(finish){
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, result){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     assert.ok(result);  // should have returned results
-    assert.strictEqual(result._id, TEST_SUBMISSION_ID);
-    assert.strictEqual(result.appId, TEST_SUBMISSION_APPID);
-    assert.strictEqual(result.formId, TEST_SUBMISSION_FORMID);
+    assert.equal(result._id, TEST_SUBMISSION_ID);
+    assert.equal(result.appId, TEST_SUBMISSION_APPID);
+    assert.equal(result.formId, TEST_SUBMISSION_FORMID);
     assert.ok(result.formFields.length > 3, "should be more than 3 fields returned in summary submissions list, actual: " + result.formFields.length);
 
     finish();    
