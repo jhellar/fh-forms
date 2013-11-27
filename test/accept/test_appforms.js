@@ -90,6 +90,7 @@ module.exports.it_should_save_app_forms = function(finish) {
       forms.getAllAppForms(options, function(err, appForms) {
         assert.ok(!err, 'Error in getAllAppForms: ' + util.inspect(err));
         assert.equal(appForms[0].forms.length, 2);
+        assert.ok(appForms[0]._id, 'Expected forms to be populated');
         return cb(err, form1, form2, appForms);
       });
     },
