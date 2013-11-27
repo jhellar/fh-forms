@@ -86,7 +86,7 @@ module.exports.setUp = function(finish){
     assert.ok(!err);
 
     createTestData(assert, function(err){
-      assert.ok(!err);
+      assert.ok(!err, 'error creating test data - err: ' + util.inspect(err));
       assert.ok(globalFormId, 'form has not been created during test setup');
       assert.notEqual(globalFormId, TEST_UNUSED_FORMID, "generated formid happens to match need to re-run");
       async.series([
@@ -214,25 +214,21 @@ function createTestData(assert, cb){
   }
 
   saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
-    assert.ok(!err);
-    assert.ok(formId);
-    assert.ok(fieldIds);
+    assert.ok(!err, 'error saving form - err: ' + util.inspect(err));
+    assert.ok(formId, 'should have a form id');
+    assert.ok(fieldIds, 'should have field ids');
 
     globalFormId = formId;
     TEST_SUBMISSION_FORMID = formId.toString();
     globalFieldIds = fieldIds;
 
-    connection.close(function(err){
-      if(err) console.log(err);
-      cb();
-    });
+    connection.close(cb);
   });
 
   function saveSingleForm(fields, testPage, testFieldsForm, cb){
     var globalFormId;
     var fieldIds = {};
     async.series([saveFields, savePage, saveForm], function(err){
-      if(err) console.log(err);
       cb(err, globalFormId, fieldIds);
     });
 
