@@ -204,7 +204,6 @@ exports.setUp = function(finish){
 }
 
 exports.tearDown = function(finish){
-  console.log("tearDown Called");
   cleanDatabase(assert, function(err){
     if(err) console.log(err);
     finish();

@@ -219,120 +219,100 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
    ]
 };
 
-var TEST_BASIC_FORM_1_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
-TEST_BASIC_FORM_1_SUBMISSION_2.formFields[0].fieldValues[0] = "hide 3";   //  This should trigger rule that causes field 3 to be hidden
 
-var TEST_BASIC_FORM_1_SUBMISSION_3 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
-TEST_BASIC_FORM_1_SUBMISSION_3.formFields[0].fieldValues[0] = "hide 5";   //  This should trigger rule that causes field 5 to be hidden
+// module.exports.testBasicForm1ValidateForm = function (finish) {
 
-var TEST_BASIC_FORM_1_SUBMISSION_4 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
-TEST_BASIC_FORM_1_SUBMISSION_3.formFields[0].fieldValues[0] = "hide 3 hide 5";   //  This should trigger rule that causes fields 3 & 5 to be hidden
+//   var options = {
+//     "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_1),
+//     "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
+//   };
 
-module.exports.testBasicForm1ValidateForm = function (finish) {
+//   var engine = formsRulesEngine(options);
+//   engine.validateForm(function(err, res) {
+//     assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
+//     assert.equal(res.errors.length, 0, 'Should not have errors from validateForm, res: ' + util.inspect(res));
+//   });
+
+// };
+
+
+
+// module.exports.testBasicForm1SpecificFields = function (finish) {
+
+//   var options = {
+//     "submission" : TEST_BASIC_FORM_1_SUBMISSION_1,
+//     "definition" : TEST_BASIC_FORM_1_DEFINITION
+//   };
+
+//   var engine = formsRulesEngine(options);
+
+//   async.each([
+//     TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+//     TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID
+//   ], function (fieldID, cb) {
+//     engine.validateField(field.fieldID, function(err,res) {
+//       assert.ok(!err, 'validation should not have returned error, for fieldID:' + fieldID + ' - err: ' + util.inspect(err));
+//       assert.equal(res.errors.length, 0);
+//     });
+//   }, function(err) {
+//     assert.ok(!err);
+//     finish();
+//   });
+// };
+
+module.exports.testBasicForm1AllFieldsVisible = function (finish) {
 
   var options = {
-    "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_1),
-    "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
+    "submission" : TEST_BASIC_FORM_1_SUBMISSION_1,
+    "definition" : TEST_BASIC_FORM_1_DEFINITION
   };
 
   var engine = formsRulesEngine(options);
-  engine.validateForms(function(err, res) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.equal(res.errors.length, 0);
-  });
 
-};
-
-
-module.exports.testBasicForm1SpecificFields = function (finish) {
-
-  var options = {
-    "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_1),
-    "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
-  };
-
-  var engine = formsRulesEngine(options);
-  engine.validateField({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID}, function(err,res) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.equal(res.errors.length, 0);    
-  });
-  engine.validateField({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID}, function(err,res) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.equal(res.errors.length, 0);    
-  });
-  engine.validateField({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID}, function(err,res) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.equal(res.errors.length, 0);    
-  });
-  engine.validateField({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID}, function(err,res) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.equal(res.errors.length, 0);    
-  });
-  engine.validateField({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID}, function(err,res) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.equal(res.errors.length, 0);    
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: true}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
   });
 };
-
-
-module.exports.testBasicForm1SpecificFieldsVisible = function (finish) {
-
-  var options = {
-    "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_1),
-    "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
-  };
-
-  var engine = formsRulesEngine(options);
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-};
-
 
 module.exports.testBasicForm1SpecificFieldsVisibleWithField3Invisible = function (finish) {
 
+  var TEST_BASIC_FORM_1_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
+  TEST_BASIC_FORM_1_SUBMISSION_2.formFields[0].fieldValues[0] = "hide 3";   //  This should trigger rule that causes field 3 to be hidden
+  
   var options = {
-    "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_2),
-    "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
+    "submission" : TEST_BASIC_FORM_1_SUBMISSION_2,
+    "definition" : TEST_BASIC_FORM_1_DEFINITION
   };
-
   var engine = formsRulesEngine(options);
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(false === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: true}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
   });
 };
 
@@ -340,61 +320,61 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithField3Invisible = function
 
 module.exports.testBasicForm1SpecificFieldsVisibleWithField5Invisible = function (finish) {
 
+  var TEST_BASIC_FORM_1_SUBMISSION_3 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
+  TEST_BASIC_FORM_1_SUBMISSION_3.formFields[0].fieldValues[0] = "hide 5";   //  This should trigger rule that causes field 5 to be hidden
+
   var options = {
-    "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_3),
-    "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
+    "submission" : TEST_BASIC_FORM_1_SUBMISSION_3,
+    "definition" : TEST_BASIC_FORM_1_DEFINITION
   };
 
   var engine = formsRulesEngine(options);
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(false === visible, 'Field should be marked as visible');    
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: false}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
   });
 };
 
 module.exports.testBasicForm1SpecificFieldsVisibleWithFields3and5Invisible = function (finish) {
 
+  var TEST_BASIC_FORM_1_SUBMISSION_4 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
+  TEST_BASIC_FORM_1_SUBMISSION_4.formFields[0].fieldValues[0] = "hide 3 hide 5";   //  This should trigger rule that causes fields 3 & 5 to be hidden
+
   var options = {
-    "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_4),
-    "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
+    "submission" : TEST_BASIC_FORM_1_SUBMISSION_4,
+    "definition" : TEST_BASIC_FORM_1_DEFINITION
   };
 
   var engine = formsRulesEngine(options);
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(false === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(true === visible, 'Field should be marked as visible');    
-  });
-  engine.isFieldVisible({"fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID}, function(err,visible) {
-    assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-    assert.ok(false === visible, 'Field should be marked as visible');    
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: false}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
   });
 };
 
