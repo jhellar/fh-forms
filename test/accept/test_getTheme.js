@@ -82,7 +82,8 @@ module.exports.testGetThemeNoAppId = function(finish){
 
 module.exports.testGetThemeNoAppExists = function(finish){
   forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
-    assert.ok(err);
+    assert.ok(!err);
+    assert.ok(!result);
     finish();
   });
 }
