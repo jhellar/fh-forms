@@ -129,8 +129,8 @@ module.exports.it_should_save_app_forms = function(finish) {
     },
 
     function getAppFormsForApp(cb) {
-      forms.getAppFormsForApp(options, '12345', function(err, appForms) {
-        assert.ok(!err, 'Error in updateAppForms: ' + util.inspect(err));
+      forms.getAppFormsForApp({uri: options.uri, userEmail: options.userEmail, appId:'12345'}, function(err, appForms) {
+        assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
         assert.equal(appForms.forms.length, 0);
         return cb();
       });
