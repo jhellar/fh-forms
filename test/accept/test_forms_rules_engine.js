@@ -378,6 +378,73 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithFields3and5Invisible = fun
   });
 };
 
+module.exports.testBasicForm1FieldSetToShowInRule = function (finish) {
+
+  var TEST_FORM_WITH_A_RULE_SET_TO_SHOW_A_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_DEFINITION));
+  var NEW_RULE =  {
+    "type": "show",
+    "ruleConditionalOperator": "and",
+    "ruleConditionalStatements": [{
+      "sourceField": TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+      "restriction": "contains",
+      "sourceValue": "show 4"
+    }],
+    "targetField": TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID,
+    "_id":"527d4539639f521e0a001235"
+  };
+  TEST_FORM_WITH_A_RULE_SET_TO_SHOW_A_FIELD.fieldRules.push(NEW_RULE);
+
+  var TEST_SUBMISSION_WITH_SHOW_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
+  TEST_SUBMISSION_WITH_SHOW_FIELD.formFields[1].fieldValues[0] = "show 4";   //  This should trigger rule that causes fields 4 to be shown
+
+  // first test that fields (with rule to show) default to correct visibility
+  var options = {
+    "submission" : TEST_BASIC_FORM_1_SUBMISSION_1,
+    "definition" : TEST_FORM_WITH_A_RULE_SET_TO_SHOW_A_FIELD
+  };
+
+  var engine = formsRulesEngine(options);
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: false},  // if rule set to show a field, it should start as hidden
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: true}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+
+    options.submission = TEST_SUBMISSION_WITH_SHOW_FIELD;
+    var engine = formsRulesEngine(options);
+
+    async.each([
+      { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+      { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+      { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: true},
+      { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},  // if rule set to show a field, it should start as hidden
+      { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: true}
+    ], function (field, cb) {
+      engine.isFieldVisible(field.fieldID, function(err,visible) {
+        assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+        assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+        return cb();
+      });
+    }, function (err) {
+      assert.ok(!err);
+      finish();
+    });
+  });
+};
+
+
+
+
 function getTestSubmission(whichOne) {
   return whichOne;
 }
