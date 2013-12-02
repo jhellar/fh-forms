@@ -35,7 +35,7 @@ module.exports.tearDown = function(finish){
 };
 
 module.exports.testGetThemeWorks = function(finish){
-  forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+  forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
 
@@ -73,7 +73,7 @@ module.exports.testGetThemeNoUri = function(finish){
 }
 
 module.exports.testGetThemeNoAppId = function(finish){
-  forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+  forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
     finish();
@@ -81,7 +81,7 @@ module.exports.testGetThemeNoAppId = function(finish){
 }
 
 module.exports.testGetThemeNoAppExists = function(finish){
-  forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
+  forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
     assert.ok(!err);
     assert.ok(!result);
     finish();

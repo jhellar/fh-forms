@@ -57,7 +57,7 @@ module.exports.it_should_set_app_theme = function(finish) {
       forms.setAppTheme(opts, function(err){
         assert.ok(!err, 'Error in setAppTheme: ' + util.inspect(err));
 
-        forms.getTheme({appId: '12345', uri: options.uri, userEmail: options.userEmail}, function(err, t) {
+        forms.getAppTheme({appId: '12345', uri: options.uri, userEmail: options.userEmail}, function(err, t) {
           assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
           assert.ok(t, 'Expected theme to be defined');
           return cb();
