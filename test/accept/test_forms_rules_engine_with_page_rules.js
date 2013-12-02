@@ -419,12 +419,8 @@ var TEST_BASIC_FORM_2_SUBMISSION_1 = {
 // };
 
 module.exports.testBasicForm2SpecificFieldsVisible = function (finish) {
-  var options = {
-    "submission" : TEST_BASIC_FORM_2_SUBMISSION_1,
-    "definition" : TEST_BASIC_FORM_2_DEFINITION
-  };
-
-  var engine = formsRulesEngine(options);
+  var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
+  engine.initSubmission(TEST_BASIC_FORM_2_SUBMISSION_1);
 
   async.each([
     TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_2_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID,
@@ -432,7 +428,7 @@ module.exports.testBasicForm2SpecificFieldsVisible = function (finish) {
     TEST_BASIC_FORM_2_PAGE_2_FIELD_2_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_3_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_4_ID,
     TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID
   ], function (fieldID, cb) {
-    engine.isFieldVisible(fieldID, function(err,visible) {
+    engine.isFieldVisible(fieldID, true, function(err,visible) {
       assert.ok(!err, 'validation should not have returned error, for fieldID:' + fieldID + ' - err: ' + util.inspect(err));
       assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
       assert.ok(true === visible, 'Field:' + fieldID + ' should be marked as visible');
@@ -447,12 +443,9 @@ module.exports.testBasicForm2SpecificFieldsVisible = function (finish) {
 module.exports.testBasicForm1SpecificFieldsVisibleWithFieldsOnPage2Invisible = function (finish) {
   var TEST_BASIC_FORM_2_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_2_SUBMISSION_1));
   TEST_BASIC_FORM_2_SUBMISSION_2.formFields[1].fieldValues[0] = "hide page 2";   //  This should trigger rule that causes all fields on page 2 to be hidden
-  var options = {
-    "submission" : TEST_BASIC_FORM_2_SUBMISSION_2,
-    "definition" : TEST_BASIC_FORM_2_DEFINITION
-  };
 
-  var engine = formsRulesEngine(options);
+  var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
+  engine.initSubmission(TEST_BASIC_FORM_2_SUBMISSION_2);
 
   async.each([
     { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID, expectedVisible: true},
@@ -466,7 +459,7 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithFieldsOnPage2Invisible = f
     { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_4_ID, expectedVisible: false},
     { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID, expectedVisible: false}
   ], function (field, cb) {
-    engine.isFieldVisible(field.fieldID, function(err,visible) {
+    engine.isFieldVisible(field.fieldID, true, function(err,visible) {
       assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
       assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
       return cb();
@@ -478,4 +471,67 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithFieldsOnPage2Invisible = f
 }; 
 
 
+module.exports.testBasicForm2CheckRulesHidingPage2 = function (finish) {
+  var TEST_BASIC_FORM_2_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_2_SUBMISSION_1));
+  TEST_BASIC_FORM_2_SUBMISSION_2.formFields[1].fieldValues[0] = "hide page 2";   //  This should trigger rule that causes all fields on page 2 to be hidden
+
+  var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
+
+  var tests = [
+    {
+      submission: TEST_BASIC_FORM_2_SUBMISSION_2,
+      fieldsToCheck: [
+        { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID, expectedVisible: true},
+        { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, expectedVisible: true},
+      ],
+      pagesToCheck: [
+        { pageID: TEST_BASIC_FORM_2_PAGE_2_ID, expectedVisible: false}
+      ]
+    }
+  ];
+
+  async.eachSeries(tests,   // these tests are using the same "engine" object, can't run in parallel
+    function (oneTest, cb) {
+      engine.checkRules(oneTest.submission, function (err, results) {
+        assert.ok(!err);
+        assert.ok(results);
+        assert.ok(results.actions);
+        assert.ok(results.actions.fields);
+        assert.equal(Object.keys(results.actions.fields).length, 2, 'Should only be 2 fields listed, since only 2 targets specified in rules');
+        assert.ok(results.actions.pages);
+        assert.equal(Object.keys(results.actions.pages).length, 1, 'Should be 1 pages listed, since 1 page targets specified in rules - actions: ' + util.inspect(results.actions));
+
+        async.series([
+          function(cb) {
+            async.each(oneTest.fieldsToCheck, function (fieldTest, cb) {
+              assert.ok(results.actions.fields[fieldTest.fieldID], 'expected field ' + fieldTest.fieldID + ' not listed in results: ' + util.inspect(results.actions.fields));
+              assert.equal(results.actions.fields[fieldTest.fieldID].targetId, fieldTest.fieldID);
+              assert.equal(results.actions.fields[fieldTest.fieldID].action, fieldTest.expectedVisible?"show":"hide", 'expected action ' + (fieldTest.expectedVisible?"show":"hide") + ', for field: ' + fieldTest.fieldID);
+              return cb();
+            }, function (err) {
+              assert.ok(!err);
+              return cb();
+            });
+          },
+          function(cb) {
+            async.each(oneTest.pagesToCheck, function (pageTest, cb) {
+              assert.ok(results.actions.pages[pageTest.pageID], 'expected page ' + pageTest.pageID + ' not listed in results: ' + util.inspect(results.actions.pages));
+              assert.equal(results.actions.pages[pageTest.pageID].targetId, pageTest.pageID);
+              assert.equal(results.actions.pages[pageTest.pageID].action, pageTest.expectedVisible?"show":"hide", 'expected action ' + (pageTest.expectedVisible?"show":"hide") + ', for page: ' + pageTest.pageID);
+              return cb();
+            }, function (err) {
+              assert.ok(!err);
+              return cb();
+            });
+          }
+        ], function (err) {
+          assert.ok(!err);
+          return cb();
+        });
+      });
+    }, function (err) {
+      assert.ok(!err);
+      finish();
+  });
+};
 
