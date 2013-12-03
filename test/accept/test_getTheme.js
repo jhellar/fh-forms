@@ -6,9 +6,10 @@ var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var lodash = require('lodash');
 var assert = require('assert');
+var fs = require('fs');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
-var appId = "123456789";
+var appId = "1234567892";
 
 var testThemeData = require('../Fixtures/theme.json');
 var testThemeId;
@@ -34,7 +35,7 @@ module.exports.tearDown = function(finish){
 };
 
 module.exports.testGetThemeWorks = function(finish){
-  forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+  forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
 
@@ -72,7 +73,7 @@ module.exports.testGetThemeNoUri = function(finish){
 }
 
 module.exports.testGetThemeNoAppId = function(finish){
-  forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+  forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
     finish();
@@ -80,8 +81,9 @@ module.exports.testGetThemeNoAppId = function(finish){
 }
 
 module.exports.testGetThemeNoAppExists = function(finish){
-  forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
-    assert.ok(err);
+  forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
+    assert.ok(!err);
+    assert.ok(!result);
     finish();
   });
 }
