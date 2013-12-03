@@ -79,7 +79,8 @@ module.exports.it_should_delete_form = function(finish) {
     function getForm(formId, cb) {
       assert.ok(formId, 'formId should not be null');
       forms.getForm({_id: formId, uri: options.uri, userEmail: options.userEmail}, function(err, form) {
-        assert.ok(err, 'Expected error - forms should not exist');
+        assert.ok(!err, 'Expected error', err);
+        assert.ok(!form, 'Form should not exist');
         return cb();
       });
     }
