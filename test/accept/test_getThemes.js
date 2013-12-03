@@ -34,11 +34,11 @@ module.exports.testGetThemesWorks = function(finish){
     if(err) console.log(err);
     assert.ok(!err);
     assert.ok(themes);
-    assert.ok(Array.isArray(themes));
+    assert.ok(Array.isArray(themes.themes));
 
-    assert.ok(themes.length === 1);
+    assert.ok(themes.themes.length === 1);
 
-    var themeRes = themes[0];
+    var themeRes = themes.themes[0];
 
     assert.ok(themeRes.appsUsingTheme === 1);
     assert.ok(themeRes.apps);
