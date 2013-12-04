@@ -712,7 +712,7 @@ exports.testValidateSignatureWrongPlaceholder = function(finish){
 exports.testValidateDateTimeTime = function(finish){
   var testField = exampleFields.timeFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [Date.now(), Date.now()];
+  var testSubmissionData = ["13:57", "00:15:20"];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -731,7 +731,7 @@ exports.testValidateDateTimeTime = function(finish){
 exports.testValidateDateTimeTimeInvalidTime = function(finish){
   var testField = exampleFields.timeFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [Date.now(), "12.3adsdsa0"];
+  var testSubmissionData = ["5:43", "12.3adsdsa0"];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -750,7 +750,7 @@ exports.testValidateDateTimeTimeInvalidTime = function(finish){
 exports.testValidateDateTimeDate = function(finish){
   var testField = exampleFields.dateFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [Date.now(), Date.now()];
+  var testSubmissionData = [new Date().toDateString(), new Date().toDateString()];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -768,7 +768,7 @@ exports.testValidateDateTimeDate = function(finish){
 exports.testValidateDateTimeDateInvalidDate = function(finish){
   var testField = exampleFields.dateFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [Date.now(), "12.3asd0"];
+  var testSubmissionData = [new Date().toDateString(), "12.3asd0"];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -788,7 +788,7 @@ exports.testValidateDateTimeDateInvalidDate = function(finish){
 exports.testValidateDateTimeDateTime = function(finish){
   var testField = exampleFields.dateTimeFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [Date.now(), Date.now()];
+  var testSubmissionData = [new Date().toString(), new Date().toString()];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -806,7 +806,7 @@ exports.testValidateDateTimeDateTime = function(finish){
 exports.testValidateDateTimeDateTimeInvalidDate = function(finish){
   var testField = exampleFields.dateTimeFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [Date.now(), "12.3ads0"];
+  var testSubmissionData = [new Date().toString(), "12.3ads0"];
 
   testSubmission.fieldValues = testSubmissionData;
 
