@@ -9,9 +9,9 @@ var assert = require('assert');
 var fs = require('fs');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
-var appId = "123456789";
+var appId = "1234567892";
 
-var testThemeData;
+var testThemeData = require('../Fixtures/theme.json');
 var testThemeId;
 
 module.exports.setUp = function(finish){
@@ -107,8 +107,6 @@ function createTestData(assert, cb){
 
   //Creating a theme
   var Theme = models.get(connection, models.MODELNAMES.THEME);
-
-  testThemeData = JSON.parse(fs.readFileSync('./test/Fixtures/theme.json'));
 
   var testTheme = new Theme(testThemeData);
 
