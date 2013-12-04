@@ -201,19 +201,101 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
       {
          "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
          "fieldValues":[
+            //234567890123456789012345678901234567890123456789012345678901
+            "value for text field (2)56789012345678901234567890"
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+         "fieldValues":[
+            100
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+         "fieldValues":[
+            "testing@example.com"
+         ]
+      }
+   ]
+};
+
+var TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_MISSING = {
+   "appId":"appId123456",
+   "appCloudName":"appCloudName123456",
+   "appEnvironment":"devLive",
+   "deviceId":"device123456",
+   "deviceFormTimestamp":1384800150848,
+   "comments":[
+      {
+         "madeBy":"somePerson@example.com",
+         "madeOn":1384800150848,
+         "value":"This is a comment"
+      },
+      {
+         "madeBy":"somePerson@example.com",
+         "madeOn":1384800150848,
+         "value":"This is another comment"
+      }
+   ],
+   "formFields":[
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+         "fieldValues":[
+            //234567890123456789012345678901234567890123456789012345678901
+            "value for text field (2)56789012345678901234567890"
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+         "fieldValues":[
+            100
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+         "fieldValues":[
+            "testing@example.com"
+         ]
+      }
+   ]
+};
+
+var TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING = {
+   "appId":"appId123456",
+   "appCloudName":"appCloudName123456",
+   "appEnvironment":"devLive",
+   "deviceId":"device123456",
+   "deviceFormTimestamp":1384800150848,
+   "comments":[
+      {
+         "madeBy":"somePerson@example.com",
+         "madeOn":1384800150848,
+         "value":"This is a comment"
+      },
+      {
+         "madeBy":"somePerson@example.com",
+         "madeOn":1384800150848,
+         "value":"This is another comment"
+      }
+   ],
+   "formFields":[
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+         "fieldValues":[
             "value for text field (1)"
          ]
       },
       {
          "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
          "fieldValues":[
-            12345
+            100
          ]
       },
       {
          "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
          "fieldValues":[
-            "value for email field"
+            "testing@example.com"
          ]
       }
    ]
@@ -223,8 +305,8 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
 // module.exports.testBasicForm1ValidateForm = function (finish) {
 
 //   var options = {
-//     "submission" : getTestSubmission(TEST_BASIC_FORM_1_SUBMISSION_1),
-//     "definition" : getTestFormDef(TEST_BASIC_FORM_1_DEFINITION)
+//     "submission" : (TEST_BASIC_FORM_1_SUBMISSION_1),
+//     "definition" : (TEST_BASIC_FORM_1_DEFINITION)
 //   };
 
 //   var engine = formsRulesEngine(options);
@@ -278,6 +360,51 @@ module.exports.testBasicForm1AllFieldsVisible = function (finish) {
     });
   }, function (err) {
     assert.ok(!err);
+    finish();
+  });
+};
+
+
+module.exports.testBasicForm1ValidateForOptionalFieldMissing = function (finish) {
+  var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
+  engine.validateForm(TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING, function (err, results) {
+    assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID], 'should not have entry for missing optional fields: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]));
+    finish();
+  });
+};
+
+
+module.exports.testBasicForm1ValidateForRequiredFieldMissing = function (finish) {
+  var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
+  engine.validateForm(TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_MISSING, function (err, results) {
+    assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
+    assert.ok(!results.validation.valid, "unexpected valid result: " + util.inspect(results.validation));
+    assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID], 'should be error for missing required field - ' + util.inspect(results.validation));
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].valid, 'missing required field should be marked as invalid');
+    assert.equal(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages.length, 1, 'should be 1 error message for missing required field - was: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages));
+
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+    finish();
+  });
+};
+
+
+module.exports.testBasicForm1ValidateForm = function (finish) {
+  var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
+  engine.validateForm(TEST_BASIC_FORM_1_SUBMISSION_1, function (err, results) {
+    assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
+    assert.ok(results.validation.valid, "unexpected invalid result: " + util.inspect(results.validation));
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
     finish();
   });
 };
@@ -420,7 +547,6 @@ module.exports.testBasicForm1FieldSetToShowInRule = function (finish) {
 };
 
 module.exports.testBasicFormCheckRulesFieldSetToShowInRule = function (finish) {
-console.log('starting');
   var TEST_FORM_WITH_A_RULE_SET_TO_SHOW_A_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_DEFINITION));
   var NEW_RULE =  {
     "type": "show",
@@ -487,10 +613,3 @@ console.log('starting');
   });
 };
 
-function getTestSubmission(whichOne) {
-  return whichOne;
-}
-
-function getTestFormDef(whichOne) {
-  return whichOne;
-}

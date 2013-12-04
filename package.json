@@ -5,7 +5,7 @@
   "main": "lib/forms.js",
   "scripts": {
     "test": "make test;"
-},
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/fheng/fh-forms.git"
@@ -18,20 +18,25 @@
   "bugs": {
     "url": "https://github.com/fheng/fh-forms/issues"
   },
-  "dependencies":{
-    "mongoose":"3.6.19",
-    "async":"0.2.9",
-    "fh-gridfs":"*",
-    "underscore":"1.5.2",
-    "mongodb":"1.3.19",
+  "dependencies": {
+    "mongoose": "3.6.19",
+    "async": "0.2.9",
+    "fh-gridfs": "*",
+    "underscore": "1.5.2",
+    "mongodb": "1.3.19",
     "lodash": "2.2.1"
   },
-  "devDependencies":{
-    "proxyquire" : "0.4.1",
-    "cli-color" : "0.2.2",
-    "nock" : "0.22.1",
-    "mongodb":"1.3.19",
-    "turbo-test-runner" : "*",
-    "istanbul": "0.1.42"
+  "devDependencies": {
+    "proxyquire": "0.4.1",
+    "cli-color": "0.2.2",
+    "nock": "0.22.1",
+    "mongodb": "1.3.19",
+    "turbo-test-runner": "*",
+    "istanbul": "0.1.42",
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-concat": "~0.3.0"
   }
 }
