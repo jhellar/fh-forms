@@ -280,8 +280,10 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "locationUnit" : "latLong",
-      "maxRepeat":4,
-      "minRepeat":2
+      "definition" : {
+        "maxRepeat":4,
+        "minRepeat":2
+      }
     },
     "validation" : {}
   },
@@ -293,8 +295,10 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "locationUnit" : "northEast",
-      "maxRepeat":4,
-      "minRepeat":2
+      "definition" : {
+        "maxRepeat":4,
+        "minRepeat":2
+      }
     },
     "validation" : {}
   },
