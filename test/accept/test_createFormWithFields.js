@@ -37,18 +37,17 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
            "helpText":"This is a text field",
            "type":"text",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":20,
                  "max":100
               },
+              definition:             
               {
-                 "maxRepeat":5
-              },
-              {
+                 "maxRepeat":5,
                  "minRepeat":2
               }
-           ],
+           },
            "repeating":true
         },
         {
@@ -56,18 +55,16 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
            "helpText":"This is a text area field",
            "type":"textarea",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":50,
                  "max":100
               },
-              {
-                 "maxRepeat":5
-              },
-              {
+              definition: {
+                 "maxRepeat":5,
                  "minRepeat":3
               }
-           ],
+            },
            "repeating":true
         }
       ]
@@ -80,18 +77,17 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
            "helpText":"This is a text field on page2",
            "type":"text",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":20,
                  "max":100
               },
+              definition:             
               {
-                 "maxRepeat":5
-              },
-              {
+                 "maxRepeat":5,
                  "minRepeat":2
               }
-           ],
+           },
            "repeating":true
         },
         {
@@ -99,18 +95,16 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
            "helpText":"This is a text area field on page2",
            "type":"textarea",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":50,
                  "max":100
               },
-              {
-                 "maxRepeat":5
-              },
-              {
+              definition: {
+                 "maxRepeat":5,
                  "minRepeat":3
               }
-           ],
+            },
            "repeating":true
         }
       ]
@@ -124,18 +118,17 @@ var TEST_PAGE1_NEW_FIELD = {
   "helpText":"This is a new text field",
   "type":"text",
   "required":false,
-  "fieldOptions":[
-    {
-      "min":20,
-      "max":100
+  "fieldOptions":{
+    validation: {
+       "min":20,
+       "max":100
     },
+    definition:             
     {
-      "maxRepeat":5
-    },
-    {
-      "minRepeat":2
+       "maxRepeat":5,
+       "minRepeat":2
     }
-  ],
+  },
   "repeating":true
 };
 

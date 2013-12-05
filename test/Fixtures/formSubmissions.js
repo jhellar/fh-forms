@@ -279,8 +279,8 @@ module.exports = {
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "locationUnit" : "latLong",
       "definition" : {
+        "locationUnit" : "latLong",
         "maxRepeat":4,
         "minRepeat":2
       }
@@ -294,8 +294,8 @@ module.exports = {
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "locationUnit" : "northEast",
       "definition" : {
+        "locationUnit" : "northEast",
         "maxRepeat":4,
         "minRepeat":2
       }
@@ -323,8 +323,8 @@ module.exports = {
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "dateTimeUnit": "date",
       "definition" : {
+        "dateTimeUnit": "date",
         "timeAutopopulate":true,
         "maxRepeat":6,
         "minRepeat":1
@@ -339,8 +339,8 @@ module.exports = {
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "dateTimeUnit": "time",
       "definition" : {
+        "dateTimeUnit": "time",
         "timeAutopopulate":false,
         "maxRepeat":6,
         "minRepeat":2
@@ -355,8 +355,8 @@ module.exports = {
     "repeating":true,
     "required":false,
     "fieldOptions": {
-      "dateTimeUnit": "dateTime",
       "definition" : {
+        "dateTimeUnit": "dateTime",
         "timeAutopopulate":true,
         "maxRepeat":6,
         "minRepeat":1

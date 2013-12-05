@@ -190,11 +190,11 @@ module.exports.testDatTimeConditions = function (finish) {
     { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_DATETIME, value: beforeYearValue, expected: true }
   ];
 
-  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {}};
+  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {definition: {}}};
   async.each(testValues, function (testValue, cb) {
-    field.fieldOptions.dateTimeUnit = testValue.dateTimeUnit;
+    field.fieldOptions.definition.dateTimeUnit = testValue.dateTimeUnit;
     var actual = engine.isConditionActive(field, fieldValue, testValue.value, testValue.condition);
-    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
+    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.definition.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
     return cb();
   }, function (err) {
     assert.ok(!err);
@@ -238,11 +238,11 @@ module.exports.testDateOnlyConditions = function (finish) {
     { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_DATEONLY, value: beforeYearValue, expected: true }
   ];
 
-  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {}};
+  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {definition: {}}};
   async.each(testValues, function (testValue, cb) {
-    field.fieldOptions.dateTimeUnit = testValue.dateTimeUnit;
+    field.fieldOptions.definition.dateTimeUnit = testValue.dateTimeUnit;
     var actual = engine.isConditionActive(field, fieldValue, testValue.value, testValue.condition);
-    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
+    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.definition.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
     return cb();
   }, function (err) {
     assert.ok(!err);
@@ -304,11 +304,11 @@ module.exports.testTimeOnlyConditions = function (finish) {
     { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeYearValue, expected: true }
   ];
 
-  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {}};
+  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {definition: {}}};
   async.each(testValues, function (testValue, cb) {
-    field.fieldOptions.dateTimeUnit = testValue.dateTimeUnit;
+    field.fieldOptions.definition.dateTimeUnit = testValue.dateTimeUnit;
     var actual = engine.isConditionActive(field, fieldValue, testValue.value, testValue.condition);
-    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
+    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.definition.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
     return cb();
   }, function (err) {
     assert.ok(!err);

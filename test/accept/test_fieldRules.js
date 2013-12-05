@@ -42,18 +42,16 @@ var TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES = {
            "helpText":"This is a text field",
            "type":"text",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":20,
                  "max":100
               },
-              {
-                 "maxRepeat":5
-              },
-              {
+              definition: {
+                 "maxRepeat":5,
                  "minRepeat":2
               }
-           ],
+           },
            "repeating":true
         },
         {
@@ -61,18 +59,16 @@ var TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES = {
            "helpText": TEST_INITIAL_FIELD2_HELPTEXT,
            "type":"textarea",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":50,
                  "max":100
               },
-              {
-                 "maxRepeat":5
-              },
-              {
+              definition: {
+                 "maxRepeat":5,
                  "minRepeat":3
               }
-           ],
+           },
            "repeating":true
         }
       ]
@@ -85,18 +81,16 @@ var TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES = {
            "helpText":"This is a text field on page2",
            "type":"text",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":20,
                  "max":100
               },
-              {
-                 "maxRepeat":5
-              },
-              {
+              definition: {
+                 "maxRepeat":5,
                  "minRepeat":2
               }
-           ],
+           },
            "repeating":true
         },
         {
@@ -104,18 +98,16 @@ var TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES = {
            "helpText":"This is a text area field on page2",
            "type":"textarea",
            "required":false,
-           "fieldOptions":[
-              {
+           "fieldOptions":{
+              validation: {
                  "min":50,
                  "max":100
               },
-              {
-                 "maxRepeat":5
-              },
-              {
+              definition: {
+                 "maxRepeat":5,
                  "minRepeat":3
               }
-           ],
+           },
            "repeating":true
         }
       ]
