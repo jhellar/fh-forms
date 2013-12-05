@@ -1,6 +1,5 @@
 
 /* This is the suffix file */
-  obj = module.exports;
-}(window);)
-
+  return module.exports;
+};
 /* End of suffix file */
