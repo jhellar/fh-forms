@@ -864,6 +864,63 @@ module.exports.testSubmitDropdownWrongOption = function(finish){
   });
 };
 
+module.exports.testSubmitUpdate = function(finish){
+  var submission = testSubmitFormBaseInfo;
+  submission.formId = testBigFormId;
+
+  // submit some test values to test form submission endpoint
+  var testValues = [{
+    "fieldId" : bigFieldIds["textField"],
+    "fieldValues": ["test1", "test2"]
+  }];
+
+  submission.formFields = testValues;
+
+  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(err, res){
+    assert.ok(!err, err);
+    assert.ok(res, res);
+
+    // verify test values
+    assert.equal(res.formSubmission.formFields[0].fieldValues[0], "test1");
+    assert.equal(res.formSubmission.formFields[0].fieldValues[1], "test2");
+
+    // update test values and call update
+    var updatedValues = [{
+      "fieldId" : bigFieldIds["textField"],
+      "fieldValues": ["test1updated", "test2updated"]
+    }];
+    submission._id = res.formSubmission._id;
+    submission.formFields = updatedValues;
+    submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(err, res){
+      assert.ok(!err, err);
+      assert.ok(res, res);
+
+      // verify updated test values
+      assert.equal(res.formSubmission._id, submission._id);
+      assert.equal(res.formSubmission.formFields[0].fieldValues[0], "test1updated");
+      assert.equal(res.formSubmission.formFields[0].fieldValues[1], "test2updated");
+
+      // complete submission
+      forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submission._id}}, function(err, res){
+        assert.ok(!err, err);
+        assert.ok(res, res);
+
+        // read submission back
+        forms.getSubmission(options, {_id: submission._id}, function (err, res){
+          assert.ok(!err, err);
+          assert.ok(res, res);
+
+          // verify test values
+          assert.equal(res._id.toString(), submission._id.toString());
+          assert.equal(res.formFields[0].fieldValues[0], "test1updated");
+          assert.equal(res.formFields[0].fieldValues[1], "test2updated");
+          finish();
+        });
+      });
+    });
+  });
+};
+
 
 function checkSubmissionExists(assert, submissionId, options, cb){
   //Need to create a form that contains every possible field type.
@@ -913,7 +970,7 @@ function submitAndCheckForm(assert, submission, options, cb ){
       if(result) console.log(JSON.stringify(submission), result, options);
       assert.ok(err);
       assert.ok(!result);
-      return cb();
+      return cb(null, result);
     } else {
       if(err) console.log(err);
       assert.ok(!err);
@@ -926,7 +983,7 @@ function submitAndCheckForm(assert, submission, options, cb ){
 
       checkSubmissionExists(assert, result.submissionId, options, function(err){
         assert.ok(!err);
-        return cb();
+        return cb(null, result);
       });
     }
   });
