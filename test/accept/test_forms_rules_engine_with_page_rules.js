@@ -377,47 +377,6 @@ var TEST_BASIC_FORM_2_SUBMISSION_1 = {
    ]
 };
 
-// module.exports.testBasicForm2ValidateForm = function (finish) {
-
-//   var options = {
-//     "submission" : TEST_BASIC_FORM_2_SUBMISSION_1,
-//     "definition" : TEST_BASIC_FORM_2_DEFINITION
-//   };
-
-//   var engine = formsRulesEngine(options);
-//   engine.validateForm(function(err, res) {
-//     assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-//     assert.equal(res.errors.length, 0, 'should be 0 errors returned: ' + util.inspect(res));
-//   });
-
-// };
-
-
-// module.exports.testBasicForm2SpecificFields = function (finish) {
-
-//   var options = {
-//     "submission" : TEST_BASIC_FORM_2_SUBMISSION_1,
-//     "definition" : TEST_BASIC_FORM_2_DEFINITION
-//   };
-
-//   var engine = formsRulesEngine(options);
-
-//   async.each([
-//     TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_2_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID,
-//     TEST_BASIC_FORM_2_PAGE_1_FIELD_4_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_1_ID,
-//     TEST_BASIC_FORM_2_PAGE_2_FIELD_2_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_3_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_4_ID,
-//     TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID
-//   ], function (fieldID, cb) {
-//     engine.validateField(field.fieldID, function(err,res) {
-//       assert.ok(!err, 'validation should not have returned error, for fieldID:' + fieldID + ' - err: ' + util.inspect(err));
-//       assert.equal(res.errors.length, 0);
-//     });
-//   }, function(err) {
-//     assert.ok(!err);
-//     finish();
-//   });
-// };
-
 module.exports.testBasicForm2SpecificFieldsVisible = function (finish) {
   var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
   engine.initSubmission(TEST_BASIC_FORM_2_SUBMISSION_1);

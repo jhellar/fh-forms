@@ -302,47 +302,6 @@ var TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING = {
    ]
 };
 
-
-// module.exports.testBasicForm1ValidateForm = function (finish) {
-
-//   var options = {
-//     "submission" : (TEST_BASIC_FORM_1_SUBMISSION_1),
-//     "definition" : (TEST_BASIC_FORM_1_DEFINITION)
-//   };
-
-//   var engine = formsRulesEngine(options);
-//   engine.validateForm(function(err, res) {
-//     assert.ok(!err, 'validation should not have returned error - err: ' + util.inspect(err));
-//     assert.equal(res.errors.length, 0, 'Should not have errors from validateForm, res: ' + util.inspect(res));
-//   });
-
-// };
-
-
-
-// module.exports.testBasicForm1SpecificFields = function (finish) {
-
-//   var options = {
-//     "submission" : TEST_BASIC_FORM_1_SUBMISSION_1,
-//     "definition" : TEST_BASIC_FORM_1_DEFINITION
-//   };
-
-//   var engine = formsRulesEngine(options);
-
-//   async.each([
-//     TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
-//     TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID
-//   ], function (fieldID, cb) {
-//     engine.validateField(field.fieldID, function(err,res) {
-//       assert.ok(!err, 'validation should not have returned error, for fieldID:' + fieldID + ' - err: ' + util.inspect(err));
-//       assert.equal(res.errors.length, 0);
-//     });
-//   }, function(err) {
-//     assert.ok(!err);
-//     finish();
-//   });
-// };
-
 module.exports.testBasicForm1AllFieldsVisible = function (finish) {
   var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
   engine.initSubmission(TEST_BASIC_FORM_1_SUBMISSION_1);
@@ -457,6 +416,7 @@ module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
 
 
 
+// sample result from validateField
 // engine.validateField(fieldId, submissionJSON, function(err,res) {});
 // // validate only field values on validation (no rules, no repeat checking)
 // res:
@@ -470,8 +430,6 @@ module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
 //             ]
 //         }
 //     }
-
-
 module.exports.testBasicForm1ValidateFieldInvalid = function testBasicForm1ValidateFieldInvalid(finish) {
   var TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
   TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD.formFields[2].fieldValues[0] = TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE + 1;   //  This should trigger an invalid field, field 3 has max value specified as 100
