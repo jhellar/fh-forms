@@ -203,7 +203,7 @@ module.exports.testDatTimeConditions = function (finish) {
 
 };
 
-module.exports.testDatOnlyConditions = function (finish) {
+module.exports.testDateOnlyConditions = function (finish) {
   var FIELD_TYPE_DATETIME = "dateTime";
   var FIELD_TYPE_DATETIME_DATETIMEUNIT_DATEONLY = "date";
   var FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY = "time";
@@ -251,4 +251,69 @@ module.exports.testDatOnlyConditions = function (finish) {
 
 };
 
+
+
+module.exports.testTimeOnlyConditions = function (finish) {
+  var FIELD_TYPE_DATETIME = "dateTime";
+  var FIELD_TYPE_DATETIME_DATETIMEUNIT_DATEONLY = "date";
+  var FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY = "time";
+  var FIELD_TYPE_DATETIME_DATETIMEUNIT_DATETIME = "dateTime";
+
+  var engine = formsRulesEngine({"submission" : null, "definition" : null});
+
+
+  var fieldValue = "12:00:00";
+  var otherRepresentationOfFieldValue2 =  "12:00";
+  var otherRepresentationOfFieldValue4 =  "12:00:0";
+  var otherRepresentationOfFieldValue5 =  "12:0:0";
+  var otherRepresentationOfFieldValue6 =  "12:0";
+  var beforeValue = "12:00:01";
+  var beforeYearValue = "23:59:59";
+  var afterValue = "11:59:59"
+  var afterYearValue = "00:00:01"
+
+  var testValues = [
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: fieldValue, expected: true },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue2, expected: true },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue4, expected: true },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue5, expected: true },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue6, expected: true },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: afterValue, expected: false },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeValue, expected: false },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: afterYearValue, expected: false },
+    { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeYearValue, expected: false },
+
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: fieldValue, expected: false },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue2, expected: false },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue4, expected: false },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue5, expected: false },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue6, expected: false },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: afterValue, expected: true },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeValue, expected: false },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: afterYearValue, expected: true },
+    { condition: "is after", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeYearValue, expected: false },
+
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: fieldValue, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue2, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue4, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue5, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: otherRepresentationOfFieldValue6, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: afterValue, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeValue, expected: true },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: afterYearValue, expected: false },
+    { condition: "is before", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: beforeYearValue, expected: true }
+  ];
+
+  var field = {type: FIELD_TYPE_DATETIME, fieldOptions: {}};
+  async.each(testValues, function (testValue, cb) {
+    field.fieldOptions.dateTimeUnit = testValue.dateTimeUnit;
+    var actual = engine.isConditionActive(field, fieldValue, testValue.value, testValue.condition);
+    assert.strictEqual(actual, testValue.expected, "testing fieldType: " + field.type + '/' + field.fieldOptions.dateTimeUnit + ', condition: ' + testValue.condition + ", fieldValue: " + fieldValue + ", value: " + testValue.value + ", actual: " + actual + ', expected: ' + testValue.expected);
+    return cb();
+  }, function (err) {
+    assert.ok(!err);
+    return finish();
+  });
+
+};
 

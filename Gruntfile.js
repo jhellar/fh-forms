@@ -30,10 +30,11 @@ module.exports = function(grunt) {
         src: [
           "client/prefix.js",
           "node_modules/async/lib/async.js",
+          "client/infix.js",
           "lib/common/forms-rule-engine.js",
           "client/suffix.js"
         ],
-        dest: 'dist/rulesengine.js',
+        dest: 'client/output/rulesengine.js',
         nonull: true
       }
     }

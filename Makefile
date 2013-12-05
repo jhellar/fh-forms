@@ -38,9 +38,11 @@ test_accept_cov: npm_deps
 npm_deps: 
 	npm install .
 
-# Note we create two distributions, one with Mongo, one without.
-# This is due to Mongo driver being 1.5G in size
-dist: npm_deps
+# Uses grunt to combine forms-rules-engine with async inside closure, for use in apps
+client_rules_engine:
+	./node_modules/.bin/grunt
+
+dist: npm_deps client_rules_engine
 	rm -rf $(DIST_DIR) $(OUTPUT_DIR)
 	rm -rf $(MODULES)/whiskey
 	mkdir -p $(DIST_DIR) $(OUTPUT_DIR)/$(RELEASE_DIR)
@@ -49,7 +51,9 @@ dist: npm_deps
 	echo "$(MAJOR).$(RELEASE).$(HOTFIX)-$(BUILD_NUMBER)" > $(OUTPUT_DIR)/$(RELEASE_DIR)/VERSION.txt
 	sed -i -e s/BUILD-NUMBER/$(BUILD_NUMBER)/ $(OUTPUT_DIR)/$(RELEASE_DIR)/package.json
 	tar -czf $(DIST_DIR)/$(RELEASE_FILE) -C $(OUTPUT_DIR) $(RELEASE_DIR)
+	cp  ./client/output/rulesengine.js $(DIST_DIR)
+
 clean:
 	rm -rf $(DIST_DIR) $(OUTPUT_DIR) $(MODULES) $(COV_DIR)
 
-.PHONY: test dist clean npm_deps martin_test
+.PHONY: test dist clean npm_deps client_rules_engine
