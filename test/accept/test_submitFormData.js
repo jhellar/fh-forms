@@ -459,13 +459,10 @@ module.exports.testSubmitDate = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateField"],
-    "fieldValues": [Date.now(), Date.now()]
+    "fieldValues": [new Date().toDateString(), new Date().toDateString()]
   }];
 
   submission.formFields = testValues;
-
-
-
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -478,7 +475,7 @@ module.exports.testSubmitDateInvalid = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateField"],
-    "fieldValues": [Date.now(), "14*23452346/235236"]
+    "fieldValues": [new Date().toDateString(), "14*23452346/235236"]
   }];
 
   submission.formFields = testValues;
@@ -495,7 +492,7 @@ module.exports.testSubmitDateTime = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateTimeField"],
-    "fieldValues": [Date.now(), Date.now()]
+    "fieldValues": [new Date().toUTCString(), new Date().toUTCString()]
   }];
 
   submission.formFields = testValues;
@@ -512,7 +509,7 @@ module.exports.testSubmitDateTimeInvalid = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateTimeField"],
-    "fieldValues": [Date.now(), "5/11/13 332523:05:54"]
+    "fieldValues": [new Date().toUTCString(), "5/11/13 332523:05:54"]
   }];
 
   submission.formFields = testValues;
