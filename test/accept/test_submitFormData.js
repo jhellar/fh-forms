@@ -7,6 +7,7 @@ var initDatabase = require('./../setup.js').initDatabase;
 var lodash = require('lodash');
 var assert = require('assert');
 
+var testFilePath = "./test/Fixtures/test.pdf";
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var testBigFormId = undefined;
 var bigFieldIds = {};
@@ -864,6 +865,211 @@ module.exports.testSubmitDropdownWrongOption = function(finish){
   });
 };
 
+module.exports.testSubmitUpdate = function(finish){
+  var submission = testSubmitFormBaseInfo;
+  submission.formId = testBigFormId;
+
+  // submit some test values to test form submission endpoint
+  var testValues = [{
+    "fieldId" : bigFieldIds["textField"],
+    "fieldValues": ["test1", "test2"]
+  }];
+
+  submission.formFields = testValues;
+
+  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(err, res){
+    assert.ok(!err, err);
+    assert.ok(res);
+    assert.equal(res.formSubmission.status, "pending");
+
+    // keep track of updatedTimestamp, and make sure it changes with subsequent updates
+    var updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+    assert.ok(updatedTimestamp);
+
+    // verify test values
+    assert.equal(res.formSubmission.formFields[0].fieldValues[0], "test1");
+    assert.equal(res.formSubmission.formFields[0].fieldValues[1], "test2");
+
+    // update test values and call update
+    var updatedValues = [{
+      "fieldId" : bigFieldIds["textField"],
+      "fieldValues": ["test1updated", "test2updated"]
+    }];
+    submission._id = res.formSubmission._id;
+    submission.formFields = updatedValues;
+    submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(err, res){
+      assert.ok(!err, err);
+      assert.ok(res);
+      assert.equal(res.formSubmission.status, "pending");
+      assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+      updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+      // verify updated test values
+      assert.equal(res.formSubmission._id, submission._id);
+      assert.equal(res.formSubmission.formFields[0].fieldValues[0], "test1updated");
+      assert.equal(res.formSubmission.formFields[0].fieldValues[1], "test2updated");
+
+      // complete submission
+      forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submission._id}}, function(err, res){
+        assert.ok(!err, err);
+        assert.ok(res);
+        assert.equal(res.formSubmission.status, "complete");
+        assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+        updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+        // read submission back
+        forms.getSubmission(options, {_id: submission._id}, function (err, res){
+          assert.ok(!err, err);
+          assert.ok(res);
+          assert.equal(res.status, "complete");
+          assert.equal(updatedTimestamp, res.updatedTimestamp.getTime());
+
+          // verify test values
+          assert.equal(res._id.toString(), submission._id.toString());
+          assert.equal(res.formFields[0].fieldValues[0], "test1updated");
+          assert.equal(res.formFields[0].fieldValues[1], "test2updated");
+          finish();
+        });
+      });
+    });
+  });
+};
+
+module.exports.testSubmitUpdateFileField = function(finish){
+  var submission = testSubmitFormBaseInfo;
+  submission.formId = testBigFormId;
+
+  var testValues = [{
+    "fieldId" : bigFieldIds["fileField"],
+    "fieldValues": ["filePlaceHolderhash123456", "filePlaceHolder124124"]
+  }];
+
+  submission.formFields = testValues;
+
+  // create submission with file placeholder
+  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(err, res){
+    assert.ok(!err, err);
+    assert.ok(res);
+    assert.equal(res.formSubmission.status, "pending");
+
+    // keep track of updatedTimestamp, and make sure it changes with subsequent updates
+    var updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+    assert.ok(updatedTimestamp);
+
+    var submission = res.formSubmission;
+
+    // upload file 1, verify ok
+    var testFileSubmission = {"submissionId" : submission._id, "fileName": "test.pdf", "fileId": "filePlaceHolderhash123456", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
+    forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, res){
+      assert.ok(!err, err);
+      assert.ok(res);
+      assert.equal(res.formSubmission.status, "pending");
+      assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+      updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+      // upload file 2, verify ok
+      var testFileSubmission = {"submissionId" : submission._id, "fileName": "test.pdf", "fileId": "filePlaceHolder124124", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
+      forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, res){
+        assert.ok(!err, err);
+        assert.ok(res);
+        assert.equal(res.formSubmission.status, "pending");
+        assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+        updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+        // complete submission, verify ok
+        forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submission._id}}, function(err, res){
+          assert.ok(!err, err);
+          assert.ok(res);
+          var submission = res.formSubmission;
+          assert.equal(submission.status, "complete");
+          assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+          updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+          // update file field, modifying an id
+          // verify update failed, not allowed to modify ids
+          var updatedSubmission = JSON.parse(JSON.stringify(submission));
+          updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
+          updatedSubmission.formFields[0].fieldValues[1] = "a_new_id";
+          submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
+            assert.ok(err);
+            assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
+
+            // update file field, adding an id
+            // verify update failed, not allow to add new ids, only placeholders
+            var updatedSubmission = JSON.parse(JSON.stringify(submission));
+            updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
+            updatedSubmission.formFields[0].fieldValues.push("a_new_id");
+            submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
+              assert.ok(err);
+              assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
+
+              // update file field, adding a placeholder
+              // verify update ok, and placeholder added, status pending as we've a placeholder waiting
+              var updatedSubmission = JSON.parse(JSON.stringify(submission));
+              updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
+              updatedSubmission.formFields[0].fieldValues.push("filePlaceHolderhash777777");
+              submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : updatedSubmission, "errExpected": false}, function(err, res){
+                assert.ok(!err, err);
+                assert.ok(res);
+                assert.equal(res.formSubmission.status, "pending");
+                assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+                updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+                // update file field, removing an id
+                // verify update ok, and file id removed, status pending
+                updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
+                updatedSubmission.formFields[0].fieldValues.shift(); // remove first id
+                submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : updatedSubmission, "errExpected": false}, function(err, res){
+                  assert.ok(!err, err);
+                  assert.ok(res);
+                  assert.equal(res.formSubmission.status, "pending");
+                  assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+                  updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+                  // upload file for new placeholder
+                  // verify ok, status pending
+                  var testFileSubmission = {"submissionId" : submission._id, "fileName": "test.pdf", "fileId": "filePlaceHolderhash777777", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
+                  forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, res){
+                    assert.ok(!err, err);
+                    assert.ok(res);
+                    assert.equal(res.formSubmission.status, "pending");
+                    assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+                    updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+                    // complete submission
+                    // verify ok, status complete
+                    forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submission._id}}, function(err, res){
+                      assert.ok(!err, err);
+                      assert.ok(res);
+                      assert.equal(res.formSubmission.status, "complete");
+                      assert.equal(res.formSubmission.formFields[0].fieldValues.length, 2, res.formSubmission.formFields[0].fieldValues);
+                      assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
+                      updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
+
+                      // read back submission
+                      // verify ok, status complete
+                      forms.getSubmission(options, {_id: submission._id}, function (err, res){
+                        assert.ok(!err, err);
+                        assert.ok(res);
+                        assert.equal(res._id.toString(), submission._id.toString());
+                        assert.equal(res.status, "complete");
+                        assert.equal(res.formFields[0].fieldValues.length, 2, res.formFields[0].fieldValues);
+                        assert.equal(updatedTimestamp, res.updatedTimestamp.getTime());
+
+                        finish();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+};
+
 
 function checkSubmissionExists(assert, submissionId, options, cb){
   //Need to create a form that contains every possible field type.
@@ -913,7 +1119,7 @@ function submitAndCheckForm(assert, submission, options, cb ){
       if(result) console.log(JSON.stringify(submission), result, options);
       assert.ok(err);
       assert.ok(!result);
-      return cb();
+      return cb(err, result);
     } else {
       if(err) console.log(err);
       assert.ok(!err);
@@ -926,7 +1132,7 @@ function submitAndCheckForm(assert, submission, options, cb ){
 
       checkSubmissionExists(assert, result.submissionId, options, function(err){
         assert.ok(!err);
-        return cb();
+        return cb(null, result);
       });
     }
   });
