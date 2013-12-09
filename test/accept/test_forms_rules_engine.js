@@ -479,6 +479,55 @@ module.exports.testBasicForm1ValidateFieldInvalid = function testBasicForm1Valid
   });
 };
 
+module.exports.testBasicForm1ValidateFieldValue = function testBasicForm1ValidateFieldValue(finish) {
+  var TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
+  TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD.formFields[2].fieldValues[0] = TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE + 1;   //  This should trigger an invalid field, field 3 has max value specified as 100
+  assert.equal(TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD.formFields[2].fieldId, TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, 'This test expects FIELD3 to be in index 2 of submission.formFields')
+
+  var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
+
+  async.series([
+    function testInvalid(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE + 1, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID], 'Should be details for field 3');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].valid, 'Field 3 should be marked invalid');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages, 'Field 3 should have an error message');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages.length > 0, 'Field 3 should have at least one error message');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages[0].indexOf("max") > -1, 'Field 3 should complain about max value' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValid(cb) {
+      // change field to value within range, field should now validate
+      TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD.formFields[2].fieldValues[0] = TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE;
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE, function testValidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]));
+
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID], 'Should be details for field 3');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].valid, 'Field 3 should be marked valid');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages, 'Field 3 should have an error message array');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages.length === 0, 'Field 3 should have no error messages: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages));
+
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]));
+
+        return cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
+    finish();
+  });
+};
+
 module.exports.testBasicForm1SpecificFieldsVisibleWithField3Invisible = function (finish) {
 
   var TEST_BASIC_FORM_1_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
