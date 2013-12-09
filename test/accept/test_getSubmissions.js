@@ -14,11 +14,19 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var TEST_TOTAL_NUM_SUBMISSIONS = 1;
 var TEST_SUBMISSION_APPID = "appId123456";
 var TEST_UNUSED_APPID = "ThisDidNotSubmit";
+var TEST_APP_NAME_UNKNOWN = 'Unknown';
+var TEST_APP_NAME = 'Joe';
+var TEST_APP_MAP = {
+};
+TEST_APP_MAP[TEST_SUBMISSION_APPID] = {id: TEST_SUBMISSION_APPID, name: TEST_APP_NAME};
+
 var TEST_SUBMISSION_FORMID; // will be populated by setup
 var TEST_SUBMISSION_ID; // will be populated by setup
 var TEST_UNUSED_FORMID = '123456789012345678901234';
 var TEST_FIELD_NAME_PREFIX = "TestField";
 var TEST_FIELD_VALUE_PREFIX = "TestFieldValue";
+var TEST_FORM_NAME = "testFieldsForm";
+
 
 var globalFormId;
 var globalFieldIds;
@@ -46,7 +54,7 @@ var testSubmitFormBaseInfo = {
 
 module.exports.testGetAllSubmissions = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
-  
+
   forms.getSubmissions(options, {}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
@@ -56,13 +64,36 @@ module.exports.testGetAllSubmissions = function(finish){
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + submissions[0]._id + ", expected: " + TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
+    assert.strictEqual(submissions[0].formName, TEST_FORM_NAME);
+    assert.strictEqual(submissions[0].appName, TEST_APP_NAME_UNKNOWN, 'app name should be unknown, since no appname map passed in');
     finish();
   });
 };
 
+
+module.exports.testGetAllSubmissionsWithAppMap = function(finish){
+// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
+
+  forms.getSubmissions(options, {appMap: TEST_APP_MAP}, function (err, results){
+    assert.ok(!err, "should not have returned error: " + util.inspect(err));
+    assert.ok(results);  // should have returned results
+    var submissions = results.submissions;
+    assert.ok(submissions);  // should have returned submissions in results
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + submissions[0]._id + ", expected: " + TEST_SUBMISSION_ID);
+    assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
+    assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
+    assert.strictEqual(submissions[0].formName, TEST_FORM_NAME);
+    assert.strictEqual(submissions[0].appName, TEST_APP_NAME, 'app name should be known, since appname map passed in');
+    finish();
+  });
+};
+
+
+
 module.exports.testGetAllSubmissionsByApp = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
-  
+
   forms.getSubmissions(options, {appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
@@ -78,7 +109,7 @@ module.exports.testGetAllSubmissionsByApp = function(finish){
 
 module.exports.testGetAllSubmissionsByForm = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
-  
+
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
@@ -94,7 +125,7 @@ module.exports.testGetAllSubmissionsByForm = function(finish){
 
 module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
-  
+
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
@@ -152,7 +183,7 @@ module.exports.testGetAllSubmissionsForNonExistantForm = function(finish){
 
 module.exports.testGetAllSubmissionsForNonExistantApp = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
-  
+
   forms.getSubmissions(options, {appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
@@ -191,7 +222,7 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(fi
 
 module.exports.testGetAllSubmissionsForNonExistantAppAndGoodFormId = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
-  
+
   forms.getSubmissions(options, {appId: TEST_UNUSED_APPID, formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
@@ -314,7 +345,7 @@ function createTestData(assert, cb){
   var Field = models.get(connection, models.MODELNAMES.FIELD);
   var Page = models.get(connection, models.MODELNAMES.PAGE);
 
-  var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
+  var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : TEST_FORM_NAME, "description": "This form is for testing fields."});
   var testRequiredPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
   var testData = require("./../Fixtures/formSubmissions.js");
