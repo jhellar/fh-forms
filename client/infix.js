@@ -1,12 +1,8 @@
 /* This is the infix file */    
-  }
 
-  var asyncLoader = {};  // used as "this" for async
+  var asyncLoader = module.exports;  // async has updated this, now save in our var, to that it can be returned from our dummy require
   function require() {
-    loadAsync.call(asyncLoader);
-    return asyncLoader.async;
+    return asyncLoader;
   }
-
-  module.exports = function(){};  // add an exports for our normal formsRulesEngine so we can retrieve and put into our closure param
 
 /* End of infix file */

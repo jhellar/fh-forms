@@ -1,7 +1,6 @@
 /* This is the prefix file */
-function rulesEngine () {
+function rulesEngine (formDef) {
+  
+  var module = {exports:{}}; // create a module.exports - async will load into it
 
-  var module = {}; // create a module without exports - async will load into it's this
-
-  function loadAsync() {
 /* End of prefix file */
