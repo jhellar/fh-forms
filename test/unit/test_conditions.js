@@ -164,11 +164,11 @@ module.exports.testDatTimeConditions = function (finish) {
 
   var engine = formsRulesEngine({"submission" : null, "definition" : null});
 
-  var fieldValue = "Mon, 02 Dec 2013 13:22:08 GMT";
-  var beforeValue = "Mon, 02 Dec 2013 13:22:09 GMT";
-  var beforeYearValue = "Mon, 02 Dec 2014 13:22:08 GMT";
-  var afterValue = "Mon, 02 Dec 2013 13:22:07 GMT"
-  var afterYearValue = "Mon, 02 Dec 2012 13:22:08 GMT"
+  var fieldValue = "2013/12/02 13:22:08";
+  var beforeValue = "2013/12/02 13:22:09";
+  var beforeYearValue = "2014/12/02 13:22:08";
+  var afterValue = "2013/12/02 13:22:07"
+  var afterYearValue = "2012/12/02 13:22:08"
 
   var testValues = [
     { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_DATETIME, value: fieldValue, expected: true },
@@ -212,11 +212,11 @@ module.exports.testDateOnlyConditions = function (finish) {
   var engine = formsRulesEngine({"submission" : null, "definition" : null});
 
 
-  var fieldValue = "Mon, 02 Dec 2013 00:00:00 GMT";
-  var beforeValue = "Tue, 03 Dec 2013 13:22:09 GMT";
-  var beforeYearValue = "Tue, 02 Dec 2014 00:00:00 GMT";
-  var afterValue = "Sun, 01 Dec 2013 00:00:00 GMT"
-  var afterYearValue = "Sat, 02 Dec 2012 00:00:00 GMT"
+  var fieldValue = "2013/12/02 00:00:00";
+  var beforeValue = "2013/12/03 13:22:09";
+  var beforeYearValue = "2014/12/02 00:00:00";
+  var afterValue = "2013/12/01 00:00:00"
+  var afterYearValue = "2012/12/02 00:00:00"
 
   var testValues = [
     { condition: "is at", dateTimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_DATEONLY, value: fieldValue, expected: true },

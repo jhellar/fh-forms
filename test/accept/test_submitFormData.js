@@ -987,7 +987,6 @@ module.exports.testSubmitUpdateFileField = function(finish){
           var updatedSubmission = JSON.parse(JSON.stringify(submission));
           updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
           updatedSubmission.formFields[0].fieldValues[1] = "a_new_id";
-          var tempValue = updatedSubmission.formFields[0].fieldValues[0];
           submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
             assert.ok(err);
             assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
