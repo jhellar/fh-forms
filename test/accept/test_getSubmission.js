@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var models = require('../../lib/common/models.js')();
 var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
-var async = require("async");
 var assert = require('assert');
 var util = require('util');
 
@@ -46,20 +45,25 @@ var testSubmitFormBaseInfo = {
 
 module.exports.testGetSubmission = function(finish){
 // forms.getSubmission({"uri": mongoUrl}, {"_id" : req.params.submissionId, function(err, results){
-  
+
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
     assert.equal(results._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + results._id + ", expected: " + TEST_SUBMISSION_ID);
     assert.equal(results.appId, TEST_SUBMISSION_APPID);
     assert.equal(results.formId, TEST_SUBMISSION_FORMID);
-    finish();
+
+    // test delete
+    forms.deleteSubmission(options, {_id: TEST_SUBMISSION_FORMID}, function(err) {
+      assert.ok(!err, "should not have returned error: " + util.inspect(err));
+      finish();
+    });
   });
 };
 
 module.exports.testGetSubmissionsAndCheckFields = function(finish){
 // forms.getSubmission({"uri": mongoUrl}, {"_id" : req.params.submissionId, function(err, results){
-  
+
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, result){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     assert.ok(result);  // should have returned results
@@ -68,7 +72,7 @@ module.exports.testGetSubmissionsAndCheckFields = function(finish){
     assert.equal(result.formId, TEST_SUBMISSION_FORMID);
     assert.ok(result.formFields.length > 3, "should be more than 3 fields returned in summary submissions list, actual: " + result.formFields.length);
 
-    finish();    
+    finish();
   });
 };
 
