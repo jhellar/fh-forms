@@ -342,7 +342,8 @@ module.exports.testBasicForm1ValidateForRequiredFieldMissing = function (finish)
     assert.ok(!results.validation.valid, "unexpected valid result: " + util.inspect(results.validation));
     assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID], 'should be error for missing required field - ' + util.inspect(results.validation));
     assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].valid, 'missing required field should be marked as invalid');
-    assert.equal(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages.length, 1, 'should be 1 error message for missing required field - was: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages));
+    assert.equal(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].fieldErrorMessage.length, 1, 'should be 1 error message for missing required field - was: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].fieldErrorMessage));
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages, 'should not be field value specific error message for missing required field - was: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages));
 
     assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
     assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
