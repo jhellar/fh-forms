@@ -347,7 +347,7 @@ module.exports.testBasicForm1ValidateForRequiredFieldMissing = function (finish)
     assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
     assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
     assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
-    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID], "unexpected error results for field5: " + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]));
 
     finish();
   });
