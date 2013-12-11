@@ -465,7 +465,8 @@ module.exports.testBasicForm1ValidateFieldInvalid = function testBasicForm1Valid
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID], 'Should be details for field 3');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].valid, 'Field 3 should be marked valid');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages, 'Field 3 should have an error message array');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages.length === 0, 'Field 3 should have no error messages: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages.length === 1, 'Field 3 should have 1 error message placeholder: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages[0], 'Field 3 should have 1 error message placeholder with null: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]));
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]));
@@ -493,7 +494,8 @@ module.exports.testBasicForm1ValidateFieldValue = function testBasicForm1Validat
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID], 'Should be details for field 3');
-        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].valid, 'Field 3 should be marked invalid');
+
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].valid, 'Field 3 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages, 'Field 3 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages.length > 0, 'Field 3 should have at least one error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages[0].indexOf("max") > -1, 'Field 3 should complain about max value' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID].errorMessages));

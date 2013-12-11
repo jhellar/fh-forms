@@ -28,8 +28,21 @@ var testSubmitFormBaseInfo = {
 function fieldValidator(fieldDef, submission) {
   var retVal;
   var engine = formsRulesEngine({"submission" : null, "definition" : null});
-  engine.validateFieldInternal(submission, fieldDef, function (err) {
-    retVal = err;
+  engine.validateFieldInternal(submission, fieldDef, function (err, results) {
+    if(err) {
+      retVal = err;
+    } else {
+      if (results.fieldErrorMessage && results.fieldErrorMessage.length > 0) {
+        retVal = new Error(results.fieldErrorMessage[0]);
+      } else {
+        for(var i=0; i < results.errorMessages.length; i += 1) {
+          if(results.errorMessages[i]) {
+            retVal = new Error(results.errorMessages[i]);
+            break;
+          }
+        }
+      }
+    }
   });
 
   return {
