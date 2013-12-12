@@ -257,21 +257,21 @@ module.exports.testSubmitCheckBox = function(finish){
   });
 };
 
-// module.exports.testSubmitCheckBoxWrongOption = function(finish){
-//   var submission = testSubmitFormBaseInfo;
-//   submission.formId = testBigFormId;
+module.exports.testSubmitCheckBoxWrongOption = function(finish){
+  var submission = testSubmitFormBaseInfo;
+  submission.formId = testBigFormId;
 
-//   var testValues = [{
-//     "fieldId" : bigFieldIds["checkboxField"],
-//     "fieldValues": [{"selections" : ["red", "blue", "cyan"]}, {"selections" : ["red", "blue", "purple"]}]
-//   }];
+  var testValues = [{
+    "fieldId" : bigFieldIds["checkboxField"],
+    "fieldValues": [{"selections" : ["red", "blue", "cyan"]}, {"selections" : ["red", "blue", "purple"]}]
+  }];
 
-//   submission.formFields = testValues;
+  submission.formFields = testValues;
 
-//   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
-//     finish();
-//   });
-// };
+  submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": true}, function(){
+    finish();
+  });
+};
 
 module.exports.testSubmitCheckBoxTooFewOptions = function(finish){
   var submission = testSubmitFormBaseInfo;

@@ -454,21 +454,21 @@ exports.testValidateCheckbox = function(finish){
   });
 }
 
-// exports.testValidateCheckboxDoesNotExist = function(finish){
-//   var testField = exampleFields.checkboxFieldData;
-//   var testSubmission = testSubmitFormBaseInfo;
-//   var testSubmissionData = [{"selections" : ["red", "wrongOption", "green"]}, {"selections" : ["red", "blue", "purple"]}];
+exports.testValidateCheckboxDoesNotExist = function(finish){
+  var testField = exampleFields.checkboxFieldData;
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = [{"selections" : ["red", "wrongOption", "green"]}, {"selections" : ["red", "blue", "purple"]}];
 
-//   testSubmission.fieldValues = testSubmissionData;
+  testSubmission.fieldValues = testSubmissionData;
 
-//   var validator = fieldValidator(testField, testSubmission);
+  var validator = fieldValidator(testField, testSubmission);
 
-//   validator.validate(function(err){
-//     assert.ok(err, 'Expected error, but was: ' + util.inspect(err));
+  validator.validate(function(err){
+    assert.ok(err, 'Expected error, but was: ' + util.inspect(err));
 
-//     finish();
-//   });
-// }
+    finish();
+  });
+}
 
 exports.testValidateCheckboxDoesTooMany = function(finish){
   var testField = exampleFields.checkboxFieldData;
