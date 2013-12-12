@@ -51,6 +51,7 @@ module.exports.testCompleteSubmissionWorks = function(finish){
       if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
+      assert.ok(result.status === "complete");
 
       checkSubmissionComplete(assert, submissionId, function(){
         finish();
@@ -87,8 +88,13 @@ module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {"skipOne": true}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : "SOMEWRONGID"}}, function(err, result){
-      assert.ok(err);
-      assert.ok(!result);
+      assert.ok(!err);
+      assert.ok(result);
+      assert.ok(result.status === "pending");
+      assert.ok(result.pendingFiles);
+      assert.ok(Array.isArray(result.pendingFiles));
+      assert.ok(result.pendingFiles.length === 1);
+      assert.ok(result.pendingFiles[0] === "filePlaceHolder123456789");
 
       finish();
     });
