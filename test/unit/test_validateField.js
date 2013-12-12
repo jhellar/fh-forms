@@ -613,13 +613,24 @@ exports.testValidateLocationNorthEastWrongKeys = function(finish){
 exports.testValidatePhoto = function(finish){
   var testField = exampleFields.photoFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = ["filePlaceHolder1234567", "filePlaceHolder12345678"];
+  var testSubmissionData = [{
+    "fileName":"MyLovelyHorse.jpg",
+    "fileSize":1234567,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder1234567"
+  },
+  {
+    "fileName":"MyOtherHorse.jpg",
+    "fileSize":1238887,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder12345678"
+  }];
 
   testSubmission.fieldValues = testSubmissionData;
 
   var validator = fieldValidator(testField, testSubmission);
-
-
 
   validator.validate(function(err){
     assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
@@ -632,7 +643,20 @@ exports.testValidatePhoto = function(finish){
 exports.testValidatePhotoWrongPlaceholder = function(finish){
   var testField = exampleFields.photoFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = ["filePlHolder1234567", "filePlaceHolder12345678"];
+  var testSubmissionData = [{
+    "fileName":"MyLovelyHorse.jpg",
+    "fileSize":1234567,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlHolder1234567"
+  },
+  {
+    "fileName":"MyOtherHorse.jpg",
+    "fileSize":1238887,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder12345678"
+  }];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -650,7 +674,20 @@ exports.testValidatePhotoWrongPlaceholder = function(finish){
 exports.testValidateFile = function(finish){
   var testField = exampleFields.fileFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = ["filePlaceHolder1234567", "filePlaceHolder12345678"];
+  var testSubmissionData = [{
+    "fileName":"MyLovelyHorse.jpg",
+    "fileSize":1234567,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder1234567"
+  },
+  {
+    "fileName":"MyOtherHorse.jpg",
+    "fileSize":1238887,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder12345678"
+  }];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -668,7 +705,20 @@ exports.testValidateFile = function(finish){
 exports.testValidateFileWrongPlaceholder = function(finish){
   var testField = exampleFields.fileFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = ["filePlaceHolder1234567", "filePlacasfder12345678"];
+  var testSubmissionData = [{
+    "fileName":"MyLovelyHorse.jpg",
+    "fileSize":1234567,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlHolder1234567"
+  },
+  {
+    "fileName":"MyOtherHorse.jpg",
+    "fileSize":1238887,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder12345678"
+  }];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -681,13 +731,23 @@ exports.testValidateFileWrongPlaceholder = function(finish){
   });
 }
 
-
-
-
 exports.testValidateSignature = function(finish){
   var testField = exampleFields.signatureFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = ["filePlaceHolder1234567", "filePlaceHolder12345678"];
+  var testSubmissionData = [{
+    "fileName":"MySignature1.jpg",
+    "fileSize":1234567,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder1234567"
+  },
+  {
+    "fileName":"MySignature1.jpg",
+    "fileSize":1238887,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder12345678"
+  }];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -705,7 +765,20 @@ exports.testValidateSignature = function(finish){
 exports.testValidateSignatureWrongPlaceholder = function(finish){
   var testField = exampleFields.signatureFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = ["filePlaceHolder1234567", "filePlaceHasffsar12345678"];
+  var testSubmissionData = [{
+    "fileName":"MySignature1.jpg",
+    "fileSize":1234567,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlHolder1234567"
+  },
+  {
+    "fileName":"MySignature2.jpg",
+    "fileSize":1238887,
+    "fileType":"image/jpeg",
+    "fileUpdateTime":Date.now(),
+    "hashName":"filePlaceHolder12345678"
+  }];
 
   testSubmission.fieldValues = testSubmissionData;
 
