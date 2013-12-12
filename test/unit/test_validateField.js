@@ -702,6 +702,57 @@ exports.testValidateFile = function(finish){
   });
 }
 
+
+exports.testValidateFileObjects = function(finish){
+  var testField = exampleFields.fileFieldData;
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = [
+   { num: 00, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: true },
+   { num: 01, value: { "fileName":12334,               "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 02, value: { "fileName":undefined,           "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 03, value: {                                 "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 04, value: { "fileName":"",                  "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 05, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567,   "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: true },
+   { num: 06, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":"1234567", "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 07, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":{},        "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 08, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":undefined, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 09, value: { "fileName":"MyLovelyHorse.jpg",                       "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 10, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: true },
+   { num: 11, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":23,           "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 12, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":undefined,    "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 13, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":{},           "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 14, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567,                          "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 15, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(),   "hashName":"filePlaceHolder1234567" }, valid: true },
+   { num: 16, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":"2013/12/12", "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 17, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":{},           "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 18, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":undefined,    "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 19, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg",                                "hashName":"filePlaceHolder1234567" }, valid: false },
+   { num: 20, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePlaceHolder1234567" }, valid: true },
+   { num: 21, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":""                       }, valid: false },
+   { num: 22, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":12345667                 }, valid: false },
+   { num: 23, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":"filePaceHolder1234567"  }, valid: false },
+   { num: 24, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(), "hashName":undefined                }, valid: false },
+   { num: 25, value: { "fileName":"MyLovelyHorse.jpg", "fileSize":1234567, "fileType":"image/jpeg", "fileUpdateTime":Date.now(),                                     }, valid: false }
+  ];
+
+  async.each(testSubmissionData, function (testSubmissionDatum, cb) {
+    testSubmission.fieldValues = [testSubmissionDatum.value, testSubmissionDatum.value];
+    var validator = fieldValidator(testField, testSubmission);
+    validator.validate(function(err){
+      if(testSubmissionDatum.valid) {
+        assert.ok(!err, 'Unexpected error: ' + util.inspect(err) + "for testdata " + testSubmissionDatum.num);
+      } else {
+        assert.ok(err, 'Expected error: ' + util.inspect(err));
+      }
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
+  });
+
+}
+
 exports.testValidateFileWrongPlaceholder = function(finish){
   var testField = exampleFields.fileFieldData;
   var testSubmission = testSubmitFormBaseInfo;
