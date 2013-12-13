@@ -17,6 +17,7 @@ var testSubmitFormBaseInfo = {
   "appId": "appId123456",
   "appCloudName": "appCloudName123456",
   "appEnvironment": "devLive",
+  "timezoneOffset" : 120,
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",

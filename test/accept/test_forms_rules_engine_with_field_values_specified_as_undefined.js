@@ -480,6 +480,7 @@ var SUBMISSION = {
   "status": "new",
   "createDate": "2013-12-11T15:57:06.898Z",
   "appId": "8P-SzpQTu1EqHLYrZQAdUzPQ",
+  "timezoneOffset" : 120,
   "appEnvironment": "dev",
   "appCloudName": "",
   "comments": [],

@@ -18,6 +18,7 @@ var testFilePath = "./test/Fixtures/test.pdf";
 var testSubmitFormBaseInfo = {
   "appId": "appId123456",
   "appCloudName": "appCloudName123456",
+  "timezoneOffset" : 120,
   "appEnvironment": "devLive",
   "userId": "user123456",
   "deviceId": "device123456",

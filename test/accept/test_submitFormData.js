@@ -28,6 +28,7 @@ var testSubmitFormBaseInfo = {
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
+  "timezoneOffset" : 120,
   "deviceFormTimestamp": new Date().getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",

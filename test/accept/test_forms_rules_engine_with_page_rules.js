@@ -257,7 +257,7 @@ var TEST_BASIC_FORM_2_DEFINITION = {
   ],
   "pageRef":{
     TEST_BASIC_FORM_2_PAGE_1_ID:0,
-    TEST_BASIC_FORM_2_PAGE_2_ID:1,
+    TEST_BASIC_FORM_2_PAGE_2_ID:1
   },
   "fieldRef": {
     TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID: {
@@ -299,7 +299,7 @@ var TEST_BASIC_FORM_2_DEFINITION = {
     TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID: {
       "page":1,
       "field":4
-    },
+    }
   },
   "appsUsing":123,
   "submissionsToday":1234,
@@ -309,6 +309,7 @@ var TEST_BASIC_FORM_2_DEFINITION = {
 var TEST_BASIC_FORM_2_SUBMISSION_1 = {
    "appId":"appId123456",
    "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
    "appEnvironment":"devLive",
    "deviceId":"device123456",
    "deviceFormTimestamp":1384800150848,
@@ -441,7 +442,7 @@ module.exports.testBasicForm2CheckRulesHidingPage2 = function (finish) {
       submission: TEST_BASIC_FORM_2_SUBMISSION_2,
       fieldsToCheck: [
         { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID, expectedVisible: true},
-        { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, expectedVisible: true},
+        { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, expectedVisible: true}
       ],
       pagesToCheck: [
         { pageID: TEST_BASIC_FORM_2_PAGE_2_ID, expectedVisible: false}

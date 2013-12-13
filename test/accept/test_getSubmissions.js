@@ -36,6 +36,7 @@ var testFilePath = "./test/Fixtures/test.pdf";
 var testSubmitFormBaseInfo = {
   "appId": TEST_SUBMISSION_APPID,
   "appCloudName": "appCloudName123456",
+  "timezoneOffset" : 120,
   "appEnvironment": "devLive",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
