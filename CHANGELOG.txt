@@ -1,5 +1,11 @@
 fh-forms
 -------
+0.2.4 - IR216 - Martin Murphy
+	#5317  Add validateFieldValue to rulesEngine to validate against a value instead of a submission entry
+	#5322  fix rulesEngine closure wrapping async
+	#5328  fix bug in rulesEngine.checkRules where rules reference an field not submitted
+	#5338  Update rulesengine.validateForm to return per-field values errors and per-field errors
+ 
 0.2.3 - IR216 - Martin Murphy
         #5244  Add app and forms names to submissions list
 
