@@ -177,6 +177,7 @@ var TEST_BASIC_FORM_1_DEFINITION = {
 var TEST_BASIC_FORM_1_SUBMISSION_1 = {
    "appId":"appId123456",
    "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
    "appEnvironment":"devLive",
    "deviceId":"device123456",
    "deviceFormTimestamp":1384800150848,
@@ -224,6 +225,7 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
 var TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_MISSING = {
    "appId":"appId123456",
    "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
    "appEnvironment":"devLive",
    "deviceId":"device123456",
    "deviceFormTimestamp":1384800150848,
@@ -265,6 +267,7 @@ var TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_MISSING = {
 var TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING = {
    "appId":"appId123456",
    "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
    "appEnvironment":"devLive",
    "deviceId":"device123456",
    "deviceFormTimestamp":1384800150848,

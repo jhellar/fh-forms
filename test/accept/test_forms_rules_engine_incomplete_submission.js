@@ -511,6 +511,7 @@ var TEST_SUBMISSION_INCOMPLETE = {
     "status": "new",
     "createDate": "2013-12-10T11:41:45.725Z",
     "appId": "8P-SzpQTu1EqHLYrZQAdUzPQ",
+    "timezoneOffset" : 120,
     "appEnvironment": "dev",
     "appCloudName": "",
     "comments": [],

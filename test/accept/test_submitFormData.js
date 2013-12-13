@@ -27,15 +27,16 @@ var testSubmitFormBaseInfo = {
   "appEnvironment": "devLive",
   "userId": "user123456",
   "deviceId": "device123456",
+  "timezoneOffset" : 120,
   "deviceIPAddress": "192.168.1.1",
-  "deviceFormTimestamp": new Date(Date.now()).toUTCString(),
+  "deviceFormTimestamp": new Date().getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()).toUTCString(),
+    "madeOn": new Date().getTime(),
     "value": "This is a comment"
   },{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()).toUTCString(),
+    "madeOn": new Date().getTime(),
     "value": "This is another comment"
   }]
 };
@@ -169,9 +170,25 @@ module.exports.testSubmitFile = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
+  var file1Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolderhash123456"
+  };
+
+  var file2Details = {
+    "fileName" : "test2.jpg",
+    "fileSize" : 123456,
+    "fileType" : "image/jpeg",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolder124124"
+  };
+
   var testValues = [{
     "fieldId" : bigFieldIds["fileField"],
-    "fieldValues": ["filePlaceHolderhash123456", "filePlaceHolder124124"]
+    "fieldValues": [file1Details, file2Details]
   }];
 
   submission.formFields = testValues;
@@ -187,9 +204,25 @@ module.exports.testSubmitFileWrongPlaceholder = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
+  var file1Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolderhash123456"
+  };
+
+  var file2Details = {
+    "fileName" : "test2.jpg",
+    "fileSize" : 123456,
+    "fileType" : "image/jpeg",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "wrongGierlsfdsfdsf"
+  };
+
   var testValues = [{
     "fieldId" : bigFieldIds["fileField"],
-    "fieldValues": ["filePlaceHolderhash123456", "wrongGierlsfdsfdsf"]
+    "fieldValues": [file1Details, file2Details]
   }];
 
   submission.formFields = testValues;
@@ -936,9 +969,25 @@ module.exports.testSubmitUpdateFileField = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
+  var file1Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolderhash123456"
+  };
+
+  var file2Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolder124124"
+  };
+
   var testValues = [{
     "fieldId" : bigFieldIds["fileField"],
-    "fieldValues": ["filePlaceHolderhash123456", "filePlaceHolder124124"]
+    "fieldValues": [file1Details, file2Details]
   }];
 
   submission.formFields = testValues;
@@ -956,7 +1005,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
     var submission = res.formSubmission;
 
     // upload file 1, verify ok
-    var testFileSubmission = {"submissionId" : submission._id, "fileName": "test.pdf", "fileId": "filePlaceHolderhash123456", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
+    var testFileSubmission = {"submissionId" : submission._id, "fileId": "filePlaceHolderhash123456", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
     forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, res){
       assert.ok(!err, err);
       assert.ok(res);
@@ -965,7 +1014,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
       updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
 
       // upload file 2, verify ok
-      var testFileSubmission = {"submissionId" : submission._id, "fileName": "test.pdf", "fileId": "filePlaceHolder124124", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
+      var testFileSubmission = {"submissionId" : submission._id, "fileId": "filePlaceHolder124124", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
       forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, res){
         assert.ok(!err, err);
         assert.ok(res);
@@ -982,11 +1031,19 @@ module.exports.testSubmitUpdateFileField = function(finish){
           assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
           updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
 
+          var wrongFileDetails = {
+            "fileName" : "test.pdf",
+            "fileSize" : 123456,
+            "fileType" : "application/pdf",
+            "fileUpdateTime" : new Date().getTime(),
+            "hashName" : "a_new_id"
+          };
+
           // update file field, modifying an id
           // verify update failed, not allowed to modify ids
           var updatedSubmission = JSON.parse(JSON.stringify(submission));
           updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
-          updatedSubmission.formFields[0].fieldValues[1] = "a_new_id";
+          updatedSubmission.formFields[0].fieldValues[1] = wrongFileDetails;
           submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
             assert.ok(err);
             assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
@@ -995,7 +1052,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
             // verify update failed, not allow to add new ids, only placeholders
             var updatedSubmission = JSON.parse(JSON.stringify(submission));
             updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
-            updatedSubmission.formFields[0].fieldValues.push("a_new_id");
+            updatedSubmission.formFields[0].fieldValues.push(wrongFileDetails);
             submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
               assert.ok(err);
               assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
@@ -1003,8 +1060,17 @@ module.exports.testSubmitUpdateFileField = function(finish){
               // update file field, adding a placeholder
               // verify update ok, and placeholder added, status pending as we've a placeholder waiting
               var updatedSubmission = JSON.parse(JSON.stringify(submission));
-              updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
-              updatedSubmission.formFields[0].fieldValues.push("filePlaceHolderhash777777");
+              updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"];
+              //All files submissions should be objects, not strings.
+              var newPlaceHolder = {
+                "fileName" : "test.pdf",
+                "fileSize" : 123456,
+                "fileType" : "application/pdf",
+                "fileUpdateTime" : new Date().getTime(),
+                "hashName" : "filePlaceHolderhash777777"
+              };
+              // reset fieldId to just the id, not the full field definition, as returned when reading a field
+              updatedSubmission.formFields[0].fieldValues.push(newPlaceHolder);
               submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : updatedSubmission, "errExpected": false}, function(err, res){
                 assert.ok(!err, err);
                 assert.ok(res);
@@ -1025,11 +1091,10 @@ module.exports.testSubmitUpdateFileField = function(finish){
 
                   // upload file for new placeholder
                   // verify ok, status pending
-                  var testFileSubmission = {"submissionId" : submission._id, "fileName": "test.pdf", "fileId": "filePlaceHolderhash777777", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
+                  var testFileSubmission = {"submissionId" : submission._id, "fileId": "filePlaceHolderhash777777", "fieldId": bigFieldIds["fileField"], "fileStream" : testFilePath, "keepFile" : true};
                   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, res){
                     assert.ok(!err, err);
-                    assert.ok(res);
-                    assert.equal(res.formSubmission.status, "pending");
+                    assert.ok(res.formSubmission.status === "pending");
                     assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
                     updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
 
@@ -1038,6 +1103,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
                     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submission._id}}, function(err, res){
                       assert.ok(!err, err);
                       assert.ok(res);
+                      assert.ok(res.status === "complete");
                       assert.equal(res.formSubmission.status, "complete");
                       assert.equal(res.formSubmission.formFields[0].fieldValues.length, 2, res.formSubmission.formFields[0].fieldValues);
                       assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());

@@ -36,6 +36,7 @@ var testFilePath = "./test/Fixtures/test.pdf";
 var testSubmitFormBaseInfo = {
   "appId": TEST_SUBMISSION_APPID,
   "appCloudName": "appCloudName123456",
+  "timezoneOffset" : 120,
   "appEnvironment": "devLive",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
@@ -240,10 +241,27 @@ module.exports.setUp = function(finish){
       assert.ok(!err);
       assert.ok(globalFormId, 'form has not been created during test setup');
       assert.notEqual(globalFormId, TEST_UNUSED_FORMID, "generated formid happens to match need to re-run");
+
+      var  file1Details = {
+        "fileName" : "test.pdf",
+        "fileSize" : 123456,
+        "fileType" : "application/pdf",
+        "fileUpdateTime" : new Date().getTime(),
+        "hashName" : "filePlaceHolder123456"
+      };
+
+      var  file2Details = {
+        "fileName" : "test.pdf",
+        "fileSize" : 123456,
+        "fileType" : "application/pdf",
+        "fileUpdateTime" : new Date().getTime(),
+        "hashName" : "filePlaceHolder123456789"
+      };
+
       async.series([
-        async.apply(submitData, assert, ["filePlaceHolder123456", "filePlaceHolder123456789"]),
-        async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath, "test.pdf"),
-        async.apply(submitFile, assert, "filePlaceHolder123456789", testFilePath, "test.pdf"),
+        async.apply(submitData, assert, [file1Details, file2Details]),
+        async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath),
+        async.apply(submitFile, assert, "filePlaceHolder123456789", testFilePath),
         async.apply(completeSubmission, assert),
         async.apply(checkPending, assert, "complete", [])
       ], function(err){
@@ -287,9 +305,9 @@ function submitData(assert, filesToSubmit, cb){
   });
 }
 
-function submitFile(assert, placeholderText, filePath, fileName, cb){
+function submitFile(assert, placeholderText, filePath, cb){
   // console.log("SUBMITFILE()");
-  var testFileSubmission = {"submissionId" : submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
+  var testFileSubmission = {"submissionId" : submissionId, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     if(err) console.log(err);
     assert.ok(!err);
