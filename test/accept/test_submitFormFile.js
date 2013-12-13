@@ -134,7 +134,7 @@ module.exports.testSubmitFormFileBadFileId = function(finish){
 }
 
 module.exports.testSubmitFormFileFileNoFileStream = function(finish){
-  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": ["filePlaceHolder123456", "filePlaceHolder123456789"], "fieldId": globalFieldIds["fileField"]};
+  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"]};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -144,7 +144,7 @@ module.exports.testSubmitFormFileFileNoFileStream = function(finish){
 }
 
 module.exports.testSubmitFormFileFileBadFileStream = function(finish){
-  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": ["filePlaceHolder123456", "filePlaceHolder123456789"], "fieldId": globalFieldIds["fileField"], "fileStream" : "NOTASTREAM"};
+  var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : "NOTASTREAM"};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -166,7 +166,7 @@ module.exports.testSubmitFormFileFileIdDoesNotExist = function(finish){
     "fileType" : "application/pdf",
     "fileUpdateTime" : new Date(Date.now()),
     "hashName" : "filePlaceHolder1234wrong4232"
-  }
+  };
 
   submitAndTest(assert, "test.pdf", [fileWrongDetails], "fileField", submission, testFilePath, {"errorExpected": true}, function(){
 

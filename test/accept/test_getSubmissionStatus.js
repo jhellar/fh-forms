@@ -47,8 +47,24 @@ module.exports.setUp = function(finish){
 
 module.exports.testGetSubmissionStatusWorks = function(finish){
 
+  var  file1Details = {
+    "fileName" : fileName,
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date(Date.now()),
+    "hashName" : "filePlaceHolder123456"
+  };
+
+  var  file2Details = {
+    "fileName" : fileName,
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date(Date.now()),
+    "hashName" : "filePlaceHolder123456789"
+  };
+
   async.series([
-    async.apply(submitData, assert, ["filePlaceHolder123456", "filePlaceHolder123456789"]),
+    async.apply(submitData, assert, [file1Details, file2Details]),
     async.apply(checkPending, assert, "pending", ["filePlaceHolder123456", "filePlaceHolder123456789"]),
     async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath, "test.pdf"),
     async.apply(checkPending, assert, "pending", ["filePlaceHolder123456789"]),

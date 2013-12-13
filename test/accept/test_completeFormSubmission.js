@@ -228,7 +228,24 @@ function createTestData(assert, cb){
 
 function submitDataAndTest(assert, submissionType, fileName, filePath, options, cb){
   var submission = testSubmitFormBaseInfo;
-  var filePlaceHolderEntries = ["filePlaceHolder123456", "filePlaceHolder123456789"];
+
+  var  file1Details = {
+    "fileName" : fileName,
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date(Date.now()),
+    "hashName" : "filePlaceHolder123456"
+  };
+
+  var  file2Details = {
+    "fileName" : fileName,
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date(Date.now()),
+    "hashName" : "filePlaceHolder123456789"
+  };
+
+  var filePlaceHolderEntries = [file1Details, file2Details];
   submission.formId = globalFormId;
   submission.formFields = [{"fieldId" : globalFieldIds[submissionType], "fieldValues" : filePlaceHolderEntries}];
 
