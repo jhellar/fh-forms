@@ -51,7 +51,6 @@ module.exports.testCompleteSubmissionWorks = function(finish){
       if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
-      console.log("RESULT", result.status);
       assert.ok(result.status === "complete");
 
       checkSubmissionComplete(assert, submissionId, function(){
@@ -92,12 +91,10 @@ module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
       if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
-      console.log("THINGY", JSON.stringify(result));
       assert.ok(result.status === "pending");
       assert.ok(result.pendingFiles);
       assert.ok(Array.isArray(result.pendingFiles));
       assert.ok(result.pendingFiles.length === 1);
-      console.log("result.pendingFiles ", result.pendingFiles);
       assert.ok(result.pendingFiles[0] === "filePlaceHolder123456789");
 
       finish();
@@ -264,12 +261,10 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
 
 
     //Submission accepted and now have submissionId -- save the file
-    console.log("Options: ", options, Array.isArray(placeholderTextArray));
     if(options.skipOne === true){
       placeholderTextArray = placeholderTextArray.slice(0, 1);//Removing one of the files so it is skipped
       assert(placeholderTextArray.length === 1);
     }
-    console.log("placeholderTextArray", placeholderTextArray);
     async.eachSeries(placeholderTextArray, function(placeholderText, cb){
       var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText.hashName, "fieldId": globalFieldIds[submissionType], "fileStream" : filePath, "keepFile": true};
       forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
@@ -306,7 +301,6 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
           var foundFieldSubmission = foundSubmittedFields[0];
 
           var foundFileEntry = foundFieldSubmission.fieldValues.filter(function(fieldValue){
-            console.log("THING", JSON.stringify(fieldValue));
             if(!fieldValue.groupId){
               return false;
             }
