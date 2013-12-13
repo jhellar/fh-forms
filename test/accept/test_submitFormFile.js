@@ -156,7 +156,7 @@ module.exports.testSubmitFormFileFileBadFileStream = function(finish){
 module.exports.testSubmitFormFileFileIdDoesNotExist = function(finish){
   var submission = testSubmitFormBaseInfo;
   var  file1Details = {
-    "fileName" : "test.pdf",
+    "fileName" : "test",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
     "fileUpdateTime" : new Date().getTime(),
