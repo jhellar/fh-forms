@@ -6,6 +6,6 @@ var testConfig = {
   "dbForTests": "testAppFormsDb"
 };
 
-process.env.FH_DOMAIN_DB_CONN_URL = "mongodb://" + testConfig.dbUser + ":" + testConfig.dbPassword + "@" + testConfig.dbAddress + ":" + testConfig.dbPort + "/" + testConfig.dbForTests;
+process.env.FH_DOMAIN_DB_CONN_URL = "mongodb://testing:jOhIjy9VtcQqX@10.0.2.15:27017/testing";
 
 module.exports = testConfig;
