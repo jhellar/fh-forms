@@ -38,6 +38,8 @@ module.exports.testGetFormWorksSinglePage = function(finish){
       if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
+      assert.ok(result.lastUpdatedTimestamp);
+      assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
       finish();
     });
   });

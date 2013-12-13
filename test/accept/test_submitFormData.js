@@ -1111,6 +1111,11 @@ function checkSubmissionExists(assert, submissionId, options, cb){
 
 
 function submitAndCheckForm(assert, submission, options, cb ){
+
+  if(!submission._id){
+    submission._id = null;
+  }
+
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission" : submission}, function(err, result){
     if(options.errExpected){
       if(result) console.log(JSON.stringify(submission), result, options);
