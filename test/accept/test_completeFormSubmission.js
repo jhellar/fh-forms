@@ -88,14 +88,16 @@ module.exports.testCompleteSubmissionWrongSubmissionId = function(finish){
 module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {"skipOne": true}, function(submissionId){
     //Form data submitted with all files, now complete the
-    forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : "SOMEWRONGID"}}, function(err, result){
+    forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submissionId}}, function(err, result){
       if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
+      console.log("THINGY", JSON.stringify(result));
       assert.ok(result.status === "pending");
       assert.ok(result.pendingFiles);
       assert.ok(Array.isArray(result.pendingFiles));
       assert.ok(result.pendingFiles.length === 1);
+      console.log("result.pendingFiles ", result.pendingFiles);
       assert.ok(result.pendingFiles[0] === "filePlaceHolder123456789");
 
       finish();
@@ -262,9 +264,12 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
 
 
     //Submission accepted and now have submissionId -- save the file
+    console.log("Options: ", options, Array.isArray(placeholderTextArray));
     if(options.skipOne === true){
-      placeholderTextArray = placeholderTextArray.slice(0);//Removing one of the files so it is skipped
+      placeholderTextArray = placeholderTextArray.slice(0, 1);//Removing one of the files so it is skipped
+      assert(placeholderTextArray.length === 1);
     }
+    console.log("placeholderTextArray", placeholderTextArray);
     async.eachSeries(placeholderTextArray, function(placeholderText, cb){
       var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText.hashName, "fieldId": globalFieldIds[submissionType], "fileStream" : filePath, "keepFile": true};
       forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){

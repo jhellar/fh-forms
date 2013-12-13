@@ -155,7 +155,23 @@ module.exports.testSubmitFormFileFileBadFileStream = function(finish){
 
 module.exports.testSubmitFormFileFileIdDoesNotExist = function(finish){
   var submission = testSubmitFormBaseInfo;
-  var filePlaceHolderEntries = ["filePlaceHolder123456", "filePlaceHolder123456789"];
+  var  file1Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolder123456"
+  };
+
+  var  file2Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolder123456789"
+  };
+
+  var filePlaceHolderEntries = [file1Details, file2Details];
 
   submission.formId = globalFormId;
   submission.formFields = [{"fieldId" : globalFieldIds["fileField"], "fieldValues" : filePlaceHolderEntries}];
@@ -350,7 +366,10 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
           var foundFieldSubmission = foundSubmittedFields[0];
 
           var foundFileEntry = foundFieldSubmission.fieldValues.filter(function(fieldValue){
-            return fieldValue.toString() === result.savedFileGroupId.toString();
+            if(!fieldValue.groupId){
+              return false;
+            }
+            return fieldValue.groupId.toString() === result.savedFileGroupId.toString();
           });
 
           assert.equal(foundFileEntry.length, 1, "Expected single field with fileGroupId " + result.fileGroupId + " but got " + foundFileEntry.length);

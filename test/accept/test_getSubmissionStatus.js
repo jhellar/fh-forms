@@ -22,14 +22,14 @@ var testSubmitFormBaseInfo = {
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
-  "deviceFormTimestamp": new Date.getTime(),
+  "deviceFormTimestamp": new Date().getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date.getTime(),
+    "madeOn": new Date().getTime(),
     "value": "This is a comment"
   },{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date.getTime(),
+    "madeOn": new Date().getTime(),
     "value": "This is another comment"
   }]
 };
@@ -48,27 +48,27 @@ module.exports.setUp = function(finish){
 module.exports.testGetSubmissionStatusWorks = function(finish){
 
   var  file1Details = {
-    "fileName" : fileName,
+    "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date.getTime(),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder123456"
   };
 
   var  file2Details = {
-    "fileName" : fileName,
+    "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date.getTime(),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder123456789"
   };
 
   async.series([
     async.apply(submitData, assert, [file1Details, file2Details]),
     async.apply(checkPending, assert, "pending", ["filePlaceHolder123456", "filePlaceHolder123456789"]),
-    async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath, "test.pdf"),
+    async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath),
     async.apply(checkPending, assert, "pending", ["filePlaceHolder123456789"]),
-    async.apply(submitFile, assert, "filePlaceHolder123456789", testFilePath, "test.pdf"),
+    async.apply(submitFile, assert, "filePlaceHolder123456789", testFilePath),
     async.apply(checkPending, assert, "pending", []),
     async.apply(completeSubmission, assert),
     async.apply(checkPending, assert, "complete", [])
@@ -100,8 +100,8 @@ function submitData(assert, filesToSubmit, cb){
   });
 }
 
-function submitFile(assert, placeholderText, filePath, fileName, cb){
-  var testFileSubmission = {"submissionId" : submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
+function submitFile(assert, placeholderText, filePath, cb){
+  var testFileSubmission = {"submissionId" : submissionId, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     if(err) console.log(err);
     assert.ok(!err);
