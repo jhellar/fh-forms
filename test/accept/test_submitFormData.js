@@ -28,14 +28,14 @@ var testSubmitFormBaseInfo = {
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
-  "deviceFormTimestamp": new Date(Date.now()).toUTCString(),
+  "deviceFormTimestamp": new Date().getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()).toUTCString(),
+    "madeOn": new Date().getTime(),
     "value": "This is a comment"
   },{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()).toUTCString(),
+    "madeOn": new Date().getTime(),
     "value": "This is another comment"
   }]
 };
@@ -173,7 +173,7 @@ module.exports.testSubmitFile = function(finish){
     "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolderhash123456"
   };
 
@@ -181,7 +181,7 @@ module.exports.testSubmitFile = function(finish){
     "fileName" : "test2.jpg",
     "fileSize" : 123456,
     "fileType" : "image/jpeg",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder124124"
   };
 
@@ -207,7 +207,7 @@ module.exports.testSubmitFileWrongPlaceholder = function(finish){
     "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolderhash123456"
   };
 
@@ -215,7 +215,7 @@ module.exports.testSubmitFileWrongPlaceholder = function(finish){
     "fileName" : "test2.jpg",
     "fileSize" : 123456,
     "fileType" : "image/jpeg",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "wrongGierlsfdsfdsf"
   };
 
@@ -972,7 +972,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
     "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolderhash123456"
   };
 
@@ -980,7 +980,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
     "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder124124"
   };
 
@@ -1057,7 +1057,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
                 "fileName" : "test.pdf",
                 "fileSize" : 123456,
                 "fileType" : "application/pdf",
-                "fileUpdateTime" : new Date(Date.now()),
+                "fileUpdateTime" : new Date().getTime(),
                 "hashName" : "filePlaceHolderhash777777"
               };
               // reset fieldId to just the id, not the full field definition, as returned when reading a field

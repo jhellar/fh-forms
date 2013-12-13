@@ -23,14 +23,14 @@ var testSubmitFormBaseInfo = {
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
-  "deviceFormTimestamp": new Date(Date.now()),
+  "deviceFormTimestamp": new Date().getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()),
+    "madeOn": new Date().getTime(),
     "value": "This is a comment"
   },{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()),
+    "madeOn": new Date().getTime(),
     "value": "This is another comment"
   }]
 }
@@ -164,7 +164,7 @@ module.exports.testSubmitFormFileFileIdDoesNotExist = function(finish){
     "fileName" : "test.pdf",
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder1234wrong4232"
   };
 
@@ -283,7 +283,7 @@ function submitDataAndTest(assert, submissionType, fileName, filePath, options, 
     "fileName" : fileName,
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder123456"
   };
 
@@ -291,7 +291,7 @@ function submitDataAndTest(assert, submissionType, fileName, filePath, options, 
     "fileName" : fileName,
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder123456789"
   };
 

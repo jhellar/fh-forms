@@ -21,13 +21,13 @@ RELEASE_DIR = $(PACKAGE)-$(VERSION)-$(BUILD_NUMBER)
 
 all: clean npm_deps test
 
-test: test_unit test_accept
+test: test_accept
 
 test_accept: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/turbo --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/ --series=true
 
 test_unit: npm_deps
-	env NODE_PATH=./lib ./node_modules/.bin/turbo ./test/unit/
+	env NODE_PATH=./lib ./node_modules/.bin/turbo ./test/unit/ --series=true
 
 test_unit_cov: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- ./test/unit

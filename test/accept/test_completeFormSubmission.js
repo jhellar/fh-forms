@@ -20,14 +20,14 @@ var testSubmitFormBaseInfo = {
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
-  "deviceFormTimestamp": new Date(Date.now()),
+  "deviceFormTimestamp": new Date().getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()),
+    "madeOn": new Date().getTime(),
     "value": "This is a comment"
   },{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()),
+    "madeOn": new Date().getTime(),
     "value": "This is another comment"
   }]
 };
@@ -51,6 +51,7 @@ module.exports.testCompleteSubmissionWorks = function(finish){
       if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
+      console.log("RESULT", result.status);
       assert.ok(result.status === "complete");
 
       checkSubmissionComplete(assert, submissionId, function(){
@@ -88,6 +89,7 @@ module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {"skipOne": true}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : "SOMEWRONGID"}}, function(err, result){
+      if(err) console.log(err);
       assert.ok(!err);
       assert.ok(result);
       assert.ok(result.status === "pending");
@@ -233,7 +235,7 @@ function submitDataAndTest(assert, submissionType, fileName, filePath, options, 
     "fileName" : fileName,
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder123456"
   };
 
@@ -241,7 +243,7 @@ function submitDataAndTest(assert, submissionType, fileName, filePath, options, 
     "fileName" : fileName,
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder123456789"
   };
 
@@ -264,7 +266,7 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
       placeholderTextArray = placeholderTextArray.slice(0);//Removing one of the files so it is skipped
     }
     async.eachSeries(placeholderTextArray, function(placeholderText, cb){
-      var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText, "fieldId": globalFieldIds[submissionType], "fileStream" : filePath, "keepFile": true};
+      var testFileSubmission = {"submissionId" : dataSaveResult.submissionId, "fileName": fileName, "fileId": placeholderText.hashName, "fieldId": globalFieldIds[submissionType], "fileStream" : filePath, "keepFile": true};
       forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
         if(options.errorExpected === true){
           assert.ok(err);
@@ -299,7 +301,11 @@ function submitAndTest(assert, fileName, placeholderTextArray, submissionType, s
           var foundFieldSubmission = foundSubmittedFields[0];
 
           var foundFileEntry = foundFieldSubmission.fieldValues.filter(function(fieldValue){
-            return fieldValue.toString() === result.savedFileGroupId.toString();
+            console.log("THING", JSON.stringify(fieldValue));
+            if(!fieldValue.groupId){
+              return false;
+            }
+            return fieldValue.groupId.toString() === result.savedFileGroupId.toString();
           });
 
           assert.equal(foundFileEntry.length, 1, "Expected single field with fileGroupId " + result.fileGroupId + " but got " + foundFileEntry.length);

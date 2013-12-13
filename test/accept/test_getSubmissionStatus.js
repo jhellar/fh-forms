@@ -22,14 +22,14 @@ var testSubmitFormBaseInfo = {
   "userId": "user123456",
   "deviceId": "device123456",
   "deviceIPAddress": "192.168.1.1",
-  "deviceFormTimestamp": new Date(Date.now()),
+  "deviceFormTimestamp": new Date.getTime(),
   "comments": [{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()),
+    "madeOn": new Date.getTime(),
     "value": "This is a comment"
   },{
     "madeBy": "somePerson@example.com",
-    "madeOn": new Date(Date.now()),
+    "madeOn": new Date.getTime(),
     "value": "This is another comment"
   }]
 };
@@ -51,7 +51,7 @@ module.exports.testGetSubmissionStatusWorks = function(finish){
     "fileName" : fileName,
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date.getTime(),
     "hashName" : "filePlaceHolder123456"
   };
 
@@ -59,7 +59,7 @@ module.exports.testGetSubmissionStatusWorks = function(finish){
     "fileName" : fileName,
     "fileSize" : 123456,
     "fileType" : "application/pdf",
-    "fileUpdateTime" : new Date(Date.now()),
+    "fileUpdateTime" : new Date.getTime(),
     "hashName" : "filePlaceHolder123456789"
   };
 
