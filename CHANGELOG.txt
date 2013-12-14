@@ -1,5 +1,10 @@
 fh-forms
 -------
+
+0.2.13 - 2013-12-19 - IR217 - dberesford
+---------------------------------------
+* Ticket 5312 - Submission export
+
 0.2.11 - IR217 - Martin Murphy
 	Change eastings/northings validation to work with uk_grid
 	Make formname retrival more defensive
