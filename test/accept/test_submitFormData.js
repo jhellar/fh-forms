@@ -475,7 +475,7 @@ module.exports.testSubmitLocationNorthEastInvalid = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["locationNorthEastField"],
-    "fieldValues": [{"zone" : "11U", "eastings" : "594234934", "northings" : "5636123474"}, {"zone" : "12U", "eastings" : "594934", "northings" : "5636174"}]
+    "fieldValues": [{"zone" : "", "eastings" : "BAD", "northings" : "5636123474"}, {"zone" : "", "eastings" : "594934", "northings" : "5636174"}]
   }];
 
   submission.formFields = testValues;
