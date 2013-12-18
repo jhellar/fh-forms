@@ -230,7 +230,7 @@ module.exports = {
     "required":false,
     "fieldOptions" : {
       "definition": {
-        "checkboxChoices":[
+        "options":[
           {
             "red":{
               "value":1,
