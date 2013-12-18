@@ -1,5 +1,10 @@
 fh-forms
 -------
+0.2.10 - IR217 - Martin Murphy
+	We seem to have changed the "checkboxChoices" key to "options"
+	Change client validation to allow any our file value types
+	Add new validation tests, fix new validation bugs
+
 0.2.4 - IR216 - Martin Murphy
 	#5317  Add validateFieldValue to rulesEngine to validate against a value instead of a submission entry
 	#5322  fix rulesEngine closure wrapping async
