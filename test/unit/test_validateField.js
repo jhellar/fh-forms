@@ -559,7 +559,7 @@ exports.testValidateLocationLatLongWrongValues = function(finish){
 exports.testValidateLocationNorthEast = function(finish){
   var testField = exampleFields.locationNorthEastFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [{"zone" : "11U", "eastings" : "594934", "northings" : "5636174"}, {"zone" : "12U", "eastings" : "594934", "northings" : "5636174"}];
+  var testSubmissionData = [{"zone" : "TG", "eastings" : "59434", "northings" : "56374"}, {"zone" : "TU", "eastings" : 594934, "northings" : 5636174}];
 
   testSubmission.fieldValues = testSubmissionData;
 
@@ -578,7 +578,7 @@ exports.testValidateLocationNorthEast = function(finish){
 exports.testValidateLocationNorthEastWrongValues = function(finish){
   var testField = exampleFields.locationNorthEastFieldData;
   var testSubmission = testSubmitFormBaseInfo;
-  var testSubmissionData = [{"zone" : "11U", "eastings" : "3455", "northings" : "5636174"}, {"zone" : "12U", "eastings" : "594934", "northings" : "5636174"}];
+  var testSubmissionData = [{"zone" : "1U", "eastings" : "BAD", "northings" : "5636174"}, {"zone" : "12U", "eastings" : "594934", "northings" : "5636174"}];
 
   testSubmission.fieldValues = testSubmissionData;
 

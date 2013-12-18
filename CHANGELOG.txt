@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.11 - IR217 - Martin Murphy
+	Change eastings/northings validation to work with uk_grid
+	Make formname retrival more defensive
+
 0.2.10 - IR217 - Martin Murphy
 	We seem to have changed the "checkboxChoices" key to "options"
 	Change client validation to allow any our file value types
