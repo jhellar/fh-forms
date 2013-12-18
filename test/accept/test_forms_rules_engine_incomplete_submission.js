@@ -218,7 +218,7 @@ var TEST_FORMDEF_1 = {
             "required": false,
             "fieldOptions": {
                "definition": {
-                  "checkboxChoices": [{
+                  "options": [{
                      "label": "red",
                      "value": 1,
                      "selected": true
