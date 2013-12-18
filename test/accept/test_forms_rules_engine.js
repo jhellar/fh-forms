@@ -760,7 +760,6 @@ module.exports.testBasicForm1ValidateFieldValueRequiredFileFields = function tes
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages[0].indexOf("Expected object") > -1, 'Field 6 should complain about Expected type' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -778,7 +777,6 @@ module.exports.testBasicForm1ValidateFieldValueRequiredFileFields = function tes
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages[0].indexOf("Expected value") > -1, 'Field 6 should complain about Expected value' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -812,9 +810,9 @@ module.exports.testBasicForm1ValidateFieldValueRequiredFileFields = function tes
         assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
 
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID], 'Should be details for field 6');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked valid');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message array');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length === 0, 'Field 6 should have no error messages: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have error messages: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]));
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]));
@@ -890,7 +888,6 @@ module.exports.testBasicForm1ValidateFieldValueOptionalFileFields = function tes
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages[0].indexOf("Expected object") > -1, 'Field 6 should complain about Expected type' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -908,7 +905,6 @@ module.exports.testBasicForm1ValidateFieldValueOptionalFileFields = function tes
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages[0].indexOf("Expected value") > -1, 'Field 6 should complain about Expected value' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -942,9 +938,9 @@ module.exports.testBasicForm1ValidateFieldValueOptionalFileFields = function tes
         assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
 
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID], 'Should be details for field 6');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked valid');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message array');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length === 0, 'Field 6 should have no error messages: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have error messages: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]));
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID], 'Unexpected results for TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]));
@@ -1022,7 +1018,6 @@ module.exports.testBasicForm1ValidateFieldValueRequiredPhotoFields = function te
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].valid, 'Field 7 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages, 'Field 7 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages.length > 0, 'Field 7 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages[0].indexOf("empty") > -1, 'Field 7 should complain about empty string' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -1040,7 +1035,6 @@ module.exports.testBasicForm1ValidateFieldValueRequiredPhotoFields = function te
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].valid, 'Field 7 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages, 'Field 7 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages.length > 0, 'Field 7 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages[0].indexOf("Expected base64") > -1, 'Field 7 should complain about Expected type' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -1134,7 +1128,6 @@ module.exports.testBasicForm1ValidateFieldValueOptionalPhotoFields = function te
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].valid, 'Field 7 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages, 'Field 7 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages.length > 0, 'Field 7 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages[0].indexOf("empty") > -1, 'Field 7 should complain about empty string' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -1152,7 +1145,6 @@ module.exports.testBasicForm1ValidateFieldValueOptionalPhotoFields = function te
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].valid, 'Field 7 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages, 'Field 7 should have an error message');
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages.length > 0, 'Field 7 should have at least one error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages[0].indexOf("Expected base64") > -1, 'Field 7 should complain about Expected type' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages));
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
