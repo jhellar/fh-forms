@@ -154,9 +154,105 @@ exports.testValidateTextFieldTooLong = function(finish){
 }
 
 
+// FIELD_FORMAT_MODE : 'fieldOptions.definition.field_format_mode',
+// FIELD_FORMAT_STRING : 'fieldOptions.definition.field_format_string',
+// field_format_string is the "ccnnnn" or regex string
+// 14:26
+// field_format_mode is either
+// "simple" or "regex"
+exports.testValidateTextFieldWithFormatRegex = function(finish){
+  var testField = exampleFields.textFieldDataFormatRegex;
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = [
+    {fieldValues: ["EN201-4123"], result: true},
+    {fieldValues: ["is349-2328"], result: true},
+    {fieldValues: ["aB000-2320"], result: true},
+    {fieldValues: ["aB000-2320"], result: true},
+    {fieldValues: ["EN201-2324", "is349-2328"], result: true},
+    {fieldValues: ["is349-3248", "is349-2328"], result: true},
+    {fieldValues: ["aB000-0000", "EN201-4324"], result: true},
+    {fieldValues: ["aB00-2320"], result: false},
+    {fieldValues: ["aB000-220"], result: false},
+    {fieldValues: ["aB00--2320"], result: false},
+    {fieldValues: ["aB000--2320"], result: false},
+    {fieldValues: ["aB000a2320"], result: false},
+    {fieldValues: ["aB000/2320"], result: false},
+    {fieldValues: ["EN20141"], result: false},
+    {fieldValues: ["EN20-3441", "is3498"], result: false},
+    {fieldValues: ["i349-0008"], result: false},
+    {fieldValues: ["3aB00-2300"], result: false},
+    {fieldValues: ["is349-0008", "3aB0000"], result: false},
+    {fieldValues: [" is3498"], result: false},
+    {fieldValues: ["is3498 "], result: false},
+    {fieldValues: ["aB000"], result: false},
+    {fieldValues: ["AB"], result: false},
+    {fieldValues: ["0000"], result: false},
+    {fieldValues: [""], result: false},
+    {fieldValues: ["aBc000"], result: false},
+    {fieldValues: ["AB 498"], result: false},
+    {fieldValues: ["aB 0000"], result: false}
+  ];
 
+  assert.equal(testField.fieldOptions.validation.field_format_mode, "regex", 'bad test data, expected field format simple');
+  async.each(testSubmissionData, function (testValues, cb) {
+    testSubmission.fieldValues = testValues.fieldValues;
+    var validator = fieldValidator(testField, testSubmission);
+    validator.validate(function(err){
+      assert.equal(!err, testValues.result, 'Unexpected ' + (testValues.result?"failure":"success") + ': ' + util.inspect(err) + ', when testing: ' + util.inspect(testValues));
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+    finish();
+  });
+}
 
+exports.testValidateTextFieldWithFormatSimple = function(finish){
+  var testField = exampleFields.textFieldDataFormatSimple;
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = [
+    {fieldValues: ["EN201-4123"], result: true},
+    {fieldValues: ["is349-2328"], result: true},
+    {fieldValues: ["aB000-2320"], result: true},
+    {fieldValues: ["aB000-2320"], result: true},
+    {fieldValues: ["EN201-2324", "is349-2328"], result: true},
+    {fieldValues: ["is349-3248", "is349-2328"], result: true},
+    {fieldValues: ["aB000-0000", "EN201-4324"], result: true},
+    {fieldValues: ["aB00-2320"], result: false},
+    {fieldValues: ["aB000-220"], result: false},
+    {fieldValues: ["aB00--2320"], result: false},
+    {fieldValues: ["aB000--2320"], result: false},
+    {fieldValues: ["aB000a2320"], result: false},
+    {fieldValues: ["aB000/2320"], result: false},
+    {fieldValues: ["EN20141"], result: false},
+    {fieldValues: ["EN20-3441", "is3498"], result: false},
+    {fieldValues: ["i349-0008"], result: false},
+    {fieldValues: ["3aB00-2300"], result: false},
+    {fieldValues: ["is349-0008", "3aB0000"], result: false},
+    {fieldValues: [" is3498"], result: false},
+    {fieldValues: ["is3498 "], result: false},
+    {fieldValues: ["aB000"], result: false},
+    {fieldValues: ["AB"], result: false},
+    {fieldValues: ["0000"], result: false},
+    {fieldValues: [""], result: false},
+    {fieldValues: ["aBc000"], result: false},
+    {fieldValues: ["AB 498"], result: false},
+    {fieldValues: ["aB 0000"], result: false}
+  ];
 
+  assert.equal(testField.fieldOptions.validation.field_format_mode, "simple", 'bad test data, expected field format simple');
+  async.eachSeries(testSubmissionData, function (testValues, cb) {
+    testSubmission.fieldValues = testValues.fieldValues;
+    var validator = fieldValidator(testField, testSubmission);
+    validator.validate(function(err){
+      assert.equal(!err, testValues.result, 'Unexpected ' + (testValues.result?"failure":"success") + ': ' + util.inspect(err) + ', when testing: ' + util.inspect(testValues));
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+    finish();
+  });
+}
 
 exports.testValidateTextArea = function(finish){
   var testField = exampleFields.textAreaFieldData;

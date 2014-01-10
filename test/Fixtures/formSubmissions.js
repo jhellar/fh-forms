@@ -18,6 +18,45 @@ module.exports = {
       }
     }
   },
+  "textFieldDataFormatRegex":{
+    "name":"textField",
+    "helpText":"This is a text field",
+    "type":"text",
+    "repeating":true,
+    "required":false,
+    "fieldOptions":{
+      "definition":{
+        "maxRepeat":5,
+        "minRepeat":1
+      },
+      "validation":{
+        "min":0,
+        "max":20,
+        "field_format_mode":"regex",
+        "field_format_string": "^[a-zA-Z0-9][a-zA-Z0-9][0-9][0-9][0-9]\\u002D[0-9][0-9][0-9][0-9]$"
+      }
+    }
+  },
+  "textFieldDataFormatSimple":{
+    "name":"textField",
+    "helpText":"This is a text field",
+    "type":"text",
+    "repeating":true,
+    "required":false,
+    "fieldOptions":{
+      "definition":{
+        "maxRepeat":5,
+        "minRepeat":1
+      },
+      "validation":{
+        "min":0,
+        "max":20,
+        "field_format_mode":"simple",
+        "field_format_string": "ccnnn-nnnn"
+      }
+    }
+  },
+
   "fileFieldData":{
     "name":"fileField",
     "helpText":"This is a file field",
