@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.2.14 - 2014-01-10 - IR218 - mmurphy
+---------------------------------------
+* Ticket #5612 - Field checking in rules engine based on format definition
+
 0.2.13 - 2013-12-19 - IR217 - dberesford
 ---------------------------------------
 * Ticket 5312 - Submission export
