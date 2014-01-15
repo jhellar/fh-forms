@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.2.15 - 2014-01-14 - IR219 - mmurphy
+---------------------------------------
+* Ticket #5643 - add app forms groups to fh-forms
+
 0.2.14 - 2014-01-10 - IR218 - mmurphy
 ---------------------------------------
 * Ticket #5612 - Field checking in rules engine based on format definition
