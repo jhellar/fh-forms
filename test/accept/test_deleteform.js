@@ -57,7 +57,7 @@ module.exports.it_should_delete_form = function(finish) {
     function(cb) {
       forms.updateForm(options, TEST_FORM, function(err, form){
         assert.ok(!err, 'Error in updateForm: ' + util.inspect(err));
-        cb(null, form);
+        cb(null, form.toJSON());
       });
     },
     function getForm(form, cb) {
@@ -72,7 +72,7 @@ module.exports.it_should_delete_form = function(finish) {
     function deleteForm(form, cb) {
       assert.ok(form, 'form should have data');
       forms.deleteForm({_id: form._id, uri: options.uri, userEmail: options.userEmail}, function(err, data){
-        assert.ok(!err, 'Error in addAppForms: ' + util.inspect(err));
+        assert.ok(!err, 'Error in deleteForm: ' + util.inspect(err));
         return cb(err, form._id);
       });
     },
@@ -89,4 +89,3 @@ module.exports.it_should_delete_form = function(finish) {
     finish();
   });
 };
-
