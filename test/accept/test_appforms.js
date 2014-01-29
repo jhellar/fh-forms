@@ -95,6 +95,17 @@ module.exports.it_should_save_app_forms = function(finish) {
       });
     },
 
+    // test read single with forms in list
+    function getAppFormsForApp(form1, form2, appForms, cb) {    
+      forms.getAppFormsForApp({uri: options.uri, userEmail: options.userEmail, appId:'12345'}, function(err, appForms) {
+        assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+        assert.equal(appForms.forms.length, 2);
+        assert.ok((appForms.forms[0]._id.toString() === form1._id.toString()) || (appForms.forms[1]._id.toString() === form1._id.toString()), 'form 1 should have been in list: ' + util.inspect(appForms.forms));
+        assert.ok((appForms.forms[0]._id.toString() === form2._id.toString()) || (appForms.forms[1]._id.toString() === form2._id.toString()), 'form 2 should have been in list: ' + util.inspect(appForms.forms));
+        return cb(err, form1, form2, appForms);
+      });
+    },
+
     // this is effectively the reverse lookup - what apps are using this form
     function getFormApps(form1, form2, appForms, cb){
       forms.getFormApps({formId: form1._id, uri: options.uri, userEmail: options.userEmail},function(err, apps) {

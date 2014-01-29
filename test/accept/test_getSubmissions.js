@@ -52,6 +52,164 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
+
+// setup 3 groups
+// group 1 give user1 access to form and app
+// group 2 give user2 access to form but not app
+// group 3 give user3 access to app but not form
+function setupTestGroups(user1id, user2id, user3id, formid, appid, cb) {
+  var group1Setup = {
+    name: 'testGroup1',
+    users: [user1id],
+    forms: [formid],
+    apps: [appid],
+    themes: []
+  };
+  var group2Setup = {
+    name: 'testGroup2',
+    users: [user2id],
+    forms: [formid],
+    apps: [],
+    themes: []
+  };
+  var group3Setup = {
+    name: 'testGroup3',
+    users: [user3id],
+    forms: [],
+    apps: [appid],
+    themes: []
+  };
+  forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group1Setup, function (err) {
+    if(err) return cb(err);
+    forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group2Setup, function (err) {
+      if(err) return cb(err);
+      forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group3Setup, function (err) {
+        if(err) return cb(err);
+        return cb();
+      });
+    });
+  });    
+}
+
+function restrictToUser(user) {
+  var ret = JSON.parse(JSON.stringify(options));
+  ret.restrictToUser = user;
+  return ret;
+}
+
+module.exports.testGetAllSubmissionsWithRestrictions = function(finish){
+  var user1id = 'user1@example.com';
+  var user2id = 'user2@example.com';
+  var user3id = 'user3@example.com';
+  var invalidUser = "notexist@example.com";
+
+  setupTestGroups(user1id, user2id, user3id, TEST_SUBMISSION_FORMID, TEST_SUBMISSION_APPID, function (err) {
+    assert.ok(!err, "should not have returned error: " + util.inspect(err));
+    async.series([
+      function testInvalidUser (cb) {
+        var restrictOptions = restrictToUser(invalidUser);
+        forms.getSubmissions(restrictOptions, {}, function (err, results){
+          assert.ok(!err, "should not have returned error: " + util.inspect(err));
+          assert.ok(results);  // should have returned results
+          var submissions = results.submissions;
+          assert.ok(submissions);  // should have returned submissions in results
+          assert.strictEqual(submissions.length, 0, 'should be nothing returned for invalid user');
+          return cb();
+        });
+      },
+      function testUser1Ok (cb) {
+        var restrictOptions = restrictToUser(user1id);
+        forms.getSubmissions(restrictOptions, {}, function (err, results){
+          assert.ok(!err, "should not have returned error: " + util.inspect(err));
+          assert.ok(results);  // should have returned results
+          var submissions = results.submissions;
+          assert.ok(submissions);  // should have returned submissions in results
+          assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS, 'should have submissions returned for user1');
+          return cb();
+        });
+      },
+      function testUser2Invalid (cb) {
+        var restrictOptions = restrictToUser(user2id);
+        forms.getSubmissions(restrictOptions, {}, function (err, results){
+          assert.ok(!err, "should not have returned error: " + util.inspect(err));
+          assert.ok(results);  // should have returned results
+          var submissions = results.submissions;
+          assert.ok(submissions);  // should have returned submissions in results
+          assert.strictEqual(submissions.length, 0, 'should be nothing returned for invalid user2 - no access to app');
+          return cb();
+        });
+      },
+      function testUser3Invalid (cb) {
+        var restrictOptions = restrictToUser(user3id);
+        forms.getSubmissions(restrictOptions, {}, function (err, results){
+          assert.ok(!err, "should not have returned error: " + util.inspect(err));
+          assert.ok(results);  // should have returned results
+          var submissions = results.submissions;
+          assert.ok(submissions);  // should have returned submissions in results
+          assert.strictEqual(submissions.length, 0, 'should be nothing returned for invalid user3 - no access to form');
+          return cb();
+        });
+      },
+    ], function (err) {
+      assert.ok(!err, "should not have returned error: " + util.inspect(err));
+      finish();
+    });
+  });
+};
+
+module.exports.testGetAllSubmissionsByAppWithRestrictions = function(finish){
+  var user1id = 'user1@example.com';
+  var user2id = 'user2@example.com';
+  var user3id = 'user3@example.com';
+  var invalidUser = "notexist@example.com";
+
+  setupTestGroups(user1id, user2id, user3id, TEST_SUBMISSION_FORMID, TEST_SUBMISSION_APPID, function (err) {
+    assert.ok(!err, "should not have returned error: " + util.inspect(err));
+
+    async.series([
+      function testInvalidUser (cb) {
+        var restrictOptions = restrictToUser(invalidUser);
+        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
+          assert.ok(err, "should have returned error, for invalid user: " + util.inspect(err));
+          return cb();
+        });
+      },
+      function testUser1Ok (cb) {
+        var restrictOptions = restrictToUser(user1id);
+        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
+          assert.ok(!err, "should not have returned error, for valid user: " + util.inspect(err));
+          assert.ok(results);  // should have returned results
+          var submissions = results.submissions;
+          assert.ok(submissions);  // should have returned submissions in results
+          assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+          return cb();
+        });
+      },
+      function testUser2Invalid (cb) {
+        var restrictOptions = restrictToUser(user2id);
+        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
+          assert.ok(err, "should have returned error, for user without access to app: " + util.inspect(err));
+          return cb();
+        });
+      },
+      function testUser3Invalid (cb) {
+        var restrictOptions = restrictToUser(user3id);
+        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
+          assert.ok(!err, "should not have returned error, for user with access to app: " + util.inspect(err));
+          assert.ok(results);  // should have returned results
+          var submissions = results.submissions;
+          assert.ok(submissions);  // should have returned submissions in results
+          assert.strictEqual(submissions.length, 0, 'should not have returned submissions for user without access to forms: ' + util.inspect(submissions)); 
+          return cb();
+        });
+      }
+    ], function (err) {
+      assert.ok(!err, "should not have returned error: " + util.inspect(err));
+      finish();
+    });
+  });
+};
+
 module.exports.testGetAllSubmissions = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
@@ -69,7 +227,6 @@ module.exports.testGetAllSubmissions = function(finish){
     finish();
   });
 };
-
 
 module.exports.testGetAllSubmissionsWithAppMap = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){

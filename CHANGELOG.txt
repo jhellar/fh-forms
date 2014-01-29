@@ -1,9 +1,18 @@
 fh-forms
 -------
 
-0.2.16 - 2014-01-14 - IR219 - Niall Donnelly
+
+0.2.18 - 2014-01-29 - IR219 - Niall Donnelly
 ---------------------------------------
-* Ticket #5398 - added updates to fh-forms theme generator for more complext themes.
+* Ticket #5398 - added updates to fh-forms theme generator for more complex themes.
+
+0.2.17 - 2014-01-24 - IR219 - mmurphy
+---------------------------------------
+* Ticket #5729 - fix restriction on setting forms apps
+
+0.2.16 - 2014-01-22 - IR219 - mmurphy
+---------------------------------------
+* Ticket #5650 - fh-forms logic for restricting access (R&W) based on user id
 
 0.2.15 - 2014-01-14 - IR219 - mmurphy
 ---------------------------------------
