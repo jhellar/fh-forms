@@ -217,7 +217,7 @@ function checkTheme(assert, theme){
 
   delete theme._id;//Should be equal bar the id
   for(var key in testThemeData){
-    assert.ok(lodash.isEqual(testThemeData[key], theme[key]));
+    assert.ok(lodash.isEqual(testThemeData[key], theme[key]), key, testThemeData[key],  theme[key] );
   }
 }
 
