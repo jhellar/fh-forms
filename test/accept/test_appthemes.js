@@ -48,6 +48,9 @@ module.exports.it_should_set_app_theme = function(finish) {
       var testTheme = new Theme(testThemeData);
 
       testTheme.save(function(err, theme){
+        if(err){
+          console.log(err);
+        }
         assert.ok(!err);
         cb(null, theme);
       });

@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.2.16 - 2014-01-14 - IR219 - Niall Donnelly
+---------------------------------------
+* Ticket #5398 - added updates to fh-forms theme generator for more complext themes.
+
 0.2.15 - 2014-01-14 - IR219 - mmurphy
 ---------------------------------------
 * Ticket #5643 - add app forms groups to fh-forms

@@ -319,7 +319,7 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "definition" : {
-        "locationUnit" : "latLong",
+        "locationUnit" : "latlong",
         "maxRepeat":4,
         "minRepeat":2
       }
@@ -334,7 +334,7 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "definition" : {
-        "locationUnit" : "northEast",
+        "locationUnit" : "northeast",
         "maxRepeat":4,
         "minRepeat":2
       }
