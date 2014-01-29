@@ -6,6 +6,7 @@ var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var lodash = require('lodash');
 var assert = require('assert');
+var util = require('util');
 
 var testFilePath = "./test/Fixtures/test.pdf";
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
@@ -943,7 +944,7 @@ module.exports.testSubmitUpdate = function(finish){
       forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submission._id}}, function(err, res){
         assert.ok(!err, err);
         assert.ok(res);
-        assert.equal(res.formSubmission.status, "complete");
+        assert.equal(res.formSubmission.status, "complete", "should be COMPLETE submission: " + util.inspect(res.formSubmission));
         assert.notEqual(updatedTimestamp, res.formSubmission.updatedTimestamp.getTime());
         updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
 
