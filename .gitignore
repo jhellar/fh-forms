@@ -16,3 +16,7 @@ node_modules
 
 .idea/
 cov-accept/
+
+client/
+cov-unit/
+output/

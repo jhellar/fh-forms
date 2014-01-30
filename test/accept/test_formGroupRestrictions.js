@@ -19,7 +19,7 @@ module.exports.setUp = function(finish){
       finish();
     });
   });
-}
+};
 
 module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
@@ -28,29 +28,132 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.testGetFormWorksSinglePage = function(finish){
+module.exports.testGetFormGroupRestrictFail = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
 
-    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
-      if(err) console.log(err);
-      assert.ok(!err, util.inspect(err));
-      assert.ok(result);
-      assert.ok(result.lastUpdatedTimestamp);
-      assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
-      finish();
+    var formId = result.forms[0]._id;
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : formId, restrictToUser: "notexist@example.com"}, function(err, result){
+      assert.ok(err, 'should generate error since no access to that form');
+
+      var allowedUser = 'users1@example.com';
+      var groupSetup = {
+        name: 'testGroup',
+        users: [allowedUser],
+        forms: [formId],
+        apps: [],
+        themes: []
+      };
+      forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, groupSetup, function (err) {
+        // should still fail, since user not listed
+        forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : formId, restrictToUser: "notexist@example.com"}, function(err, result){
+          assert.ok(err, 'should generate error since no access to that form');
+
+          // should pass since user is listed
+          forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : formId, restrictToUser: allowedUser}, function(err, result){
+            assert.ok(!err, util.inspect(err));
+
+            finish();
+          });
+        });
+      });
     });
   });
 };
 
-module.exports.testGetFormWorksAllForms = function(finish){
-  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+// setup 2 groups
+// group 1 give user1 access to form1
+// group 2 give user 2 access to form1 and form 2
+function setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, cb) {
+  var group1Setup = {
+    name: 'testGroup',
+    users: [allowedUser1],
+    forms: [form1Id],
+    apps: [appId],
+    themes: []
+  };
+  var group2Setup = {
+    name: 'testGroup2',
+    users: [allowedUser2],
+    forms: [form1Id, form2Id],
+    apps: [appId],
+    themes: []
+  };
+  forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group1Setup, function (err) {
+    if(err) return cb(err);
+    forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group2Setup, function (err) {
+      if(err) return cb(err);
+      return cb();
+    });
+  });    
+}
+
+module.exports.testGetFormsGroupRestrict = function(finish){
+  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
-    assert.ok(result.forms);
-    assert.equal(2, result.forms.length);
-    finish();
+
+    assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
+    var form1Id = result.forms[0]._id;
+    var form2Id = result.forms[1]._id;
+    var allowedUser1 = 'users1@example.com';
+    var allowedUser2 = 'users2@example.com';
+    setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, function (err) {
+      assert.ok(!err, util.inspect(err));
+
+      forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: "notexist@example.com", "appId": appId}, function(err, result){
+        assert.ok(!err, util.inspect(err));
+        assert.equal(result.forms.length, 0, 'should be no forms returned: ' + util.inspect(result));
+
+        forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser2, "appId": appId}, function(err, result){
+          assert.ok(!err, util.inspect(err));
+          assert.equal(result.forms.length, 2, 'should be 2 forms returned: ' + util.inspect(result));
+
+          // should be 1 form
+          forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser1, "appId": appId}, function(err, result){
+            assert.ok(!err, util.inspect(err));
+            assert.equal(result.forms.length, 1, 'should be 1 form returned: >>>>>' + util.inspect(result) + "<<<<<<");
+
+            finish();
+          });
+        });
+      });
+    });
+  });
+};
+
+module.exports.testGetAllFormsGroupRestrict = function(finish){
+  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+    assert.ok(!err, util.inspect(err));
+    assert.ok(result);
+
+    assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
+    var form1Id = result.forms[0]._id;
+    var form2Id = result.forms[1]._id;
+    var allowedUser1 = 'users1@example.com';
+    var allowedUser2 = 'users2@example.com';
+    setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, function (err) {
+      assert.ok(!err, util.inspect(err));
+
+      forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: "notexist@example.com"}, function(err, result){
+        assert.ok(!err, util.inspect(err));
+        assert.equal(result.forms.length, 0, 'should be no forms returned: ' + util.inspect(result));
+
+        forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser2}, function(err, result){
+          assert.ok(!err, util.inspect(err));
+          assert.equal(result.forms.length, 2, 'should be 2 forms returned: ' + util.inspect(result));
+
+          // should be 1 form
+          forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser1}, function(err, result){
+            assert.ok(!err, util.inspect(err));
+            assert.equal(result.forms.length, 1, 'should be 1 form returned: >>>>>' + util.inspect(result) + "<<<<<<");
+
+            finish();
+          });
+        });
+      });
+    });
   });
 };
 

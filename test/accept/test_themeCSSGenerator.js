@@ -15,11 +15,16 @@ module.exports.tearDown = function(finished){
 }
 
 module.exports.testGenerateLogo = function(finished){
-  var testJSON = {"logo" : "sometestLogo"};
+  var testJSON = {"logo" : {
+    base64String : "sometestlogostrbase64",
+    height: 100,
+    width: 200
+  }};
 
   var resStr = themeCSSFunctions.logo(testJSON);
 
-  assert.equal(resStr, "background-image:url(\"data:image/png;base64,sometestLogo\");");
+  assert.ok(resStr.indexOf("background-image") > -1);
+  assert.ok(resStr.indexOf("sometestlogostrbase64") > -1);
   finished();
 };
 
@@ -344,6 +349,7 @@ module.exports.testGenerateCSSFromJSON = function(finished){
   var generatedCSS = themeCSSGenerator(exampleThemeJSON)();
 
   assert(generatedCSS != null);
+  console.log(generatedCSS);
   finished();
 };
 
