@@ -39,6 +39,7 @@ module.exports.setUp = function(finish){
     formModel = models.get(connection, models.MODELNAMES.FORM);
     fieldModel = models.get(connection, models.MODELNAMES.FIELD);
     pageModel = models.get(connection, models.MODELNAMES.PAGE);
+console.log('finishing appforms setUp');
     finish();
   });
 };
@@ -48,6 +49,7 @@ module.exports.tearDown = function(finish){
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
       assert.ok(!err);
+console.log('finishing appforms setUp');
       finish();
     });
   });
@@ -82,6 +84,7 @@ module.exports.it_should_save_app_forms = function(finish) {
         assert.ok(!err, 'Error in addAppForms: ' + util.inspect(err));
         assert.equal(appForms.appId, '12345');
         assert.equal(appForms.forms.length, 2);
+
         return cb(err, form1, form2, appForms);
       });
     },
