@@ -1,6 +1,9 @@
 fh-forms
 -------
 
+0.2.19 - 2014-02-04 - IR220 - mmurphy
+---------------------------------------
+* Ticket #5706 - fh-forms module check to see if email needs to be sent
 
 0.2.18 - 2014-01-29 - IR219 - Niall Donnelly
 ---------------------------------------
