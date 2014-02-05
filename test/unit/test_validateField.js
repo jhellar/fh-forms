@@ -496,6 +496,27 @@ exports.testValidateDropdownDoesNotExist = function(finish){
   });
 }
 
+// test for bug #5815
+exports.testValidateDropdownDuplicateOptions = function(finish){
+  var testField = JSON.parse(JSON.stringify(exampleFields.dropdownFieldData));
+  assert.ok(testField.fieldOptions.definition.options.length >= 2, 'strange test data');
+  testField.fieldOptions.definition.options[0] = testField.fieldOptions.definition.options[1]; // option is now duplicated
+
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = ["dropdownVal2", "dropdownVal2", "dropdownVal3"];
+
+  testSubmission.fieldValues = testSubmissionData;
+
+  var validator = fieldValidator(testField, testSubmission);
+
+  validator.validate(function(err){
+    if(err) console.log(err);
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+
+    finish();
+  });
+}
+
 
 exports.testValidateRadio = function(finish){
   var testField = exampleFields.radioFieldData;
