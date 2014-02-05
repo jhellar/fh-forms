@@ -18,6 +18,21 @@ module.exports = {
       }
     }
   },
+  "urlFieldData":{
+    "name":"urlField",
+    "helpText":"This is a url field",
+    "type":"url",
+    "repeating":true,
+    "required":false,
+    "fieldOptions":{
+      "definition":{
+        "maxRepeat":5,
+        "minRepeat":2
+      },
+      "validation":{
+      }
+    }
+  },
   "textFieldDataFormatRegex":{
     "name":"textField",
     "helpText":"This is a text field",

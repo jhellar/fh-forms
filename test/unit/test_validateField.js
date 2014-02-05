@@ -443,8 +443,23 @@ exports.testValidateEmailAddressInvalidEmail = function(finish){
   });
 }
 
+exports.testValidateUrl = function(finish){
 
+  var testField = exampleFields.urlFieldData;
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = ["dropdownVal1", "dropdownVal2", "dropdownVal3"];
 
+  testSubmission.fieldValues = testSubmissionData;
+
+  var validator = fieldValidator(testField, testSubmission);
+
+  validator.validate(function(err){
+    if(err) console.log(err);
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+
+    finish();
+  });
+}
 
 exports.testValidateDropdown = function(finish){
   var testField = exampleFields.dropdownFieldData;
