@@ -444,7 +444,6 @@ exports.testValidateEmailAddressInvalidEmail = function(finish){
 }
 
 exports.testValidateUrl = function(finish){
-
   var testField = exampleFields.urlFieldData;
   var testSubmission = testSubmitFormBaseInfo;
   var testSubmissionData = ["dropdownVal1", "dropdownVal2", "dropdownVal3"];
@@ -543,6 +542,26 @@ exports.testValidateRadio = function(finish){
   var validator = fieldValidator(testField, testSubmission);
 
   validator.validate(function(err){
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+
+    finish();
+  });
+}
+
+exports.testValidateRadioDuplicateOptions = function(finish){
+  var testField = JSON.parse(JSON.stringify(exampleFields.radioFieldData));
+  assert.ok(testField.fieldOptions.definition.options.length >= 2, 'strange test data');
+  testField.fieldOptions.definition.options[0] = testField.fieldOptions.definition.options[1]; // option is now duplicated
+
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = ["radio2", "radio2"];
+
+  testSubmission.fieldValues = testSubmissionData;
+
+  var validator = fieldValidator(testField, testSubmission);
+
+  validator.validate(function(err){
+    if(err) console.log(err);
     assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
 
     finish();
