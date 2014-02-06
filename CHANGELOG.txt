@@ -1,6 +1,12 @@
 fh-forms
 -------
 
+0.2.20 - 2014-02-06 - IR220 - mmurphy
+---------------------------------------
+* Ticket #5817 - Don't raise validation error if duplicate radio options in form field definition #5817
+* Ticket #5813 - Avoid raising error during validation of url field #5813
+* Ticket #5815 - don't fail form field validation if dropdown options are duplicated in form definition
+
 0.2.19 - 2014-02-04 - IR220 - mmurphy
 ---------------------------------------
 * Ticket #5706 - fh-forms module check to see if email needs to be sent
