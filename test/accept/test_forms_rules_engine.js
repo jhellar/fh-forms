@@ -188,6 +188,127 @@ var TEST_BASIC_FORM_1_DEFINITION = {
   "submissionsTotal":124125  
 };
 
+var TEST_BASIC_FORM_2_DEFINITION = { // no page or field rules
+ "updatedBy":"user@example.com",
+  "name":"TEST_BASIC_FORM_1_DEFINITION",
+  "lastUpdated":"2013-11-08T20:10:33.819Z",
+  "lastUpdatedTimestamp": 1384800150848,
+  "dateCreated":"2013-11-08T20:10:33.819Z",
+  "description":"This form is for testing rules.",
+  "_id":"527d4539639f521e0a000004",
+  "pageRules":[],
+  "fieldRules":[],
+  "pages":[
+    {
+      "name":TEST_BASIC_FORM_1_PAGE_1_NAME,
+      "description":"This is a test page for the win.",
+      "_id":TEST_BASIC_FORM_1_PAGE_1_ID,
+      "fields":[
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_NAME,
+          "helpText":"This is a text field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_TYPE,
+          "required":true,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":2
+            },
+            "validation":{
+              "min":0,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_NAME,
+          "helpText":"This is a text area field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_TYPE,
+          "required":false,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":3
+            },
+            "validation":{
+              "min":0,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_NAME,
+          "helpText":"This is a number field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_TYPE,
+          "required":false,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":2
+            },
+            "validation":{
+              "min":0,
+              "max": TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE
+            }
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_NAME,
+          "helpText":"This is a sectionBreak field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_TYPE, //"sectionBreak",
+          "required":false,
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_NAME,
+          "helpText":"This is a Email field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_TYPE, //"emailAddress",
+          "required":true,
+          "fieldOptions":{
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+          "repeating":false
+        }
+      ]
+    }
+  ],
+  "pageRef":{
+    TEST_BASIC_FORM_1_PAGE_1_ID:0
+  },
+  "fieldRef": {
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID: {
+      "page":0,
+      "field":0
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID: {
+      "page":0,
+      "field":1
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID: {
+      "page":0,
+      "field":2
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID: {
+      "page":0,
+      "field":3
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID: {
+      "page":0,
+      "field":4
+    }
+  },
+  "appsUsing":123,
+  "submissionsToday":1234,
+  "submissionsTotal":124125  
+};
+
 var TEST_BASIC_FORM_1_SUBMISSION_1 = {
    "appId":"appId123456",
    "appCloudName":"appCloudName123456",
@@ -277,6 +398,55 @@ var TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_MISSING = {
       }
    ]
 };
+
+var TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_EMPTY = {
+   "appId":"appId123456",
+   "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
+   "appEnvironment":"devLive",
+   "deviceId":"device123456",
+   "deviceFormTimestamp":1384800150848,
+   "comments":[
+      {
+         "madeBy":"somePerson@example.com",
+         "madeOn":1384800150848,
+         "value":"This is a comment"
+      },
+      {
+         "madeBy":"somePerson@example.com",
+         "madeOn":1384800150848,
+         "value":"This is another comment"
+      }
+   ],
+   "formFields":[
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+         "fieldValues":[
+            ""
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+         "fieldValues":[
+            //234567890123456789012345678901234567890123456789012345678901
+            "value for text field (2)56789012345678901234567890"
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+         "fieldValues":[
+            TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE
+         ]
+      },
+      {
+         "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+         "fieldValues":[
+            "testing@example.com"
+         ]
+      }
+   ]
+};
+
 
 var TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING = {
    "appId":"appId123456",
@@ -371,6 +541,25 @@ module.exports.testBasicForm1ValidateForRequiredFieldMissing = function (finish)
   });
 };
 
+module.exports.testBasicForm1ValidateForRequiredFieldEmpty = function (finish) {
+  var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
+  engine.validateForm(TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_EMPTY, function (err, results) {
+    assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
+    assert.ok(results.validation, "expected validation results: " + util.inspect(results.validation));
+    assert.strictEqual(results.validation.valid, false, "expected invalid result: " + util.inspect(results.validation));
+    assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID], 'should be error for empty required field - ' + util.inspect(results));
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].valid, 'empty required field should be marked as invalid');
+    assert.equal(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].fieldErrorMessage.length, 1, 'should be 1 error message for missing required field - was: ' + util.inspect(results));
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages, 'should not be field value specific error message for missing required field - was: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID].errorMessages));
+
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+    assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID], "unexpected error results for field5: " + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]));
+
+    finish();
+  });
+};
 
 module.exports.testBasicForm1ValidateForm = function (finish) {
   var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
@@ -501,7 +690,7 @@ module.exports.testBasicForm1ValidateFieldInvalid = function testBasicForm1Valid
 module.exports.testBasicForm1ValidateFieldValueRequiredTextFields = function testBasicForm1ValidateFieldValueFileFields(finish) {
   var fileField = {
     "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_8_NAME,
-    "helpText":"This is a file field",
+    "helpText":"This is a text field",
     "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_8_TYPE,
     "required":true,
     "fieldOptions":{
@@ -548,7 +737,7 @@ module.exports.testBasicForm1ValidateFieldValueRequiredTextFields = function tes
       engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID, "", function testInvalidCallback(err, results) {
         assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID], 'Should be details for field 8');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID].valid, 'Field 8 should be marked valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID].valid, 'Field 8 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID]));
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
@@ -881,13 +1070,13 @@ module.exports.testBasicForm1ValidateFieldValueOptionalFileFields = function tes
         return cb();
       });
     },
-    function testInvalidObj(cb) {
+    function testInvalidObj(cb) {  // empty string is used for unspecified fields, unspecified optional field is valid
       engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID, "", function testInvalidCallback(err, results) {
         assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID], 'Should be details for field 6');
-        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID]));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].valid, 'Field 6 should be marked valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages, 'Field 6 should have an error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length > 0, 'Field 6 should have at least one error message');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_6_ID].errorMessages.length == 0, 'Field 6 should have no error messages');
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
@@ -1121,13 +1310,13 @@ module.exports.testBasicForm1ValidateFieldValueOptionalPhotoFields = function te
         return cb();
       });
     },
-    function testInvalidObj(cb) {
+    function testInvalidObj(cb) {  // empty string is unspecified field
       engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID, "", function testInvalidCallback(err, results) {
         assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID], 'Should be details for field 7');
-        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].valid, 'Field 7 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID]));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].valid, 'Field 7 should be marked valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID]));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages, 'Field 7 should have an error message');
-        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages.length > 0, 'Field 7 should have at least one error message');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_7_ID].errorMessages.length == 0, 'Field 7 should have no error messages');
 
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
