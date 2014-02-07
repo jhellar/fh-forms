@@ -1,6 +1,12 @@
 fh-forms
 -------
 
+0.2.21 - 2014-02-07 - IR220 - dmartin
+---------------------------------------
+* Ticket #5978 - Include pdf attachment url in submission mail message
+* Ticket #5981 - Fixed form create api to allow setting subscribers
+* Ticket #5983 - Setting hostname placeholder in submission mail message, to be filled in by millicore later
+
 0.2.20 - 2014-02-06 - IR220 - mmurphy
 ---------------------------------------
 * Ticket #5817 - Don't raise validation error if duplicate radio options in form field definition #5817
