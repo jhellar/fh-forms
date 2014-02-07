@@ -1,7 +1,7 @@
 fh-forms
 -------
 
-0.2.21 - 2014-02-07 - IR220 - dmartin
+0.2.22 - 2014-02-07 - IR220 - dmartin
 ---------------------------------------
 * Ticket #5978 - Include pdf attachment url in submission mail message
 * Ticket #5981 - Fixed form create api to allow setting subscribers
