@@ -8,6 +8,25 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 var appId = "123456789";
 var assert = require('assert');
 var util = require('util');
+var submissionToday1;
+var submissionToday2;
+var submissionYesterday1;
+var submissionDataBase = {
+  "submissionCompletedTimestamp": "",
+  "updatedBy": "testing@sometime.com",
+  "timezoneOffset" : 2,
+  "appId": appId,
+  "appCloudName": "someCloud",
+  "appEnvironment": "dev",
+  "userId": "SomeUser",
+  "deviceId": "123456",
+  "deviceIPAddress": "192.168.1.1",
+  "status": "complete",
+  "deviceFormTimestamp": Date.now(),
+  "masterFormTimestamp": Date.now(),
+  "comments": [],
+  "formFields": []
+};
 
 
 module.exports.setUp = function(finish){
@@ -58,6 +77,97 @@ module.exports.testGetFormGroupRestrictFail = function(finish){
           });
         });
       });
+    });
+  });
+};
+
+function checkSubmissions(form, expectedTotal, expectedToday, expectedAppsUsingForm){
+  assert.ok(form.submissionsTotal === expectedTotal, "Expected total submissions to be " + expectedTotal + " but was " + form.submissionsTotal);
+  assert.ok(form.submissionsToday === expectedToday, "Expected today submissions to be " + expectedToday + " but was " + form.submissionsToday);
+  assert.ok(form.appsUsingForm === expectedAppsUsingForm, "Expected apps using form to be " + expectedAppsUsingForm + " but was " + form.appsUsingForm);
+};
+
+module.exports.testGetFormSubmissionStatistics = function(finish){
+
+  var today = new Date();
+  var yesterday = new Date().setHours(-1, 0, 0, 0);
+
+  var connection = mongoose.createConnection(options.uri);
+
+  //Set up the connection
+  models.init(connection);
+
+  var Submission = models.get(connection, models.MODELNAMES.FORM_SUBMISSION);
+
+
+  submissionToday1 = new Submission(submissionDataBase);
+  submissionToday1.submissionCompletedTimestamp = today;
+
+  submissionToday2 = new Submission(submissionDataBase);
+  submissionToday2.submissionCompletedTimestamp = today;
+
+  submissionYesterday1 = new Submission(submissionDataBase);
+  submissionYesterday1.submissionCompletedTimestamp = yesterday;
+
+
+  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+    assert.ok(!err, util.inspect(err));
+    assert.ok(result);
+    assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
+    var form1 = result.forms[0];
+    submissionToday1.formId = form1._id;
+
+    var form1Id = result.forms[0]._id;
+    var form2Id = result.forms[1]._id;
+    var allowedUser1 = 'users1@example.com';
+    var allowedUser2 = 'users2@example.com';
+    setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, function (err) {
+      assert.ok(!err, util.inspect(err));
+      checkSubmissions(form1, 0, 0, 1);
+
+      submissionToday1.save(function(err){
+      assert.ok(!err, util.inspect(err));
+      forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+        assert.ok(!err, util.inspect(err));
+        assert.ok(result);
+        assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
+        var form1 = result.forms[0];
+        submissionToday2.formId = form1._id;
+
+        checkSubmissions(form1, 1, 1, 1);
+
+        submissionToday2.save(function(err){
+          assert.ok(!err, util.inspect(err));
+
+          forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+            assert.ok(!err, util.inspect(err));
+            assert.ok(result);
+            assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
+            var form1 = result.forms[0];
+            submissionYesterday1.formId = form1._id;
+
+            checkSubmissions(form1, 2, 2, 1);
+
+            submissionYesterday1.save(function(err){
+              assert.ok(!err, util.inspect(err));
+              forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+                assert.ok(!err, util.inspect(err));
+                assert.ok(result);
+                assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
+                var form1 = result.forms[0];
+
+                checkSubmissions(form1, 3, 2, 1);
+
+                connection.close(function(err){
+                  if(err) console.error(err);
+                  finish();
+                });
+              });
+             });
+          });
+        });
+      });
+    });
     });
   });
 };
@@ -215,6 +325,7 @@ function createTestData(assert, cb){
 
 
   async.series([saveFields, savePages, saveFieldRules, savePageRules, saveForm, saveAppForm], function(err){
+    assert.ok(!err);
     connection.close(function(err){
       if(err) console.log(err);
       cb(err);

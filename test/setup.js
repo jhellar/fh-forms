@@ -242,7 +242,6 @@ function setUpDatabase(assert, cb){
        assert.ok(!err);
 
         db.close(cb);
-
       });
     });
   });
