@@ -1,6 +1,11 @@
 fh-forms
 -------
 
+0.2.23 - 2014-02-10 - IR221 - Niall Donnelly
+---------------------------------------
+
+* Ticket #5967 - Prevent users from deleting themes when in use. Populate form statistics for viewable forms.
+
 0.2.22 - 2014-02-07 - IR220 - dmartin
 ---------------------------------------
 * Ticket #5978 - Include pdf attachment url in submission mail message
