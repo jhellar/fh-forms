@@ -12,6 +12,13 @@ fh-forms
 * Ticket #5981 - Fixed form create api to allow setting subscribers
 * Ticket #5983 - Setting hostname placeholder in submission mail message, to be filled in by millicore later
 
+0.2.21 - 2014-02-07 - IR220 - mmurphy
+---------------------------------------
+* Ticket #5825 - 'Required' option for text field doesn't work. Can still submit even when no text is entered
+* Ticket #5826 - 'Required' option for paragraph field not working
+* Ticket #5827 - 'Required' option for numbers field not working
+* Ticket #5830 - Website field: When 'required' option is selected, and the user attempts to submit a blank field, there is no feedback
+
 0.2.20 - 2014-02-06 - IR220 - mmurphy
 ---------------------------------------
 * Ticket #5817 - Don't raise validation error if duplicate radio options in form field definition #5817
