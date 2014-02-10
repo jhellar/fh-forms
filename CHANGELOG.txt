@@ -1,5 +1,8 @@
 fh-forms
 -------
+0.2.24 - 2014-02-10 - IR221 - mmurphy
+---------------------------------------
+* 5961 - add forms to existing apps needs to filter apps by group 
 
 0.2.23 - 2014-02-10 - IR221 - Niall Donnelly
 ---------------------------------------
