@@ -19,9 +19,6 @@ var requiredFieldIds = {};
 var required2FieldIds = {};
 var requiredForm2Id = undefined;
 
-
-
-
 var testSubmitFormBaseInfo = {
   "appId": "appId123456",
   "appCloudName": "appCloudName123456",
@@ -1047,7 +1044,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
           updatedSubmission.formFields[0].fieldValues[1] = wrongFileDetails;
           submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
             assert.ok(err);
-            assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
+            assert.equal(err.toString(), "Invalid file placeholder texta_new_id");
 
             // update file field, adding an id
             // verify update failed, not allow to add new ids, only placeholders
@@ -1056,7 +1053,7 @@ module.exports.testSubmitUpdateFileField = function(finish){
             updatedSubmission.formFields[0].fieldValues.push(wrongFileDetails);
             submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
               assert.ok(err);
-              assert.equal(err.toString(), "Error: Invalid file placeholder texta_new_id");
+              assert.equal(err.toString(), "Invalid file placeholder texta_new_id");
 
               // update file field, adding a placeholder
               // verify update ok, and placeholder added, status pending as we've a placeholder waiting
@@ -1185,18 +1182,21 @@ function submitAndCheckForm(assert, submission, options, cb ){
 
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission" : submission}, function(err, result){
     if(options.errExpected){
-      if(result) console.log(JSON.stringify(submission), result, options);
-      assert.ok(err);
-      assert.ok(!result);
-      return cb(err, result);
-    } else {
-      if(err) console.log(err);
+      if(!result.error) console.log(JSON.stringify(submission), result, options);
       assert.ok(!err);
+      assert.ok(result.error);
+      return cb(result.error, result);
+    } else {
+      if(result.error) console.log(result.error);
+      assert.ok(!err);
+      assert.ok(!result.error);
       assert.ok(result);
       assert.ok(result.submissionId);
 
       if(options.newFormDefinition){
         assert.ok(result.updatedFormDefinition);
+        assert.ok(result.updatedFormDefinition.fieldRef);
+        assert.ok(result.updatedFormDefinition.pageRef);
       }
 
       checkSubmissionExists(assert, result.submissionId, options, function(err){
