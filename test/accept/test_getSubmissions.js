@@ -16,9 +16,11 @@ var TEST_SUBMISSION_APPID = "appId123456";
 var TEST_UNUSED_APPID = "ThisDidNotSubmit";
 var TEST_APP_NAME_UNKNOWN = 'Unknown';
 var TEST_APP_NAME = 'Joe';
-var TEST_APP_MAP = {
+var TEST_APP_MAP = {"result":[
+  {guid: TEST_SUBMISSION_APPID, title: TEST_APP_NAME}
+]
 };
-TEST_APP_MAP[TEST_SUBMISSION_APPID] = {id: TEST_SUBMISSION_APPID, name: TEST_APP_NAME};
+
 
 var TEST_SUBMISSION_FORMID; // will be populated by setup
 var TEST_SUBMISSION_ID; // will be populated by setup
@@ -176,7 +178,7 @@ module.exports.testGetAllSubmissionsByAppWithRestrictions = function(finish){
       },
       function testUser1Ok (cb) {
         var restrictOptions = restrictToUser(user1id);
-        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
+        forms.getSubmissions(restrictOptions, [{appId: TEST_SUBMISSION_APPID,"title":"a title"}], function (err, results){
           assert.ok(!err, "should not have returned error, for valid user: " + util.inspect(err));
           assert.ok(results);  // should have returned results
           var submissions = results.submissions;
