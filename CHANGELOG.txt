@@ -1,5 +1,11 @@
 fh-forms
 -------
+0.2.22 - 2014-02-18 - IR221 - mmurphy
+---------------------------------------
+* 6030 - AppForms Config
+* 6031 - Supercore APIs for appforms config
+* 6032 - mBaaS APIs for appforms config
+
 0.2.24 - 2014-02-10 - IR221 - mmurphy
 ---------------------------------------
 * 5961 - add forms to existing apps needs to filter apps by group 
