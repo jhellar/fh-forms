@@ -18,7 +18,7 @@ var TEST_APP_CONFIG = {
     "sent_save_max": 1000,
     "targetWidth": 100,
     "targetHeight": 100,
-    "quality": 75,
+    "quality": 80,
     "debug_mode": false,
     "logger" : false,
     "max_retries" : 0,
@@ -57,11 +57,12 @@ module.exports.tearDown = function(finish){
 module.exports.it_should_CRUD_appconfig = function(finish) {
 
   async.series([
-    function getAppconfig(cb) {
+    function getAppconfig2(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = {appId: '12345'};
       forms.getAppConfig(options, params, function(err, result) {
-        assert.ok(err, 'should not have found appConfig: ' + util.inspect(result));
+        assert.ok(!err, 'should have found default appConfig: ' + util.inspect(err));
+        assert.equal(75, result.client.quality);
         return cb();
       });
     },
@@ -69,20 +70,20 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     function craeteAppconfig(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = JSON.parse(JSON.stringify(TEST_APP_CONFIG));
-      params.appId = '12345';
+      params.appId = '123456';
       forms.createAppConfig(options, params, function(err, result) {
         assert.ok(!err, 'should have craeted appConfig: ' + util.inspect(err));
-        assert.equal(75, result.client.quality);
+        assert.equal(80, result.client.quality);
         return cb();
       });
     },
 
     function getAppconfig2(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
-      var params = {appId: '12345'};
+      var params = {appId: '123456'};
       forms.getAppConfig(options, params, function(err, result) {
         assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
-        assert.equal(75, result.client.quality);
+        assert.equal(80, result.client.quality);
         return cb();
       });
     },
@@ -119,11 +120,12 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
       });
     },
 
-    function getAppconfig(cb) {
+    function getAppconfig4(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = {appId: '12345'};
       forms.getAppConfig(options, params, function(err, result) {
-        assert.ok(err, 'should not have found appConfig: ' + util.inspect(result));
+        assert.ok(!err, 'should have found default appConfig: ' + util.inspect(err));
+        assert.equal(75, result.client.quality);
         return cb();
       });
     }
