@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "0.2.36",
+  "version": "0.2.35",
   "description": "Cloud Forms API for form submission",
   "main": "lib/forms.js",
   "scripts": {
