@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.33 - 2014-02-20 - IR221 - mmurphy
+---------------------------------------
+* 6106 - update app forms endpoints to include config
+
 0.2.22 - 2014-02-18 - IR221 - mmurphy
 ---------------------------------------
 * 6030 - AppForms Config
