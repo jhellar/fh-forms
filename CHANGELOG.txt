@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.34 - 2014-02-20 - IR221 - mmurphy
+---------------------------------------
+* 6056 - mBaaS Debugging / Logging
+
 0.2.33 - 2014-02-20 - IR221 - mmurphy
 ---------------------------------------
 * 6106 - update app forms endpoints to include config
