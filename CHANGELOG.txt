@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.38 - 2014-02-21 - IR221 - mmurphy
+---------------------------------------
+* 6058 - forms module - emit log events which can be listened to in other places.
+
 0.2.37 - 2014-02-21 - IR221 - mmurphy
 ---------------------------------------
 * 6057 - fix logging bugs after earlier updates
