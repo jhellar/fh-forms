@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.37 - 2014-02-21 - IR221 - mmurphy
+---------------------------------------
+* 6057 - fix logging bugs after earlier updates
+
 0.2.36 - 2014-02-20 - IR221 - mmurphy
 ---------------------------------------
 * 6138 - add default app config
