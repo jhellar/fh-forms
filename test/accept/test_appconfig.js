@@ -24,8 +24,7 @@ var TEST_APP_CONFIG = {
     "max_retries" : 0,
     "timeout" : 30,
     "log_line_limit": 300,
-    "log_email": "testing@example.com",
-    "config_admin_user": true
+    "log_email": "testing@example.com"
   },
   "cloud": {
     "logging": {
