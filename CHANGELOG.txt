@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.39 - 2014-02-25 - IR222 - mmurphy
+---------------------------------------
+* 6146 - change config_admin_user to list of device ids
+
 0.2.38 - 2014-02-21 - IR221 - mmurphy
 ---------------------------------------
 * 6058 - forms module - emit log events which can be listened to in other places.
