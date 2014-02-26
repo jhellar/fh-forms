@@ -24,8 +24,7 @@ var TEST_APP_CONFIG = {
     "max_retries" : 0,
     "timeout" : 30,
     "log_line_limit": 300,
-    "log_email": "testing@example.com",
-    "config_admin_user": true
+    "log_email": "testing@example.com"
   },
   "cloud": {
     "logging": {
@@ -60,7 +59,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     function getAppconfig2(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = {appId: '12345'};
-      forms.getAppConfig(options, params, function(err, result) {
+      forms.getAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have found default appConfig: ' + util.inspect(err));
         assert.equal(75, result.client.quality);
         return cb();
@@ -71,7 +70,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = JSON.parse(JSON.stringify(TEST_APP_CONFIG));
       params.appId = '123456';
-      forms.createAppConfig(options, params, function(err, result) {
+      forms.createAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have craeted appConfig: ' + util.inspect(err));
         assert.equal(80, result.client.quality);
         return cb();
@@ -81,9 +80,31 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     function getAppconfig2(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = {appId: '123456'};
-      forms.getAppConfig(options, params, function(err, result) {
+      forms.getAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
         assert.equal(80, result.client.quality);
+        return cb();
+      });
+    },
+
+    function getAppClientConfig(cb) {
+      var opts = {uri: options.uri, userEmail: options.userEmail};
+      opts.appId = '12345';
+      opts.deviceId = 'abcdef';
+      forms.getAppClientConfig(opts, function(err, result) {
+        assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
+        assert.equal(false, result.config_admin_user);
+        return cb();
+      });
+    },
+
+    function getAppClientConfig(cb) {
+      var opts = {uri: options.uri, userEmail: options.userEmail};
+      opts.appId = '12345';
+      opts.deviceId = 'fedcba';
+      forms.getAppClientConfig(opts, function(err, result) {
+        assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
+        assert.equal(false, result.config_admin_user);
         return cb();
       });
     },
@@ -93,9 +114,32 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
       var params = JSON.parse(JSON.stringify(TEST_APP_CONFIG));
       params.appId = '12345';
       params.client.quality = 80;
-      forms.updateAppConfig(options, params, function(err, result) {
+      params.client.config_admin_user = ['abcdef', '12345'];
+      forms.updateAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have updated appConfig: ' + util.inspect(err));
         assert.equal(80, result.client.quality);
+        return cb();
+      });
+    },
+
+    function getAppClientConfig(cb) {
+      var opts = {uri: options.uri, userEmail: options.userEmail};
+      opts.appId = '12345';
+      opts.deviceId = 'abcdef';
+      forms.getAppClientConfig(opts, function(err, result) {
+        assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
+        assert.equal(true, result.config_admin_user);
+        return cb();
+      });
+    },
+
+    function getAppClientConfig(cb) {
+      var opts = {uri: options.uri, userEmail: options.userEmail};
+      opts.appId = '12345';
+      opts.deviceId = 'fedcba';
+      forms.getAppClientConfig(opts, function(err, result) {
+        assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
+        assert.equal(false, result.config_admin_user);
         return cb();
       });
     },
@@ -103,7 +147,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     function getAppconfig3(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = {appId: '12345'};
-      forms.getAppConfig(options, params, function(err, result) {
+      forms.getAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have found appConfig: ' + util.inspect(err));
         assert.equal(80, result.client.quality);
         return cb();
@@ -114,7 +158,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = JSON.parse(JSON.stringify(TEST_APP_CONFIG));
       params.appId = '12345';
-      forms.deleteAppConfig(options, params, function(err, result) {
+      forms.deleteAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have deleted appConfig: ' + util.inspect(err));
         return cb();
       });
@@ -123,7 +167,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     function getAppconfig4(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = {appId: '12345'};
-      forms.getAppConfig(options, params, function(err, result) {
+      forms.getAppConfig(opts, params, function(err, result) {
         assert.ok(!err, 'should have found default appConfig: ' + util.inspect(err));
         assert.equal(75, result.client.quality);
         return cb();
