@@ -8,11 +8,44 @@ var assert = require('assert');
 
 module.exports.setUp = function(finished){
   finished();
-}
+};
 
 module.exports.tearDown = function(finished){
   finished();
-}
+};
+
+module.exports.testGetButtonCSS = function(finished){
+  var testJSON = {
+    "colours":{
+      "buttons":{
+        "navigation":"#FF0002"
+      }
+    },
+    "typography":{
+      "buttons":{
+        "fontFamily":"arial",
+        "fontStyle":"bold",
+        "fontSize":"17pt",
+        "fontColour":"#FF0000"
+      }
+    },
+    "borders" : {
+      "button_navigation": {
+        "thickness": "thick",
+        "style": "double",
+        "colour": "#5363c1"
+      }
+    }
+  };
+
+  var resStr = themeCSSFunctions.get_button_css(testJSON, "navigation", "buttons");
+  assert.ok(resStr != null);
+  assert.ok(resStr.indexOf("background-color:#FF0002") > -1);
+  assert.ok(resStr.indexOf("border-style:double") > -1);
+  assert.ok(resStr.indexOf("border-width:thick") > -1);
+  assert.ok(resStr.indexOf("border-color:#5363c1") > -1);
+  finished();
+};
 
 module.exports.testGenerateLogo = function(finished){
   var testJSON = {"logo" : {
@@ -42,6 +75,13 @@ module.exports.testGeneratebuttonNavigation = function(finished){
         "fontSize":"17pt",
         "fontColour":"#FF0000"
       }
+    },
+    "borders" : {
+      "button_navigation": {
+        "thickness": "thick",
+        "style": "double",
+        "colour": "#5363c1"
+      }
     }
   };
 
@@ -54,6 +94,9 @@ module.exports.testGeneratebuttonNavigation = function(finished){
   assert.ok(resStr.indexOf("font-weight:bold") > -1);
   assert.ok(resStr.indexOf("font-family:arial") > -1);
   assert.ok(resStr.indexOf("color:#FF0000") > -1);
+  assert.ok(resStr.indexOf("border-style:double") > -1);
+  assert.ok(resStr.indexOf("border-width:thick") > -1);
+  assert.ok(resStr.indexOf("border-color:#5363c1") > -1);
   finished();
 }
 
@@ -71,6 +114,13 @@ module.exports.testGenerateButtonAction = function(finished){
         "fontSize":"17pt",
         "fontColour":"#FF0000"
       }
+    },
+    "borders" : {
+      "button_action": {
+        "thickness": "thick",
+        "style": "double",
+        "colour": "#5363c1"
+      }
     }
   };
 
@@ -83,6 +133,9 @@ module.exports.testGenerateButtonAction = function(finished){
   assert.ok(resStr.indexOf("font-weight:bold") > -1);
   assert.ok(resStr.indexOf("font-family:arial") > -1);
   assert.ok(resStr.indexOf("color:#FF0000") > -1);
+  assert.ok(resStr.indexOf("border-style:double") > -1);
+  assert.ok(resStr.indexOf("border-width:thick") > -1);
+  assert.ok(resStr.indexOf("border-color:#5363c1") > -1);
   finished();
 }
 
@@ -100,6 +153,13 @@ module.exports.testGenerateButtonCancel = function(finished){
         "fontSize":"17pt",
         "fontColour":"#FF0000"
       }
+    },
+    "borders" : {
+      "button_cancel": {
+        "thickness": "thick",
+        "style": "double",
+        "colour": "#5363c1"
+      }
     }
   };
 
@@ -112,6 +172,9 @@ module.exports.testGenerateButtonCancel = function(finished){
   assert.ok(resStr.indexOf("font-weight:bold") > -1);
   assert.ok(resStr.indexOf("font-family:arial") > -1);
   assert.ok(resStr.indexOf("color:#FF0000") > -1);
+  assert.ok(resStr.indexOf("border-style:double") > -1);
+  assert.ok(resStr.indexOf("border-width:thick") > -1);
+  assert.ok(resStr.indexOf("border-color:#5363c1") > -1);
   finished();
 }
 

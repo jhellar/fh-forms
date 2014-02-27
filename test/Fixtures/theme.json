@@ -2,6 +2,21 @@
   "name": "testTheme",
   "updatedBy": "testing-admin@example.com",
   "borders": {
+    "button_navigation": {
+      "thickness": "thick",
+      "style": "double",
+      "colour": "#5363c1"
+    },
+    "button_action": {
+      "thickness": "thick",
+      "style": "double",
+      "colour": "#5363c1"
+    },
+    "button_cancel": {
+      "thickness": "thick",
+      "style": "double",
+      "colour": "#5363c1"
+    },
     "progress_steps_number_container_active": {
       "thickness": "thick",
       "style": "double",
