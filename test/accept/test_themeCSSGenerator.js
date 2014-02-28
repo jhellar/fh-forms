@@ -179,9 +179,63 @@ module.exports.testGenerateButtonCancel = function(finished){
 }
 
 module.exports.testGenerateNavigation = function(finished){
-  var testJSON = {"colours" : {"backgrounds" : {"navigationBar" : "#FF0000"}}};
+  var testJSON = {
+    "colours" :
+      {
+        "backgrounds" : {
+          "navigationBar" : "#FF0000"
+        }
+      },
+    "borders": {
+      "navigationBar": {
+        "thickness": "medium",
+        "style": "solid",
+        "colour": "#FF2000"
+      }
+    },
+    "typography": {
+      "navigationBar" : {
+        "fontFamily":"arial",
+        "fontStyle":"bold",
+        "fontSize":"17pt",
+        "fontColour":"#FF0000"
+      }
+    }
+  };
 
   var resStr = themeCSSFunctions.navigation(testJSON);
+
+  assert.ok(resStr != null);
+  assert.ok(resStr.indexOf("background-color:#FF0000") > -1);
+  finished();
+}
+
+module.exports.testGenerateNavigationActive = function(finished){
+  var testJSON = {
+    "colours" :
+    {
+      "backgrounds" : {
+        "navigationBar_active" : "#FF0000"
+      }
+    },
+    "borders": {
+      "navigationBar_active": {
+        "thickness": "medium",
+        "style": "solid",
+        "colour": "#FF2000"
+      }
+    },
+    "typography": {
+      "navigationBar_active" : {
+        "fontFamily":"arial",
+        "fontStyle":"bold",
+        "fontSize":"17pt",
+        "fontColour":"#FF0000"
+      }
+    }
+  };
+
+  var resStr = themeCSSFunctions.navigation_active(testJSON);
 
   assert.ok(resStr != null);
   assert.ok(resStr.indexOf("background-color:#FF0000") > -1);

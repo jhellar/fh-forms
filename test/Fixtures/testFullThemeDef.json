@@ -2,6 +2,16 @@
   "name": "testTheme",
   "updatedBy": "testing-admin@example.com",
   "borders": {
+    "navigationBar":{
+      "thickness": "thick",
+      "style": "double",
+      "colour": "#3213c1"
+    },
+    "navigationBar_active":{
+      "thickness": "thin",
+      "style": "double",
+      "colour": "#1233c1"
+    },
     "button_navigation": {
       "thickness": "thick",
       "style": "double",
@@ -142,12 +152,25 @@
       "fontFamily": "arial",
       "fontStyle": "bold",
       "fontColour": "#34cf75"
+    },
+    "navigationBar":{
+      "fontSize": "18pt",
+      "fontFamily": "arial",
+      "fontStyle": "bold",
+      "fontColour": "#34cf75"
+    },
+    "navigationBar_active":{
+      "fontSize": "18pt",
+      "fontFamily": "arial",
+      "fontStyle": "bold",
+      "fontColour": "#34cf75"
     }
   },
   "colours": {
     "backgrounds": {
       "headerBar": "#15a47c",
       "navigationBar": "#d41bcd",
+      "navigationBar_active": "#d41bcd",
       "body": "#6a2f55",
       "form": "#5fbd28",
       "fieldArea": "#bda17a",
