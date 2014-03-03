@@ -14,6 +14,8 @@ var assert = require('assert');
 var TEST_APPID = "123456789123456789456121";
 var TEST_GROUP_NAME = "test group delete app refs";
 var testForm;
+var appFormsModel;
+var groupsModel;
 
 module.exports.setUp = function(finish){
   async.waterfall([
@@ -24,6 +26,12 @@ module.exports.setUp = function(finish){
       connection = mongoose.createConnection(options.uri);
       callback();
     });
+  },
+  function setupModels(callback) {
+    models.init(connection);
+    appFormsModel = models.get(connection, models.MODELNAMES.APP_FORMS);
+    groupsModel = models.get(connection, models.MODELNAMES.GROUPS);
+    callback();
   },
   function setUpForm (callback){
       forms.updateForm(options, TEST_FORM, function(err,form){
@@ -102,8 +110,37 @@ module.exports.tearDown = function(finish){
 module.exports.it_should_delete_app_refs = function(finish) {
   console.log("called test delete app refs");
   //set up has been done we have a form so can perform a delete app refs and assert all is as expected.
-  forms.deleteAppRefrences()
-  finish();
+
+  var params = {
+    appId: TEST_APPID
+  };
+  async.series([
+    function doOperation(cb) {
+      forms.deleteAppRefrences(options, params, function (err) {
+        assert.ok(!err, "unexpected error: " + util.inspect(err));
+        return cb();
+      });
+    },
+    function checkAppForms(cb) {
+      var query = {"appId" : params.appId};
+      appFormsModel.find(query, function (err, appForms) {  // get all forms associated with this app
+        assert.ok(!err, "unexpected error: " + util.inspect(err));
+        assert.equal(0, appForms.length, 'Should not have found appForms' + util.inspect(appForms));
+        return cb();
+      });
+    },
+    function checkGroups(cb) {
+      var query = {"apps" : params.appId};
+      groupsModel.find(query, function (err, groups) {  // get all forms associated with this app
+        assert.ok(!err, "unexpected error: " + util.inspect(err));
+        assert.equal(0, groups.length, 'Should not have found groups containing app reference' + util.inspect(groups));
+        return cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "unexpected error: " + util.inspect(err));
+    finish();
+  });
 };
 
 var TEST_FORM = {
