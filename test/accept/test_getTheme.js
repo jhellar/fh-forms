@@ -161,7 +161,7 @@ module.exports.testGetThemeWorks = function(finish){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
 
-    checkTheme(assert, result);
+    checkTheme(assert, testThemeData, result);
 
     finish();
   });
@@ -173,7 +173,7 @@ module.exports.testGetThemeById = function(finish){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
 
-    checkTheme(assert, result);
+    checkTheme(assert, testThemeData, result);
 
     finish();
   });
@@ -210,15 +210,33 @@ module.exports.testGetThemeNoAppExists = function(finish){
   });
 };
 
-function checkTheme(assert, theme){
-  assert.ok(theme);
-  assert.ok(theme._id);//Check id exists
-  assert.ok(theme.lastUpdated);//Check id exists
+function checkTheme(assert, expectedThemeData, actualThemeData){
+  assert.ok(actualThemeData);
+  assert.ok(actualThemeData._id);//Check id exists
+  assert.ok(actualThemeData.lastUpdated);//Check lastUpdated exists
+  assert.ok(actualThemeData.css);
+  assert.ok(actualThemeData.css.indexOf("Error Generating Appforms CSS") == -1);
 
-  delete theme._id;//Should be equal bar the id
-  for(var key in testThemeData){
-    assert.ok(lodash.isEqual(testThemeData[key], theme[key]), key, testThemeData[key],  theme[key] );
-  }
+  var expectedSections = expectedThemeData.sections;
+  var actualSections = actualThemeData.sections;
+  assert.ok(expectedSections, "Expected Sections Not Present: "+ JSON.stringify(expectedThemeData));
+  assert.ok(actualSections, "Actual Sections Not Present: "+ JSON.stringify(actualThemeData));
+
+  expectedSections.forEach(function(expectedSection, index){
+    var actualSection = actualSections[index];
+
+    assert.ok(lodash.isEqual(expectedSection.id, actualSection.id), "Expected section id " + expectedSection.id + " ACTUAL: " + actualSection.id);
+    assert.ok(lodash.isEqual(expectedSection.label,actualSection.label), "Expected section id " + expectedSection.id + " ACTUAL: " + actualSection.id);
+
+    var expectedSubSections = expectedSection.sub_sections;
+    var actualSubSections = actualSection.sub_sections;
+
+    expectedSubSections.forEach(function(expectedSubSection, index){
+      var actualSubSection = actualSubSections[index];
+
+      assert.ok(lodash.isEqual(expectedSubSection, actualSubSection), "Expected sub section: " + JSON.stringify(expectedSubSection) + " ACTUAL: " + JSON.stringify(actualSubSection) );
+    });
+  });
 }
 
 function createTestData(assert, cb){
