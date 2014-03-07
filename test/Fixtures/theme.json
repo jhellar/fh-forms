@@ -46,7 +46,6 @@
         {
           "id": "title",
           "label": "Title",
-
           "typography": {
             "fontSize": "12pt",
             "fontFamily": "arial",
@@ -58,7 +57,6 @@
         {
           "id": "description",
           "label": "Description",
-
           "typography": {
             "fontSize": "18pt",
             "fontFamily": "arial",
@@ -76,7 +74,6 @@
         {
           "id": "title",
           "label": "Title",
-
           "typography": {
             "fontSize": "16pt",
             "fontFamily": "arial",
@@ -88,7 +85,6 @@
         {
           "id": "description",
           "label": "Description",
-
           "typography": {
             "fontSize": "14pt",
             "fontFamily": "arial",
@@ -100,7 +96,6 @@
         {
           "id": "progress_steps",
           "label": "Progress Steps",
-
           "background": {
             "background_color": "#124356"
           },
@@ -429,6 +424,522 @@
       ]
     }
   ],
+  "structure": {
+    "sections": [
+      {
+        "id": "body",
+        "label": "Body",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Area",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": false
+            },
+            "staticCSS": []
+          }
+        ]
+      },
+      {
+        "id": "form",
+        "label": "Form",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Background",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "padding",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "id": "description",
+            "label": "Description",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "page",
+        "label": "Page",
+        "sub_sections": [
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "description",
+            "label": "Description",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "progress_steps",
+            "label": "Progress Steps",
+            "class_name": "progress_steps",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "width",
+                "value": "100%"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": " td",
+                "cssAdditions": [
+                  {
+                    "key": "text-align",
+                    "value": "center"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " td .active .page_title",
+                "cssAdditions": [
+                  {
+                    "key": "text-align",
+                    "value": "center"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .page_title",
+                "cssAdditions": [
+                  {
+                    "key": "padding-left",
+                    "value": "10px"
+                  },
+                  {
+                    "key": "display",
+                    "value": "none"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .number",
+                "cssAdditions": [
+                  {
+                    "key": "padding-top",
+                    "value": "4px"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "progress_steps_number_container",
+            "label": "Progress Steps Number Container",
+            "class_name": "progress_steps .number_container",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "display",
+                "value": "inline-block"
+              },
+              {
+                "key": "border-radius",
+                "value": "13px"
+              },
+              {
+                "key": "padding-left",
+                "value": "10px"
+              },
+              {
+                "key": "padding-right",
+                "value": "10px"
+              },
+              {
+                "key": "margin-top",
+                "value": "5px"
+              },
+              {
+                "key": "margin-bottom",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "progress_steps_number_container_active",
+            "class_name": "progress_steps td.active .number_container",
+            "label": "Progress Steps Number Container (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          }
+        ]
+      },
+      {
+        "id": "section",
+        "label": "Section",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Area",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": false
+            },
+            "staticCSS": [
+              {
+                "key": "margin-bottom",
+                "value": "5px"
+              },
+              {
+                "key": "border-radius",
+                "value": "5px"
+              },
+              {
+                "key": "margin-top",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "id": "description",
+            "label": "Description",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "field",
+        "label": "Field",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Area",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "padding",
+                "value": "5px"
+              },
+              {
+                "key": "border-bottom",
+                "value": "none"
+              },
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "instructions",
+            "label": "Instructions",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "margin-bottom",
+                "value": "10px"
+              },
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": false
+            },
+            "staticCSS": [
+              {
+                "key": "display",
+                "value": "block"
+              }
+            ]
+          },
+          {
+            "id": "input",
+            "label": "Input Area",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "width",
+                "value": "100%"
+              },
+              {
+                "key": "border-radius",
+                "value": "5px"
+              },
+              {
+                "key": "line-height",
+                "value": "1.4em"
+              },
+              {
+                "key": "padding",
+                "value": "5px 0px 5px 5px"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": " .radio",
+                "cssAdditions": [
+                  {
+                    "key": "margin-right",
+                    "value": "10px"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .checkbox",
+                "cssAdditions": [
+                  {
+                    "key": "margin-right",
+                    "value": "10px"
+                  },
+                  {
+                    "key": "display",
+                    "value": "inline"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .choice",
+                "cssAdditions": [
+                  {
+                    "key": "margin-right",
+                    "value": "10px"
+                  },
+                  {
+                    "key": "display",
+                    "value": "inline"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "error",
+            "label": "Error Highlighting",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "required",
+            "label": "Required Symbol (*)",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false
+            },
+            "staticCSS": []
+          }
+        ]
+      },
+      {
+        "id": "button",
+        "label": "Buttons",
+        "sub_sections": [
+          {
+            "id": "bar",
+            "label": "Button Bar",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": [
+              {
+                "key": "padding",
+                "value": "18px 20px 18px 20px"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": " button.fh_appform_two_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "50%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " button.fh_appform_three_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "33.3%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "default",
+            "label": "Default",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "default_active",
+            "label": "Default (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "action",
+            "label": "Action",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "action_active",
+            "label": "Action (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "cancel",
+            "label": "Cancel",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "cancel_active",
+            "label": "Cancel (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true
+            },
+            "staticCSS": []
+          }
+        ]
+      }
+    ],
+    "logo": {
+      "staticCSS": [
+        {"key": "background-position", "value": "center"},
+        {"key": "background-repeat", "value": "no-repeat"},
+        {"key": "width", "value": "100%"}
+      ]
+    }
+  },
   "logo": {
     "base64String": "something",
     "height": "100",

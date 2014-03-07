@@ -560,7 +560,9 @@ module.exports.testGenerateStaticCSS = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateStaticCSS({"someCssKey": "someCSSVAL"});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateStaticCSS([
+    {"key": "someCssKey", "value": "someCSSVAL"}
+  ]);
   assert.ok(result);
   assert.ok(typeof result == "string");
   assert.equal(result, "someCssKey:someCSSVAL;");
@@ -617,7 +619,11 @@ module.exports.testGenerateClassAdditions = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateClassAdditions("fullCSSClassName", {" someNewCSSClass": {"staticCSSKey": "staticCSSVal"}});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateClassAdditions("fullCSSClassName", [
+    {"classNameAddition": " someNewCSSClass", "cssAdditions": [
+      {"key": "staticCSSKey", "value": "staticCSSVal"}
+    ]}
+  ]);
   assert.ok(result);
   assert.ok(typeof result == "string");
   assert.equal(result, "fullCSSClassName someNewCSSClass{staticCSSKey:staticCSSVal;}");
@@ -637,11 +643,11 @@ module.exports.testGenerateLogo = function (finished) {
 
   var testStructure = {
     "logo": {
-      "staticCSS": {
-        "background-position": "center",
-        "background-repeat": "no-repeat",
-        "width": "100%"
-      }
+      "staticCSS": [
+        {"key": "background-position", "value": "center"},
+        {"key": "background-repeat", "value": "no-repeat"},
+        {"key": "width", "value": "100%"}
+      ]
     }
   };
 
@@ -718,7 +724,8 @@ module.exports.testSingleSectionGeneration = function (finished) {
 module.exports.testFullThemeGeneration = function (finished) {
   var testJSON = exampleThemeJSON;
 
-  var result = themeCSSGenerator(testJSON).generateThemeCSS();
+  var styleStructure = themeCSSGenerator().styleStructure;
+  var result = themeCSSGenerator(testJSON, styleStructure).generateThemeCSS();
 
   assert.ok(result);
   assert.equal(result.generationResult.failed, false);
