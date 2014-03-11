@@ -102,7 +102,7 @@ module.exports.tearDown = function(finish){
 module.exports.it_should_delete_app_refs = function(finish) {
   console.log("called test delete app refs");
   //set up has been done we have a form so can perform a delete app refs and assert all is as expected.
-  forms.deleteAppRefrences()
+
   finish();
 };
 
