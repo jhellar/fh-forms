@@ -1079,6 +1079,7 @@ exports.testValidateDateTimeDateTime = function(finish){
   var testSubmissionData = [new Date().toString(), new Date().toString()];
 
   testSubmission.fieldValues = testSubmissionData;
+  console.log(testField);
 
   var validator = fieldValidator(testField, testSubmission);
 
