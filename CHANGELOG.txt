@@ -1,6 +1,11 @@
 fh-forms
 -------
 0.2.40 - 2014-02-25 - IR222 - cbrookes
+---------------------------------------
+* 6192 - cant have empty file submission when not required field
+
+0.2.40 - 2014-02-25 - IR222 - cbrookes
+---------------------------------------
 * 5270 - submissions changes to add page id and name to submission
 * changes to ignore validation when flag passed
 
