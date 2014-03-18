@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.44 - 2014-03-18 - IR223 - mmurphy
+---------------------------------------
+* 5901 - Add validator for strings containing numeric data
+
 0.2.40 - 2014-02-25 - IR222 - cbrookes
 ---------------------------------------
 * 6192 - cant have empty file submission when not required field
