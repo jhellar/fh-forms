@@ -267,12 +267,20 @@
             "style": "dotted",
             "colour": "#542134"
           }
-
+        },
+        {
+          "id": "numbering",
+          "label": "Numbering",
+          "typography": {
+            "fontSize": "13pt",
+            "fontFamily": "times",
+            "fontStyle": "bold",
+            "fontColour": "#654234"
+          }
         },
         {
           "id": "required",
           "label": "Required Symbol (*)",
-
           "typography": {
             "fontSize": "13pt",
             "fontFamily": "times",
