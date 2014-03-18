@@ -853,6 +853,24 @@ exports.testValidateFile = function(finish){
   });
 }
 
+exports.testValidateFileNoValue = function(finish){
+  var testField = exampleFields.fileFieldDataOne;
+  var testSubmission = testSubmitFormBaseInfo;
+  var testSubmissionData = [];
+
+  testSubmission.fieldValues = testSubmissionData;
+
+  var validator = fieldValidator(testField, testSubmission);
+
+
+
+  validator.validate(function(err){
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+
+    finish();
+  });
+}
+
 
 exports.testValidateFileObjects = function(finish){
   var testField = exampleFields.fileFieldData;

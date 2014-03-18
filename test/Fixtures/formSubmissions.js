@@ -86,6 +86,18 @@ module.exports = {
       }
     }
   },
+  "fileFieldDataOne":{
+    "name":"fileField",
+    "helpText":"This is a file field",
+    "type":"file",
+    "repeating":false,
+    "required":false,
+    "fieldOptions":{
+      "definition":{
+        "file_size": 100
+      }
+    }
+  },
   "photoFieldData":{
     "name":"photoField",
     "helpText":"This is a photo field",
