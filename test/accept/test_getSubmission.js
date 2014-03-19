@@ -11,7 +11,7 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
 
 var TEST_TOTAL_NUM_SUBMISSIONS = 1;
-var TEST_SUBMISSION_APPID = "appId123456";
+var TEST_SUBMISSION_APPID = "thisisnowaprojectId123456";
 var TEST_UNUSED_APPID = "ThisDidNotSubmit";
 var TEST_SUBMISSION_FORMID; // will be populated by setup
 var TEST_SUBMISSION_ID; // will be populated by setup
@@ -26,6 +26,7 @@ var testFilePath = "./test/Fixtures/test.pdf";
 
 var testSubmitFormBaseInfo = {
   "appId": TEST_SUBMISSION_APPID,
+  "appClientId": "thisistheidpassedbytheclient",
   "appCloudName": "appCloudName123456",
   "appEnvironment": "devLive",
   "timezoneOffset" : 120,
@@ -151,6 +152,11 @@ function submitData(assert, filesToSubmit, cb){
     if(err) console.log(err);
     assert.ok(!err, "problem submitting test form data - err: " + util.inspect(err));
     assert.ok(dataSaveResult.submissionId, "problem submitting test form data - returned submissionId: " + util.inspect(dataSaveResult.submissionId));
+    assert.ok(dataSaveResult.formSubmission, "Expected form submission return object but got nothing");
+    assert.ok(dataSaveResult.formSubmission.appId, "Expected appId from result but got nothing: submitFormData: " + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appClientId, "Expected clientAppId from result but got nothing: submitFormData" + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appId === "thisisnowaprojectId123456", "Expected result appId to be thisisnowaprojectId123456 but was " + dataSaveResult.formSubmission.appId);
+    assert.ok(dataSaveResult.formSubmission.appClientId === "thisistheidpassedbytheclient", "Expected result clientAppId to be thisistheidpassedbytheclient but was " + dataSaveResult.formSubmission.clientAppId);
     submissionId = dataSaveResult.submissionId;
     TEST_SUBMISSION_ID = submissionId.toString();
     cb();

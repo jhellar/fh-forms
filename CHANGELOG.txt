@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.46 - 2014-03-19 - IR223 - Niall Donnelly
+---------------------------------------
+* 6391 - Add appClientId to submissions.
+
 0.2.45 - 2014-03-18 - IR223 - mmurphy
 ---------------------------------------
 * Fix jshint errors in constructed rules engine file
