@@ -5,7 +5,7 @@ var models = require('../../lib/common/models.js')();
 var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
-var appId = "123456789";
+var appId = "thisisnowaprojectId123456";
 var assert = require('assert');
 var util = require('util');
 var submissionToday1;
@@ -16,6 +16,7 @@ var submissionDataBase = {
   "updatedBy": "testing@sometime.com",
   "timezoneOffset" : 2,
   "appId": appId,
+  "appClientId": "thisistheidpassedbytheclient",
   "appCloudName": "someCloud",
   "appEnvironment": "dev",
   "userId": "SomeUser",
