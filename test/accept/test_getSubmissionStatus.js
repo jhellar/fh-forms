@@ -6,6 +6,7 @@ var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var async = require("async");
 var assert = require('assert');
+var util = require('util');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -16,7 +17,8 @@ var testFilePath = "./test/Fixtures/test.pdf";
 
 
 var testSubmitFormBaseInfo = {
-  "appId": "appId123456",
+  "appId": "thisisnowaprojectId123456",
+  "appClientId": "thisistheidpassedbytheclient",
   "appCloudName": "appCloudName123456",
   "timezoneOffset" : 120,
   "appEnvironment": "devLive",
@@ -95,7 +97,13 @@ function submitData(assert, filesToSubmit, cb){
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
     if(err) console.log(err);
     assert.ok(!err);
-    assert.ok(dataSaveResult.submissionId);
+    assert.ok(dataSaveResult.submissionId, "Expected submissionId from result but got nothing: submitFormData");
+    assert.ok(dataSaveResult.formSubmission, "Expected form submission return object but got nothing");
+    assert.ok(dataSaveResult.formSubmission.appId, "Expected appId from result but got nothing: submitFormData: " + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appClientId, "Expected clientAppId from result but got nothing: submitFormData" + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appId === "thisisnowaprojectId123456", "Expected result appId to be thisisnowaprojectId123456 but was " + dataSaveResult.formSubmission.appId);
+    assert.ok(dataSaveResult.formSubmission.appClientId === "thisistheidpassedbytheclient", "Expected result clientAppId to be thisistheidpassedbytheclient but was " + dataSaveResult.formSubmission.clientAppId);
+
     submissionId = dataSaveResult.submissionId;
     cb();
   });
