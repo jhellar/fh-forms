@@ -112,6 +112,8 @@ function checkTheme(assert, expectedThemeData, actualThemeData){
   assert.ok(actualThemeData);
   assert.ok(actualThemeData._id);//Check id exists
   assert.ok(actualThemeData.lastUpdated);//Check lastUpdated exists
+  assert.ok(actualThemeData.updatedBy);
+  assert.ok(actualThemeData.updatedBy === options.userEmail, "Expected updatedBy to be: " + options.userEmail + " but was " + actualThemeData.updatedBy);
   assert.ok(actualThemeData.css);
   assert.ok(actualThemeData.css.indexOf("Error Generating Appforms CSS") == -1);
 
