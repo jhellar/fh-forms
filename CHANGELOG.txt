@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.48 - 2014-03-21 - IR223 - Niall Donnelly
+---------------------------------------
+* 6420 - Fixed updatedBy not being added to theme update/create
+
 0.2.47 - 2014-03-19 - IR223 - Craig Brookes
 ---------------------------------------
 * form submission changes to add page data to fields to allow for removed feilds to
