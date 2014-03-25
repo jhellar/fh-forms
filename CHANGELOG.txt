@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.49 - 2014-03-21 - IR223 - cbrookes
+---------------------------------------
+* 6454 - changes to add form def to submission and match values (useful for studio and wfm)
+
 0.2.48 - 2014-03-21 - IR223 - Niall Donnelly
 ---------------------------------------
 * 6420 - Fixed updatedBy not being added to theme update/create
