@@ -33,22 +33,39 @@ var TEST_APP_CONFIG = {
   }
 };
 
+var createdGroup;
+
+var TEST_GROUP_NAME = 'test group name for config tests';
+var TEST_GROUP_APP1 = '12345';
+var TEST_GROUP_USER1 = 'testuser67890';
+var TEST_GROUP_USER_NOACCESS = 'testuser9999';
 
 module.exports.setUp = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
     models.init(connection);
-    finish();
+
+    forms.createGroup(options, {name: TEST_GROUP_NAME, apps: [TEST_GROUP_APP1], forms: [], users: [TEST_GROUP_USER1], themes: []}, function(err, group){
+      assert.ok(!err, 'Error in setUp.createGroup(): ' + util.inspect(err));
+      assert.equal(group.name, TEST_GROUP_NAME);
+      assert.ok(group._id);
+      createdGroup = group;
+      finish();
+    });
   });
 };
 
 module.exports.tearDown = function(finish){
-  connection.close(function(err) {
-    assert.ok(!err);
-    forms.tearDownConnection(options, function (err) {
+  forms.deleteGroup(options, {_id: createdGroup._id}, function(err){
+    assert.ok(!err, 'Error in tearDon.deleteGroup(): ' + util.inspect(err));
+    createdGroup = null;
+    connection.close(function(err) {
       assert.ok(!err);
-      finish();
+      forms.tearDownConnection(options, function (err) {
+        assert.ok(!err);
+        finish();
+      });
     });
   });
 };
@@ -65,6 +82,26 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
         return cb();
       });
     },
+
+    function getAppconfigNoGroupAccess(cb) {
+      var opts = {uri: options.uri, userEmail: options.userEmail, restrictToUser: TEST_GROUP_USER_NOACCESS};
+      var params = {appId: TEST_GROUP_APP1};
+      forms.getAppConfig(opts, params, function(err, result) {
+        assert.ok(err, 'should have been denied access to app: ' + util.inspect(err));
+        return cb();
+      });
+    },
+
+    function getAppconfigWithGroupAccess(cb) {
+      var opts = {uri: options.uri, userEmail: options.userEmail, restrictToUser: TEST_GROUP_USER1};
+      var params = {appId: TEST_GROUP_APP1};
+      forms.getAppConfig(opts, params, function(err, result) {
+        assert.ok(!err, 'should have found default appConfig: ' + util.inspect(err));
+        assert.equal(75, result.client.quality);
+        return cb();
+      });
+    },
+
 
     function craeteAppconfig(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
@@ -179,4 +216,3 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     finish();
   });
 };
-
