@@ -1,5 +1,10 @@
 fh-forms
 -------
+0.2.51 - 2014-03-21 - IR223 - cbrookes
+---------------------------------------
+* 6454 - changes to add form def to submission and match values (useful for studio and wfm)
+deploy note : ensure that all submissions are deleted in beta
+
 0.2.50 - 2014-03-25 - IR224 - Martin Murphy
 ---------------------------------------
 * 6356 - Calling List Form Apps API without Forms Admin user results in error

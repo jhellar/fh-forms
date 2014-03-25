@@ -263,6 +263,7 @@ module.exports.testGetAllSubmissionsByApp = function(finish){
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
+    assert.ok(undefined !== submissions[0].formSubmittedAgainst, "formSubmittedAgainst should be defined");
     finish();
   });
 };

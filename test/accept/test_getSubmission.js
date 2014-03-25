@@ -73,6 +73,7 @@ module.exports.testGetSubmissionsAndCheckFields = function(finish){
     assert.equal(result.appId, TEST_SUBMISSION_APPID);
     assert.equal(result.formId, TEST_SUBMISSION_FORMID);
     assert.ok(result.formFields.length > 3, "should be more than 3 fields returned in summary submissions list, actual: " + result.formFields.length);
+    assert.ok(undefined !== result.formSubmittedAgainst,"formSubmittedAgainst should be populated");
 
     finish();
   });
