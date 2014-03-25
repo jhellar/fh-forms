@@ -349,7 +349,7 @@ module.exports.testSubmitNumber = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["numberField"],
-    "fieldValues": [12, 12]
+    "fieldValues": [12, " 12 "]
   }];
 
   submission.formFields = testValues;
