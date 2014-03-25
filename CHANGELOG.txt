@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.50 - 2014-03-25 - IR224 - Martin Murphy
+---------------------------------------
+* 6356 - Calling List Form Apps API without Forms Admin user results in error
+
 0.2.49 - 2014-03-24 - IR224 - Martin Murphy
 ---------------------------------------
 * 5901 - Allow numeric strings in as values in number field submissions
