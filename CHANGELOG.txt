@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.52 - 2014-03-21 - IR223 - cbrookes
+--------------------------------------
+minor fix for list submissions
+
 0.2.51 - 2014-03-21 - IR223 - cbrookes
 ---------------------------------------
 * 6454 - changes to add form def to submission and match values (useful for studio and wfm)
