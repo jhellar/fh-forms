@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.53 - 2014-03-26 - IR224 - mmurphy
+--------------------------------------
+* 5974 - fix field formatting in submission notifications
+
 0.2.52 - 2014-03-21 - IR223 - cbrookes
 --------------------------------------
 minor fix for list submissions
