@@ -55,10 +55,15 @@ var submission = {
     },
     {
       fieldId: { name: 'TestField4', type: 'location', fieldOptions: {definition:{locationUnit:"latlong"}}},
-      fieldValues: [ {lat: 52.1234, 'long': -7.5678} ] },
+      fieldValues: [ {lat: 52.1234, 'long': -7.5678} ]
+    },
     {
       fieldId: { name: 'TestField5', type: 'location', fieldOptions: {definition:{locationUnit:"eastnorth"}}},
       fieldValues: [ {zone: 'SL', eastings: 49000, northings: 12345} ]
+    },
+    {
+      fieldId: { name: 'TestField6', type: 'locationMap' },
+      fieldValues: [ {lat: 52.1234, 'long': -7.5678} ]
     }
   ],
   comments:
@@ -88,7 +93,7 @@ module.exports.it_should_return_formatted_submission = function(finish) {
   assert.equal(msg.appEnvironment, submission.appEnvironment);
   assert.equal(msg.deviceIPAddress, submission.deviceIPAddress);
   assert.equal(msg.deviceId, submission.deviceId);
-  assert.equal(msg.submittedFields.length, 7);
+  assert.equal(msg.submittedFields.length, 8);
   assert.equal(msg.submittedFields[0], "greeting: Hello, World");
   assert.equal(msg.submittedFields[1], "TestField0: TestFieldValue0");
   assert.equal(msg.submittedFields[2], "TestField1: <<<host>>>/api/v2/forms/submission/file/5332b9cf887b0f0422000001");
@@ -96,6 +101,7 @@ module.exports.it_should_return_formatted_submission = function(finish) {
   assert.equal(msg.submittedFields[4], "TestField3: (TestField3ValueSelect1,TestField3ValueSelect2)");
   assert.equal(msg.submittedFields[5], "TestField4: (52.1234,-7.5678)");
   assert.equal(msg.submittedFields[6], "TestField5: (SL 49000, 12345)");
+  assert.equal(msg.submittedFields[7], "TestField6: (52.1234,-7.5678)");
 
   finish();
 }
