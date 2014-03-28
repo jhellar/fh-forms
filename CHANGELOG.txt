@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.54 - 2014-03-26 - IR224 - mmurphy
+---------------------------------------
+* 5400-validateImmediately enable checking for validateImmediately
+
 0.2.53 - 2014-03-26 - IR224 - mmurphy
 --------------------------------------
 * 5974 - fix field formatting in submission notifications
