@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.3.00 - 2014-03-26 - IR225 - cbrookes
+----------------------------------------
+* 6515 expose submissions api
+
 0.2.55 - 2014-03-26 - IR225 - cbrookes
 -------------------------------------------
 *6516 getPopulatedFormsList implimentation
