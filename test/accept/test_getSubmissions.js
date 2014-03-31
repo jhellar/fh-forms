@@ -380,15 +380,15 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(fi
   });
 };
 
-module.exports.testGetAllSubmissionsForNonExistantAppAndGoodFormId = function(finish){
+module.exports.testGetSubmissionsArraySubids = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
-  forms.getSubmissions(options, {appId: TEST_UNUSED_APPID, formId: TEST_SUBMISSION_FORMID}, function (err, results){
+  forms.getSubmissions(options, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, 0); // should be empty list returned
+    assert.strictEqual(submissions.length, 1); // should be empty list returned
     finish();
   });
 };
