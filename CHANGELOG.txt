@@ -1,6 +1,15 @@
 fh-forms
 -------
-0.2.54 - 2014-03-26 - IR224 - mmurphy
+
+0.3.00 - 2014-03-26 - IR225 - cbrookes
+----------------------------------------
+* 6515 expose submissions api
+
+0.2.55 - 2014-03-26 - IR225 - cbrookes
+-------------------------------------------
+*6516 getPopulatedFormsList implimentation
+
+0.2.54 - 2014-03-26 - IR224 - cbrookes
 ---------------------------------------
 * 5400-validateImmediately enable checking for validateImmediately
 
