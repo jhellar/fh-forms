@@ -57,6 +57,7 @@ dist: npm_deps client_rules_engine
 	sed -i -e s/BUILD-NUMBER/$(BUILD_NUMBER)/ $(OUTPUT_DIR)/$(RELEASE_DIR)/package.json
 	tar -czf $(DIST_DIR)/$(RELEASE_FILE) -C $(OUTPUT_DIR) $(RELEASE_DIR)
 	cp  ./client/output/rulesengine.js $(DIST_DIR)
+	cp  ./client/output/cssGenerator.js $(DIST_DIR)
 
 clean:
 	rm -rf $(DIST_DIR) $(OUTPUT_DIR) $(MODULES) $(COV_DIR)

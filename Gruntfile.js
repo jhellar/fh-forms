@@ -39,7 +39,7 @@ module.exports = function(grunt) {
       },
       "dist_css_generator":{
         src: ['lib/common/themeCSSGenerator.js'],
-        dest: 'dist/cssGenerator.js',
+        dest: 'client/output/cssGenerator.js',
         options: {
           banner: '/*! <%= rulespkg.name %> - v<%= rulespkg.version %> -  */\n' +
             '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n'
