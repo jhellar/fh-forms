@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.2.55 - 2014-03-26 - IR225 - cbrookes
+-------------------------------------------
+*6516 getPopulatedFormsList implimentation
+
 0.2.53 - 2014-03-26 - IR224 - mmurphy
 --------------------------------------
 * 5974 - fix field formatting in submission notifications
