@@ -28,22 +28,22 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.testGetFormWorksSinglePage = function(finish){
-  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
-    assert.ok(!err);
-    assert.ok(result);
-
-    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
-      if(err) console.log(err);
-      assert.ok(!err, util.inspect(err));
-      assert.ok(result);
-      assert.ok(result.lastUpdatedTimestamp);
-      assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
-      finish();
-    });
-  });
-};
-
+//module.exports.testGetFormWorksSinglePage = function(finish){
+//  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+//    assert.ok(!err);
+//    assert.ok(result);
+//
+//    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
+//      if(err) console.log(err);
+//      assert.ok(!err, util.inspect(err));
+//      assert.ok(result);
+//      assert.ok(result.lastUpdatedTimestamp);
+//      assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
+//      finish();
+//    });
+//  });
+//};
+//
 module.exports.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err, util.inspect(err));
@@ -61,13 +61,23 @@ module.exports.testGetFormWorksArrayOfFormIds = function(finish){
     formIdArray[0] = result.forms[0]._id;
     formIdArray[1] = result.forms[1]._id;
 
-    forms.getFormsList({"uri": process.env.FH_DOMAIN_DB_CONN_URL, forms: formIdArray}, function(err, result){
+    forms.getPopulatedFormList({"uri": process.env.FH_DOMAIN_DB_CONN_URL, formids: formIdArray}, function(err, result){
       assert.ok(!err, util.inspect(err));
       assert.ok(result);
       assert.ok(result.forms);
       assert.equal(2, result.forms.length);
       checkForm(result.forms[0], {"name": "Test Form 1", "description": "This is a test form 1."});
       checkForm(result.forms[1], {"name": "Test Form 2", "description": "This is a test form 2."});
+      finish();
+    });
+  });
+};
+
+module.exports.testgetPopulatedFormListFails = function(finish){
+  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+
+    forms.getPopulatedFormList({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+      assert.ok(err, util.inspect(err));
       finish();
     });
   });
