@@ -28,22 +28,22 @@ module.exports.tearDown = function(finish){
   });
 };
 
-//module.exports.testGetFormWorksSinglePage = function(finish){
-//  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
-//    assert.ok(!err);
-//    assert.ok(result);
-//
-//    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
-//      if(err) console.log(err);
-//      assert.ok(!err, util.inspect(err));
-//      assert.ok(result);
-//      assert.ok(result.lastUpdatedTimestamp);
-//      assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
-//      finish();
-//    });
-//  });
-//};
-//
+module.exports.testGetFormWorksSinglePage = function(finish){
+  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+    assert.ok(!err);
+    assert.ok(result);
+
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
+      if(err) console.log(err);
+      assert.ok(!err, util.inspect(err));
+      assert.ok(result);
+      assert.ok(result.lastUpdatedTimestamp);
+      assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
+      finish();
+    });
+  });
+};
+
 module.exports.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err, util.inspect(err));
