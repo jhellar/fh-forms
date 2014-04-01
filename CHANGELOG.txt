@@ -1,6 +1,11 @@
 fh-forms
 -------
 
+0.3.01 - 2014-03-26 - IR225 - cbrookes
+---------------------------------------
+6378 fix for log levels and logger in config
+
+
 0.3.00 - 2014-03-26 - IR225 - cbrookes
 ----------------------------------------
 * 6515 expose submissions api
