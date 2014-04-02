@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.4.0 - 2014-04-02 - IR224 - mmurphy
+---------------------------------------
+bumping version number only due to broken npm
+
 0.3.01 - 2014-03-26 - IR225 - cbrookes
 ---------------------------------------
 6378 fix for log levels and logger in config
