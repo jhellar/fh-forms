@@ -1,5 +1,35 @@
 fh-forms
 -------
+
+0.4.1 - 2014-04-03 - IR224 - mmurphy
+---------------------------------------
+* 6649 - Change baseTheme Template to show error text as black on red backround - Error flagging in on-device App forms setting font to red on red
+
+0.4.0 - 2014-04-02 - IR224 - mmurphy
+---------------------------------------
+bumping version number only due to broken npm
+
+0.3.01 - 2014-03-26 - IR225 - cbrookes
+---------------------------------------
+6378 fix for log levels and logger in config
+
+
+0.3.00 - 2014-03-26 - IR225 - cbrookes
+----------------------------------------
+* 6515 expose submissions api
+
+0.2.55 - 2014-03-26 - IR225 - cbrookes
+-------------------------------------------
+*6516 getPopulatedFormsList implimentation
+
+0.2.54 - 2014-03-26 - IR224 - cbrookes
+---------------------------------------
+* 5400-validateImmediately enable checking for validateImmediately
+
+0.2.53 - 2014-03-26 - IR224 - mmurphy
+--------------------------------------
+* 5974 - fix field formatting in submission notifications
+
 0.2.52 - 2014-03-21 - IR223 - cbrookes
 --------------------------------------
 minor fix for list submissions

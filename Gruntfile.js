@@ -21,12 +21,12 @@ module.exports = function(grunt) {
       }
     },
     concat: {
-      options: {
-        banner: '/*! <%= rulespkg.name %> - v<%= rulespkg.version %> -  */\n' +
-          '/*! <%= asyncpkg.name %> - v<%= asyncpkg.version %> -  */\n' +
-          '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-      },
-      dist: {
+      "dist_rules_engine":{
+        options: {
+          banner: '/*! <%= rulespkg.name %> - v<%= rulespkg.version %> -  */\n' +
+            '/*! <%= asyncpkg.name %> - v<%= asyncpkg.version %> -  */\n' +
+            '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        },
         src: [
           "client/prefix.js",
           "node_modules/async/lib/async.js",
@@ -36,6 +36,14 @@ module.exports = function(grunt) {
         ],
         dest: 'client/output/rulesengine.js',
         nonull: true
+      },
+      "dist_css_generator":{
+        src: ['lib/common/themeCSSGenerator.js'],
+        dest: 'client/output/cssGenerator.js',
+        options: {
+          banner: '/*! <%= rulespkg.name %> - v<%= rulespkg.version %> -  */\n' +
+            '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        }
       }
     }
   });

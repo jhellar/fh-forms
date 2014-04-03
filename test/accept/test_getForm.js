@@ -54,6 +54,42 @@ module.exports.testGetFormWorksAllForms = function(finish){
   });
 };
 
+module.exports.testGetFormWorksArrayOfFormIds = function(finish){
+  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+    var formIdArray = [];
+
+    formIdArray[0] = result.forms[0]._id;
+    formIdArray[1] = result.forms[1]._id;
+
+    forms.getPopulatedFormList({"uri": process.env.FH_DOMAIN_DB_CONN_URL, formids: formIdArray}, function(err, result){
+      assert.ok(!err, util.inspect(err));
+      assert.ok(result);
+      assert.ok(result.forms);
+      assert.equal(2, result.forms.length);
+      checkForm(result.forms[0], {"name": "Test Form 1", "description": "This is a test form 1."});
+      checkForm(result.forms[1], {"name": "Test Form 2", "description": "This is a test form 2."});
+      finish();
+    });
+  });
+};
+
+module.exports.testgetPopulatedFormListFails = function(finish){
+  forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+
+    forms.getPopulatedFormList({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
+      assert.ok(err, util.inspect(err));
+      finish();
+    });
+  });
+};
+
+function checkForm(form, options){
+  assert.ok(form);
+  assert.equal(form.name, options.name, "Expected " + options.name + " got " + form.name);
+  assert.ok(form._id);
+  assert.equal(form.description, options.description, "Expected " + options.description + " got " + form.description);
+}
+
 //Adding data needed for the test
 function createTestData(assert, cb){
   //Add a form to the database.
