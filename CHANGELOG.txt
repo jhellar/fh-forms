@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.5.1 - 2014-04-03 - IR224 - mmurphy
+---------------------------------------
+bumping version number only due to broken npm
+
 0.4.2 - 2014-04-03 - IR224 - mmurphy
 ---------------------------------------
 * 6468 - Form theme edit always shows FeedHenry logo as theme logo
@@ -113,7 +117,7 @@ be rendered properly in studio
 
 0.2.24 - 2014-02-10 - IR221 - mmurphy
 ---------------------------------------
-* 5961 - add forms to existing apps needs to filter apps by group 
+* 5961 - add forms to existing apps needs to filter apps by group
 
 0.2.23 - 2014-02-10 - IR221 - Niall Donnelly
 ---------------------------------------
@@ -181,11 +185,9 @@ be rendered properly in studio
 	#5322  fix rulesEngine closure wrapping async
 	#5328  fix bug in rulesEngine.checkRules where rules reference an field not submitted
 	#5338  Update rulesengine.validateForm to return per-field values errors and per-field errors
- 
+
 0.2.3 - IR216 - Martin Murphy
         #5244  Add app and forms names to submissions list
 
 previous versions
 0.2.2 - added ne rules-engine
-
-
