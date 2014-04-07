@@ -56,7 +56,6 @@ module.exports.it_should_delete_a_theme_when_not_in_use = function(finish){
 };
 
 module.exports.it_should_not_delete_a_theme_when_in_use_by_an_app = function(finish){
-
   async.waterfall([
     function(cb){
       forms.updateTheme(options, TEST_THEME, function(err, result){
@@ -95,8 +94,6 @@ module.exports.it_should_not_delete_a_theme_when_in_use_by_an_app = function(fin
 
     finish();
   });
-
-
 };
 
 function checkTheme(assert, expectedThemeData, actualThemeData){
