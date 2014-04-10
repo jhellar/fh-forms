@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.5.3 - 2014-04-10 - IR224 - Niall Donnelly
+---------------------------------------
+* 6646 - Add margin and padding to themes.
+
 0.5.1 - 2014-04-03 - IR224 - mmurphy
 ---------------------------------------
 bumping version number only due to broken npm
