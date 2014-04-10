@@ -471,6 +471,9 @@
         {
           "id": "numbering",
           "label": "Numbering",
+          "background": {
+            "background_color": "#523421"
+          },
           "typography": {
             "fontSize": "13pt",
             "fontFamily": "times",
@@ -761,8 +764,8 @@
               "typography": false,
               "background": true,
               "border": false,
-              "margin": true,
-              "padding": true
+              "margin": false,
+              "padding": false
             },
             "staticCSS": []
           }
@@ -779,8 +782,8 @@
               "typography": false,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": false,
+              "padding": false
             },
             "staticCSS": [
             ]
@@ -908,6 +911,10 @@
               {
                 "classNameAddition": " .number",
                 "cssAdditions": [
+                  {
+                    "key": "padding",
+                    "value": "5px 10px 5px 10px"
+                  }
                 ]
               }
             ]
@@ -920,8 +927,8 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": false,
+              "padding": false
             },
             "staticCSS": [
               {
@@ -942,8 +949,8 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": false,
+              "padding": false
             },
             "staticCSS": []
           }
@@ -1058,6 +1065,10 @@
               {
                 "key": "display",
                 "value": "block"
+              },
+              {
+                "key": "border-radius",
+                "value": "5px"
               }
             ]
           },
@@ -1073,16 +1084,20 @@
             },
             "staticCSS": [
               {
-                "key": "width",
-                "value": "100%"
-              },
-              {
                 "key": "border-radius",
                 "value": "5px"
               },
               {
                 "key": "line-height",
                 "value": "1.4em"
+              },
+              {
+                "key": "display",
+                "value": "inline-block"
+              },
+              {
+                "key": "width",
+                "value": "100%"
               }
             ],
             "classAdditions": [
@@ -1106,7 +1121,23 @@
                   {
                     "key": "display",
                     "value": "inline"
+                  },
+                  {
+                    "key": "margin-left",
+                    "value": "5px"
                   }
+                ]
+              },
+              {
+                "classNameAddition": ".repeating",
+                "cssAdditions": [
+
+                ]
+              },
+              {
+                "classNameAddition": ".non_repeating",
+                "cssAdditions": [
+
                 ]
               }
             ]
@@ -1121,16 +1152,21 @@
               "margin": true,
               "padding": true
             },
-            "staticCSS": []
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
           },
           {
             "id": "numbering",
             "label": "Numbering",
             "style": {
               "typography": true,
-              "background": false,
+              "background": true,
               "border": false,
-              "margin": true,
+              "margin": false,
               "padding": true
             },
             "staticCSS": [
@@ -1141,6 +1177,14 @@
               {
                 "key": "float",
                 "value": "left"
+              },
+              {
+                "key": "width",
+                "value": "15%"
+              },
+              {
+                "key": "text-align",
+                "value": "center"
               }
             ]
           },
@@ -1151,8 +1195,8 @@
               "typography": true,
               "background": false,
               "border": false,
-              "margin": true,
-              "padding": true
+              "margin": false,
+              "padding": false
             },
             "staticCSS": [{
               "key": "content",
@@ -1209,7 +1253,7 @@
                 "cssAdditions": [
                   {
                     "key": "width",
-                    "value": "50%"
+                    "value": "45%!important"
                   }
                 ]
               },
@@ -1236,11 +1280,7 @@
                 "cssAdditions": [
                   {
                     "key": "width",
-                    "value": "50%"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
+                    "value": "45%"
                   }
                 ]
               },
@@ -1249,11 +1289,7 @@
                 "cssAdditions": [
                   {
                     "key": "width",
-                    "value": "50%"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
+                    "value": "45%"
                   }
                 ]
               }
@@ -1261,6 +1297,7 @@
           },
           {
             "id": "default_active",
+            "class_name": "button_default:active",
             "label": "Default (Active)",
             "style": {
               "typography": true,
@@ -1276,33 +1313,7 @@
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": ".fh_appform_two_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "50%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".fh_appform_three_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "33.3%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "100%"
-                  }
-                ]
-              }
+
             ]
           },
           {
@@ -1355,10 +1366,6 @@
                   {
                     "key": "width",
                     "value": "45%!important"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
                   }
                 ]
               },
@@ -1368,10 +1375,6 @@
                   {
                     "key": "width",
                     "value": "45%!important"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
                   }
                 ]
               }
@@ -1379,6 +1382,7 @@
           },
           {
             "id": "action_active",
+            "class_name": "button_action:active",
             "label": "Action (Active)",
             "style": {
               "typography": true,
@@ -1394,33 +1398,7 @@
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": ".fh_appform_two_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "50%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".fh_appform_three_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "33.3%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "100%"
-                  }
-                ]
-              }
+
             ]
           },
           {
@@ -1445,7 +1423,7 @@
                 "cssAdditions": [
                   {
                     "key": "width",
-                    "value": "50%"
+                    "value": "45%"
                   }
                 ]
               },
@@ -1472,11 +1450,7 @@
                 "cssAdditions": [
                   {
                     "key": "width",
-                    "value": "50%"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
+                    "value": "45%"
                   }
                 ]
               },
@@ -1485,11 +1459,7 @@
                 "cssAdditions": [
                   {
                     "key": "width",
-                    "value": "50%"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
+                    "value": "45%"
                   }
                 ]
               }
@@ -1497,6 +1467,7 @@
           },
           {
             "id": "cancel_active",
+            "class_name": "button_cancel:active",
             "label": "Cancel (Active)",
             "style": {
               "typography": true,
@@ -1512,59 +1483,7 @@
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": ".fh_appform_two_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "50%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".fh_appform_three_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "33.3%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "100%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "50%"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_addInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "50%"
-                  },
-                  {
-                    "key": "line-height",
-                    "value": "28px"
-                  }
-                ]
-              }
+
             ]
           }
         ]
