@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.5.4 - 2014-04-11 - IR225 - mmurphy
+---------------------------------------
+* 6663 - Change placeholder in submissions notifications messages to avoid HTML characters - part of fix for notifications emails
+
 0.5.3 - 2014-04-10 - IR224 - Niall Donnelly
 ---------------------------------------
 * 6646 - Add margin and padding to themes.
