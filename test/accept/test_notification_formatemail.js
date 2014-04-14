@@ -96,8 +96,8 @@ module.exports.it_should_return_formatted_submission = function(finish) {
   assert.equal(msg.submittedFields.length, 8);
   assert.equal(msg.submittedFields[0], "greeting: Hello, World");
   assert.equal(msg.submittedFields[1], "TestField0: TestFieldValue0");
-  assert.equal(msg.submittedFields[2], "TestField1: <<<host>>>/api/v2/forms/submission/file/5332b9cf887b0f0422000001");
-  assert.equal(msg.submittedFields[3], "TestField2: <<<host>>>/api/v2/forms/submission/file/5332b9cf887b0f0422000002");
+  assert.equal(msg.submittedFields[2], "TestField1: --#host#--/api/v2/forms/submission/file/5332b9cf887b0f0422000001");
+  assert.equal(msg.submittedFields[3], "TestField2: --#host#--/api/v2/forms/submission/file/5332b9cf887b0f0422000002");
   assert.equal(msg.submittedFields[4], "TestField3: (TestField3ValueSelect1,TestField3ValueSelect2)");
   assert.equal(msg.submittedFields[5], "TestField4: (52.1234,-7.5678)");
   assert.equal(msg.submittedFields[6], "TestField5: (SL 49000, 12345)");
