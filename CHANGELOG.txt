@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.5.5 - 2014-04-16 - IR225 - cbrookes
+-------------------------------------
+* 6827 fix for empty group values
+
 0.5.4 - 2014-04-11 - IR225 - mmurphy
 ---------------------------------------
 * 6663 - Change placeholder in submissions notifications messages to avoid HTML characters - part of fix for notifications emails
