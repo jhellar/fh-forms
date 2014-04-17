@@ -21,10 +21,17 @@ var mockSub = {"_id": "533150772dd1cd3e2fa622c6",
         "_id": "52fe126de542d21b7dc11100",
         "name": "changed 1",
         "fields": [
-        {"values":[],"_id": "5330466e08b0ea8230d9507c",
-
-          "fieldOptions": {"validation": {"min": "4", "max": "10", "validateImmediately": true}}, "name": "text5", "pageData": {"name": "changed 1", "_id": "52fe126de542d21b7dc11100"}, "required": true, "type": "text", "repeating": false}
-      ]}
+          {
+            "values": [],
+            "_id": "5330466e08b0ea8230d9507c",
+            "fieldOptions": {"validation": {"min": "4", "max": "10", "validateImmediately": true}}, "name": "text5", "pageData": {"name": "changed 1", "_id": "52fe126de542d21b7dc11100"}, "required": true, "type": "text", "repeating": false
+          },
+          {
+            "values": [],
+            "_id": "5330466e08b0fss230d9507c",
+            "fieldOptions": {}, "name": "text5", "pageData": {"name": "changed 1", "_id": "52fe126de542d21b7dc11100"}, "required": true, "type": "text", "repeating": false
+          }
+        ]}
     ],
     "lastUpdated": "2014-03-25T09:46:01.031Z",
     "dateCreated": "2014-02-14T12:56:13.692Z"},
@@ -34,25 +41,33 @@ var mockSub = {"_id": "533150772dd1cd3e2fa622c6",
   "formFields": [
     {"fieldId": {
       "_id": "5330466e08b0ea8230d9507c",
-      "fieldOptions": {"validation": {"min": "4", "max": "10", "validateImmediately": true}}, "name": "text5", "pageData": {"_id": "52fe126de542d21b7dc11100", "name": "changed 1"}, "required": true, "type": "text", "repeating": false}, "fieldValues": ["text"]}
+      "fieldOptions": {"validation": {"min": "4", "max": "10", "validateImmediately": true}}, "name": "text5", "pageData": {"_id": "52fe126de542d21b7dc11100", "name": "changed 1"}, "required": true, "type": "text", "repeating": false}, "fieldValues": ["text"]},
+    {"fieldId": {
+      "_id": "5330466e08b0fss230d9507c",
+      "fieldOptions": {}, "name": "file1", "pageData": {"_id": "52fe126de542d21b7dc11100", "name": "changed 1"}, "required": true, "type": "file", "repeating": false}, "fieldValues": [
+      {groupId: "file12345"}
+    ]}
   ], "comments": [], "status": "complete", "submissionStartedTimestamp": "2014-03-25T09:46:31.682Z", "updatedTimestamp": "2014-03-25T09:46:31.873Z", "submissionCompletedTimestamp": "2014-03-25T09:46:31.873Z"};
-
-
 
 
 var toTest = require('../../lib/common/misc.js').mapSubmissionValsToFormsFields;
 
 
+exports.testMatchingFieldsToVals = function (finish) {
 
-exports.testMatchingFieldsToVals = function (finish){
-
-  toTest(mockSub,mockSub.formSubmittedAgainst, function (err, updated){
-    if(err) assert.fail("failed " + util.inspect(err));
+  toTest(mockSub, mockSub.formSubmittedAgainst, function (err, updated) {
+    if (err) assert.fail("failed " + util.inspect(err));
     //the form def only has one page and one field
     var page = updated.formSubmittedAgainst.pages[0];
     var field = page.fields[0];
     var val = field.values[0];
     assert.ok("text" === val, "val should have been matched to sub");
+
+    var fileField = page.fields[1];
+    var fileVal = fileField.values[0];
+    assert.ok(fileVal.mbaasUrl);
+
+
     finish();
   });
 };
