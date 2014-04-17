@@ -29,7 +29,7 @@ var mockSub = {"_id": "533150772dd1cd3e2fa622c6",
           {
             "values": [],
             "_id": "5330466e08b0fss230d9507c",
-            "fieldOptions": {}, "name": "text5", "pageData": {"name": "changed 1", "_id": "52fe126de542d21b7dc11100"}, "required": true, "type": "text", "repeating": false
+            "fieldOptions": {}, "name": "file1", "pageData": {"name": "changed 1", "_id": "52fe126de542d21b7dc11100"}, "required": true, "type": "file", "repeating": false
           }
         ]}
     ],
@@ -63,8 +63,9 @@ exports.testMatchingFieldsToVals = function (finish) {
     var val = field.values[0];
     assert.ok("text" === val, "val should have been matched to sub");
 
-    var fileField = page.fields[1];
-    var fileVal = fileField.values[0];
+    var fileField = updated.formFields[1];
+    var fileVal = fileField.fieldValues[0];
+    //console.log(util.inspect(updated));
     assert.ok(fileVal.mbaasUrl);
 
 
