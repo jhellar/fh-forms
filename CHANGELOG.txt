@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.5.6 - 2014-04-17 - IR225 - Niall Donnelly
+-------------------------------------
+* 6706 get submission for client Api.
+
 0.5.5 - 2014-04-16 - IR225 - cbrookes
 -------------------------------------
 * 6827 fix for empty group values
