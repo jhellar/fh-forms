@@ -1,6 +1,10 @@
 fh-forms
 -------
 
+0.5.7 - 2014-04-17 - IR226 - Niall Donnelly
+-------------------------------------
+* 6744 file limit not working.
+
 0.5.6 - 2014-04-17 - IR225 - Niall Donnelly
 -------------------------------------
 * 6706 get submission for client Api.
