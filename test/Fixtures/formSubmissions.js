@@ -80,7 +80,7 @@ module.exports = {
     "required":false,
     "fieldOptions":{
       "definition":{
-        "file_size": 100,
+        "file_size": 1000,
         "maxRepeat":5,
         "minRepeat":2
       }

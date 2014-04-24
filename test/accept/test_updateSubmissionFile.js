@@ -61,7 +61,7 @@ module.exports.testUpdateSubmissionFile = function(finish){
   //previous file should be deleted -- new file should be saved.
   var file2Details = {
     "fileName" : "test.jpg",
-    "fileSize" : 123456,
+    "fileSize" : 1000,
     "fileType" : "image/jpeg",
     "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder124124"
@@ -69,7 +69,7 @@ module.exports.testUpdateSubmissionFile = function(finish){
 
   var file1Details = {
     "fileName" : "test.pdf",
-    "fileSize" : 1234567,
+    "fileSize" : 1000,
     "fileType" : "application/pdf",
     "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder124125"
