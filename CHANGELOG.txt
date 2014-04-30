@@ -1,5 +1,8 @@
 fh-forms
 -------
+0.5.9 - 2014-04-30 - IR226 - Niall Donnelly
+-------------------------------------
+* 5824 - fixed date fields not populating across devices.
 
 0.5.8 - 2014-04-28 - IR226 - Niall Donnelly
 -------------------------------------
