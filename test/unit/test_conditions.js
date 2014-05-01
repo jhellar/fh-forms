@@ -85,8 +85,9 @@ module.exports.testTextStyleConditions = function (finish) {
 module.exports.testNumberConditions = function (finish) {
   var engine = formsRulesEngine({"submission" : null, "definition" : null});
 
-  var fieldValue = 27;
+  var fieldValue = "27";
   var testValues = [
+    { condition: "is equal to", value: 27, expected: true },
     { condition: "is equal to", value: 27, expected: true },
     { condition: "is equal to", value: 270, expected: false },
     { condition: "is equal to", value: 0, expected: false },
