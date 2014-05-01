@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.5.10 - 2014-05-01 - IR226 - Niall Donnelly
+-------------------------------------
+* 6795 - fixed Numerical comparison not working in rules engine
+
 0.5.9 - 2014-04-30 - IR226 - Niall Donnelly
 -------------------------------------
 * 5824 - fixed date fields not populating across devices.
