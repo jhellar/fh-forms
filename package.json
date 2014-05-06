@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "0.2.38",
+  "version": "0.5.10",
   "description": "Cloud Forms API for form submission",
   "main": "lib/forms.js",
   "scripts": {
@@ -40,6 +40,7 @@
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-cli": "~0.1.11"
+    "grunt-cli": "~0.1.11",
+    "underscore":"1.6.0"
   }
 }

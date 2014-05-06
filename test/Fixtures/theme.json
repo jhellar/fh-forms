@@ -1,161 +1,1496 @@
 {
   "name": "testTheme",
   "updatedBy": "testing-admin@example.com",
-  "borders": {
-    "progress_steps_number_container_active": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#5363c1"
+  "sections": [
+    {
+      "id": "body",
+      "label": "Body",
+      "sub_sections": [
+        {
+          "id": "area",
+          "label": "Area",
+          "typography": {
+            "fontSize": "11pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#321321"
+          },
+          "background": {
+            "background_color": "#123456"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#123123"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        }
+      ]
     },
-    "progress_steps_number_container": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#bdeaa2"
+    {
+      "id": "form",
+      "label": "Form",
+      "sub_sections": [
+        {
+          "id": "area",
+          "label": "Background",
+          "background": {
+            "background_color": "#312312"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "dotted",
+            "colour": "#3213c1"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "title",
+          "label": "Title",
+          "typography": {
+            "fontSize": "12pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#34df75"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "description",
+          "label": "Description",
+          "typography": {
+            "fontSize": "18pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#35df75"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        }
+      ]
     },
-    "progress_steps": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#f05444"
+    {
+      "id": "page",
+      "label": "Page",
+      "sub_sections": [
+        {
+          "id": "title",
+          "label": "Title",
+          "typography": {
+            "fontSize": "16pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#43cf75"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "description",
+          "label": "Description",
+          "typography": {
+            "fontSize": "14pt",
+            "fontFamily": "arial",
+            "fontStyle": "normal",
+            "fontColour": "#123f75"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "progress_steps",
+          "label": "Progress Steps",
+          "background": {
+            "background_color": "#124356"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#1265c1"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "progress_steps_number_container",
+          "label": "Progress Steps Number Container",
+          "typography": {
+            "fontSize": "18pt",
+            "fontFamily": "times",
+            "fontStyle": "italic",
+            "fontColour": "#635892"
+          },
+          "background": {
+            "background_color": "#846790"
+          },
+          "border": {
+            "thickness": "none",
+            "style": "dashed",
+            "colour": "#831678"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "progress_steps_number_container_active",
+          "label": "Progress Steps Number Container (Active)",
+          "typography": {
+            "fontSize": "12pt",
+            "fontFamily": "arial",
+            "fontStyle": "italic",
+            "fontColour": "#457245"
+          },
+          "background": {
+            "background_color": "#934562"
+          },
+          "border": {
+            "thickness": "medium",
+            "style": "double",
+            "colour": "#153789"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        }
+      ]
     },
-    "error": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#65e116"
+    {
+      "id": "section",
+      "label": "Section",
+      "sub_sections": [
+        {
+          "id": "area",
+          "label": "Area",
+          "background": {
+            "background_color": "#456784"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "title",
+          "label": "Title",
+          "typography": {
+            "fontSize": "12pt",
+            "fontFamily": "times",
+            "fontStyle": "bold",
+            "fontColour": "#415126"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "description",
+          "label": "Description",
+          "typography": {
+            "fontSize": "12pt",
+            "fontFamily": "arial",
+            "fontStyle": "normal",
+            "fontColour": "#345123"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        }
+      ]
     },
-    "instructions": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#59089e"
+    {
+      "id": "field",
+      "label": "Field",
+      "sub_sections": [
+        {
+          "id": "area",
+          "label": "Area",
+          "background": {
+            "background_color": "#523521"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#623442"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "instructions",
+          "label": "Instructions",
+          "typography": {
+            "fontSize": "18pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#521251"
+          },
+          "background": {
+            "background_color": "#517564"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "double",
+            "colour": "#623452"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "title",
+          "label": "Title",
+          "typography": {
+            "fontSize": "14pt",
+            "fontFamily": "normal",
+            "fontStyle": "italic",
+            "fontColour": "#623512"
+          },
+          "background": {
+            "background_color": "#642452"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "input",
+          "label": "Input Area",
+          "typography": {
+            "fontSize": "14pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#623321"
+          },
+          "background": {
+            "background_color": "#842342"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "double",
+            "colour": "#642346"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "error",
+          "label": "Error Highlighting",
+
+          "typography": {
+            "fontSize": "12pt",
+            "fontFamily": "arial",
+            "fontStyle": "normal",
+            "fontColour": "#235232"
+          },
+          "background": {
+            "background_color": "#734453"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "dotted",
+            "colour": "#542134"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "numbering",
+          "label": "Numbering",
+          "background": {
+            "background_color": "#523421"
+          },
+          "typography": {
+            "fontSize": "13pt",
+            "fontFamily": "times",
+            "fontStyle": "bold",
+            "fontColour": "#654234"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+        },
+        {
+          "id": "required",
+          "label": "Required Symbol (*)",
+          "typography": {
+            "fontSize": "13pt",
+            "fontFamily": "times",
+            "fontStyle": "bold",
+            "fontColour": "#654234"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        }
+      ]
     },
-    "fieldInput": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#a72921"
-    },
-    "fieldArea": {
-      "thickness": "thick",
-      "style": "double",
-      "colour": "#d53160"
-    },
-    "forms": {
-      "thickness": "none",
-      "style": "double",
-      "colour": "#08fc2c"
+    {
+      "id": "button",
+      "label": "Buttons",
+      "sub_sections": [
+        {
+          "id": "bar",
+          "label": "Button Bar",
+
+          "background": {
+            "background_color": "#523421"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#523465"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "default",
+          "label": "Default",
+
+          "typography": {
+            "fontSize": "14pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#526321"
+          },
+          "background": {
+            "background_color": "#723623"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "double",
+            "colour": "#463235"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "default_active",
+          "label": "Default (Active)",
+
+          "typography": {
+            "fontSize": "18pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#643462"
+          },
+          "background": {
+            "background_color": "#686234"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "dotted",
+            "colour": "#236723"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "action",
+          "label": "Action",
+
+          "typography": {
+            "fontSize": "14pt",
+            "fontFamily": "arial",
+            "fontStyle": "normal",
+            "fontColour": "#623453"
+          },
+          "background": {
+            "background_color": "#634453"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "dashed",
+            "colour": "#634523"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "action_active",
+          "label": "Action (Active)",
+
+          "typography": {
+            "fontSize": "18pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#623412"
+          },
+          "background": {
+            "background_color": "#156122"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#523412"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "cancel",
+          "label": "Cancel",
+
+          "typography": {
+            "fontSize": "13pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#623523"
+          },
+          "background": {
+            "background_color": "#634523"
+          },
+          "border": {
+            "thickness": "thick",
+            "style": "double",
+            "colour": "#235623"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        },
+        {
+          "id": "cancel_active",
+          "label": "Cancel (Active)",
+
+          "typography": {
+            "fontSize": "18pt",
+            "fontFamily": "arial",
+            "fontStyle": "bold",
+            "fontColour": "#523643"
+          },
+          "background": {
+            "background_color": "#642342"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#235263"
+          },
+          "margin": {
+            "top": "5",
+            "right": "6",
+            "bottom": "7",
+            "left": "8"
+          },
+          "padding": {
+            "top": "9",
+            "right": "10",
+            "bottom": "11",
+            "left": "12"
+          }
+
+        }
+      ]
     }
-  },
-  "typography": {
-    "progress_steps_number_container_active": {
-      "fontSize": "11pt",
-      "fontFamily": "arial",
-      "fontStyle": "normal",
-      "fontColour": "#2fbdbd"
+  ],
+  "structure": {
+    "logo": {
+      "staticCSS": [
+        {"key": "background-position", "value": "center"},
+        {"key": "background-repeat", "value": "no-repeat"},
+        {"key": "width", "value": "100%"},
+        {"key": "display", "value": "inline-block"}
+      ]
     },
-    "progress_steps_number_container": {
-      "fontSize": "11pt",
-      "fontFamily": "arial",
-      "fontStyle": "normal",
-      "fontColour": "#e31610"
-    },
-    "section_break_description": {
-      "fontSize": "12pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#ec090d"
-    },
-    "section_break_title": {
-      "fontSize": "14pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#2cec09"
-    },
-    "error": {
-      "fontSize": "12pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#ca2853"
-    },
-    "buttons_active": {
-      "fontSize": "12pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#9b333a"
-    },
-    "buttons": {
-      "fontSize": "12pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#516aa0"
-    },
-    "instructions": {
-      "fontSize": "12pt",
-      "fontFamily": "arial",
-      "fontStyle": "normal",
-      "fontColour": "#53841e"
-    },
-    "fieldInput": {
-      "fontSize": "14pt",
-      "fontFamily": "arial",
-      "fontStyle": "italic",
-      "fontColour": "#770238"
-    },
-    "fieldTitle": {
-      "fontSize": "14pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#8bf27a"
-    },
-    "page_description": {
-      "fontSize": "11pt",
-      "fontFamily": "arial",
-      "fontStyle": "italic",
-      "fontColour": "#4e921d"
-    },
-    "page_title": {
-      "fontSize": "11pt",
-      "fontFamily": "arial",
-      "fontStyle": "normal",
-      "fontColour": "#64f53c"
-    },
-    "description": {
-      "fontSize": "14pt",
-      "fontFamily": "arial",
-      "fontStyle": "italic",
-      "fontColour": "#058df6"
-    },
-    "title": {
-      "fontSize": "18pt",
-      "fontFamily": "arial",
-      "fontStyle": "bold",
-      "fontColour": "#34cf75"
-    }
-  },
-  "colours": {
-    "backgrounds": {
-      "headerBar": "#15a47c",
-      "navigationBar": "#d41bcd",
-      "body": "#6a2f55",
-      "form": "#5fbd28",
-      "fieldArea": "#bda17a",
-      "fieldInput": "#d7cad3",
-      "fieldInstructions": "#2edc3b",
-      "error": "#b33265",
-      "progress_steps": "#0f87ae",
-      "progress_steps_number_container": "#6f824f",
-      "progress_steps_number_container_active": "#b10b77",
-      "field_required": "#92b37a",
-      "section_area": "#12337a"
-    },
-    "buttons": {
-      "navigation": "#11d628",
-      "navigation_active": "#b12b4a",
-      "action": "#d425b7",
-      "action_active": "#db1e33",
-      "cancel": "#d81649",
-      "cancel_active": "#3c0b82"
-    }
-  },
+    "sections": [
+      {
+        "id": "body",
+        "label": "Body",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Area",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": false,
+              "margin": false,
+              "padding": false
+            },
+            "staticCSS": []
+          }
+        ]
+      },
+      {
+        "id": "form",
+        "label": "Form",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Background",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true,
+              "margin": false,
+              "padding": false
+            },
+            "staticCSS": [
+            ]
+          },
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "id": "description",
+            "label": "Description",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "page",
+        "label": "Page",
+        "sub_sections": [
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [{
+              "key": "text-align",
+              "value": "center"
+            },
+              {
+                "key": "width",
+                "value": "100%"
+              },
+              {
+                "key": "display",
+                "value": "inline-block"
+              }]
+          },
+          {
+            "id": "description",
+            "label": "Description",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": []
+          },
+          {
+            "id": "progress_steps",
+            "label": "Page Area",
+            "class_name": "progress_steps",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "width",
+                "value": "100%"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": " td",
+                "cssAdditions": [
+                  {
+                    "key": "text-align",
+                    "value": "center"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " td .active .page_title",
+                "cssAdditions": [
+                  {
+                    "key": "text-align",
+                    "value": "center"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .page_title",
+                "cssAdditions": [
+                  {
+                    "key": "display",
+                    "value": "none"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .number",
+                "cssAdditions": [
+                  {
+                    "key": "padding",
+                    "value": "5px 10px 5px 10px"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "progress_steps_number_container",
+            "label": "Page Number Container",
+            "class_name": "progress_steps .number_container",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": false,
+              "padding": false
+            },
+            "staticCSS": [
+              {
+                "key": "display",
+                "value": "inline-block"
+              },
+              {
+                "key": "border-radius",
+                "value": "13px"
+              }
+            ]
+          },
+          {
+            "id": "progress_steps_number_container_active",
+            "class_name": "progress_steps td.active .number_container",
+            "label": "Page Number Container (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": false,
+              "padding": false
+            },
+            "staticCSS": []
+          }
+        ]
+      },
+      {
+        "id": "section",
+        "label": "Section",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Area",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "id": "description",
+            "label": "Description",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "field",
+        "label": "Field",
+        "sub_sections": [
+          {
+            "id": "area",
+            "label": "Area",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "instructions",
+            "label": "Instructions",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "title",
+            "label": "Title",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": false,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "display",
+                "value": "block"
+              },
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "input",
+            "label": "Input Area",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              },
+              {
+                "key": "line-height",
+                "value": "1.4em"
+              },
+              {
+                "key": "display",
+                "value": "inline-block"
+              },
+              {
+                "key": "width",
+                "value": "100%"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": " .radio",
+                "cssAdditions": [
+                ]
+              },
+              {
+                "classNameAddition": " .checkbox",
+                "cssAdditions": [
+                  {
+                    "key": "display",
+                    "value": "inline"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": " .choice",
+                "cssAdditions": [
+                  {
+                    "key": "display",
+                    "value": "inline"
+                  },
+                  {
+                    "key": "margin-left",
+                    "value": "5px"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".repeating",
+                "cssAdditions": [
+
+                ]
+              },
+              {
+                "classNameAddition": ".non_repeating",
+                "cssAdditions": [
+
+                ]
+              }
+            ]
+          },
+          {
+            "id": "error",
+            "label": "Error Highlighting",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ]
+          },
+          {
+            "id": "numbering",
+            "label": "Numbering",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": false,
+              "margin": false,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "display",
+                "value": "inline"
+              },
+              {
+                "key": "float",
+                "value": "left"
+              },
+              {
+                "key": "width",
+                "value": "15%"
+              },
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "id": "required",
+            "label": "Required Symbol (*)",
+            "style": {
+              "typography": true,
+              "background": false,
+              "border": false,
+              "margin": false,
+              "padding": false
+            },
+            "staticCSS": [{
+              "key": "content",
+              "value": "\"*\""
+            },
+              {
+                "key": "vertical-align",
+                "value": "top"
+              }],
+            "class_name": "field_required:after"
+          }
+        ]
+      },
+      {
+        "id": "button",
+        "label": "Buttons",
+        "sub_sections": [
+          {
+            "id": "bar",
+            "label": "Button Bar",
+            "style": {
+              "typography": false,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "text-align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "id": "default",
+            "label": "Default",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": ".fh_appform_two_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%!important"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".fh_appform_three_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "30%!important"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "100%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button.fh_appform_addInputBtn",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "default_active",
+            "class_name": "button_default:active",
+            "label": "Default (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ],
+            "classAdditions": [
+
+            ]
+          },
+          {
+            "id": "action",
+            "label": "Action",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": ".fh_appform_two_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%!important"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".fh_appform_three_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "30%!important"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "100%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%!important"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button.fh_appform_addInputBtn",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%!important"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "action_active",
+            "class_name": "button_action:active",
+            "label": "Action (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ],
+            "classAdditions": [
+
+            ]
+          },
+          {
+            "id": "cancel",
+            "label": "Cancel",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ],
+            "classAdditions": [
+              {
+                "classNameAddition": ".fh_appform_two_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".fh_appform_three_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "33.3%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "100%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%"
+                  }
+                ]
+              },
+              {
+                "classNameAddition": ".special_button.fh_appform_addInputBtn",
+                "cssAdditions": [
+                  {
+                    "key": "width",
+                    "value": "45%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "cancel_active",
+            "class_name": "button_cancel:active",
+            "label": "Cancel (Active)",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": true,
+              "padding": true
+            },
+            "staticCSS": [
+              {
+                "key": "border-radius",
+                "value": "5px"
+              }
+            ],
+            "classAdditions": [
+
+            ]
+          }
+        ]
+      }
+    ]},
   "logo": {
-    "base64String": "data:image\/jpeg;base64,\/9j\/4AAQSkZJRgABAQEBCwELAAD\/\/gAmRmlsZSB3cml0dGVuIGJ5IEFkb2JlIFBob3Rvc2hvcKggNS4w\/9sAQwAFAwQEBAMFBAQEBQUFBgcMCAcHBwcPCwsJDBEPEhIRDxERExYcFxMUGhURERghGBodHR8fHxMXIiQiHiQcHh8e\/9sAQwEFBQUHBgcOCAgOHhQRFB4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4e\/8AAEQgAZABkAwEiAAIRAQMRAf\/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC\/\/EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29\/j5+v\/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC\/\/EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29\/j5+v\/aAAwDAQACEQMRAD8A8Qjg9qtRQc9K9O0rwTpuveAdNuNI054NbvIbmO3uGvmkiuLy3IdoHjIAjLxElSCfu57c+f2mJI1cKynkFXGGUg4KkdiCCCPUV9Lh8bTxEpQjo47pnz1fBVKEYzeqltYiSD2qwkHtViOP2qwkddiZycpVWE46VKsJx0q0qVIqcU0yWimIeOlL5PtVwJS7KomxQaGoZIq0nSq8qCmSZksVU5outasq8c1TnXrVIlmRInzUVPIvz0UxHt\/wI+16x4Z8ReF7Fh\/atv5Wt6Nk9LqA8r9HGEPsxrN+LuhWjSWHxC0KIro3iJUkuo8f8e10w4J9N5BRvSRf9qsD4e+Ibvwb4jt\/Elqin7IH8wOCUKMpBDYI+vUdBX0BpXhiDUvBmo6LezWmof25JNqE1jaDaltFOQ2IwWZgN5LBs4Dk46CvicbKWEx6qw+1\/T\/zPtsHCOJwTpT6f0v8j5qSP2qaOPnmtDVtC1Pw9rFzoerxyC6tWAErIV+0RHlJR\/vDr6MGFRCL2P5V9RTqqcVKOzPm6lJwk4sgCe1SKvHNSmPHakKH0rVMwcSMCgrT9p9DRtq0zNogZexqCVe9XGFQSrVIkz5l71SnFaMw4qlOOtUiGZcoG+ipJB89FUSe1aZqltqsepNqB0\/T3urMQXG2BY0dFXjag4Z2brxzxXTfs5+Ebu0YeMf7Vnub6e1MSCS7DRpbsVIjaMDcGGwYOMAAU3UbOPWPD5j+y6fo8c1gbWd1lWMQjIYnk5GX557iuF+HOiaZ4U155b\/XbOzinTbBOZTH9qXIZT8xwQcsQeh7dK\/LMbiOfESlTdnfbfyP1bDYV\/VlCVrW\/wCD3Povxo+mzQWEPi\/w5Dqdq10iJIr7\/KLgjeMYOM4BHv7VlzaD8LI13\/8ACJwFeOgfPJ\/3qy2nublLaWD7BPEJOXkn3qVCEqVI4zvwPYZNVyvjK9gkis9H0t2+Xa0Mjv0I45XAxzg8\/SuzD4iuopc34nm18HRTuzSubH4PRA7\/AA3EOM52yfn96qUh+CactoMHQk8SdB1\/j7d\/Ss688KeN7iW3N7ounWUWSJEW5QmRcfKF3EYGSD+FULzwL4hCMy+Hp5FAYZREcYP3hwT17+vevRhVqPeb+88+pQpLaKN+Gf4GtIqtoluNxIzskPIGT\/F2FZ\/j3wH4X8Q6LZ3XwujsLm7gY\/areG8\/ePHtJB2seWyB6Zz3rhNWsp9Ftw2p2L2+wjLSRqhJPGcccnviuH8d\/EPUPCOiJfeE9Shs9SW9RAVKMTHgk4TnKHgZOPSuqnVqwkpRk36u5zToU5rlcUT3lvPa3MltcwyQzxMUkjkUqyMOoIPINVJB2rKHxc1n4g6npy65BBLqIEq3E0FsIxt42nIyT0PB4GTjritWQV9Bhq3toc1rHg4mh7GfKVJhVG4HWr83SqE\/eupHMzOlHznmilk++aKZOh9MeL9Jgk8y01GztriPbtwyAkD2bqK4O1+HmiX2sWlmqXohmkCFI5AWx7Eg8AZr6c8WeEra7syELlnZVJVRuHPX34zxXIWNx4M0C7eS5vII72MlQzxuHQ42kdOOeOehI9a\/LMXiVh6b5qbcraWP1ClN1I\/u3p2OA1m8svhb4aaTRPDXk28UjPPAL9zty4UPuIPLfKTjpXB3\/wAcvE3niZfEV\/plpKCYbWK1hRAucHDkFnOe+fwFdh8WdW0fXbG9s7HUYZPPQRkkMAp3KQenTj8q84i+F\/ibUlu9P0mxg1KwgmIju1lEcLtj78Ykwc\/h9a4cnx2IdO9aF5X6p7eR347A0JQj71tPLfzM\/WfiTJqc5nuvFF6WI5IKZI+pBNYFzr2kXTH7TrmqSDJG1r5wp7n5VOP0rr4PgV42ld4xplkrJgMGvIh1GR36VpWH7PnjAsGuYdMjHXC3qZ\/OvoVmNRbQ\/A8OWX0G\/wCL+KPNHfwlIS0iNMeOWZ2PNaFp4f0W\/gItdFlVXyfONnM+31I+Xk17FovwZ8R28r+Rb6QJIjtLTX25hxkHkHsa6O3+F3jMOpe90UD\/AK\/D0\/75qJ5ti9o0vwX+QRyvB7yrfiePf2XaaZFFFbW86F3VXWPTZIkQH+MswAwPzrcsvCst+StvqEO5R82YXwPbIzXomqfCnxNqjo0WqaNEYlMMivdPwyn2T0P5GqmmfBrxkAt5Dq2iO0UhwonfIZTgqflx60f2zmajorfJf5CWTZU7uU7v1f8AmeX674fu9NuPImnty7DKDcU3D23ACubvo5YXZJUKMOxFdV8SJ\/EXha9Sy8Q6bc6e+8+U0i\/u5h6o4+V\/wJrj7jXLK9ixIFR+zLxz7jvXdguI68ZKOKjp3W6+RhjOF6E4c2Fnr26P5lKT79FRGVWJ2sD64NFfZQqRnFSjqmfEThKnJwkrNH6G\/ETVBo\/ha51HPzQNGwHuXA\/rXyl4r1uXUr6\/vH3iSZ5HYL03lRn8M\/rivS\/i18T9N8SaR\/ZGl2dzHEZUkeaYhS23Py7Rnv3J7V5poeqadY6gs19pdvf2\/RklXJHOcj3zzz1r4Ctg681KcVfsu5+hYTEUqCSnuYEkxaW5LqxXaMgdc\/N0\/MfpXRaX4q1PT3ktYTIIQwZVR9oXPOOhrnfiRdi7u418M2wtotwkZ4wI+ew5+g\/KuJu7TxRdXEk813MZJGLMftAXJ+g4rLCuvUipSoyW+jWp1Yunh4tpV4vbqeu\/8Jtqn2qRlW5LbEDHzzjqxx933pP+E11wNk+ayHkKZWGPXkCvGm0TX2yTctz1zdGom8O60\/DXS\/jcMa9GMK7\/AOXTPKlDDLetE9ii8bax9pmdY2BIUMTO+DgH396d\/wAJtrkf35Q2eQGlbj9R9a8XPhTU263MP\/fxv8Ka3hC+Y5a6t\/zY\/wBK1VHEf8+n95zv6ov+Xy+49gHjvV1knIe3Xc\/JMz8kKBn7\/t+lMs\/HuuQ2l2ov4IkmkZwTKdycAFgS3t3zXjF34M1CWTi4tFQDCglicflUKeCbkPulvLbgcYRjWn1bEyX8L8TP2mEi\/wCN+B6J44\/aA1u60GbQRHY6raSR+U63duJojhcbsN39xj614Tp13qd1dpaWqNLI36D1J7CuyPguNmH2i+YoP4Y0wT+JrVsdNstNhMVnAIwfvN1Zvqe9bUMpqVZXrJJGNbNaWHjbDybZBp9ubS1SFpN79XfpuaippD81FfSQpRhFRitEfNzqzqScpO7Z3pvd3emG5z3rDjufeplnz3rzFSse7Kvc0mlzTPM9MVR86nCX3raEbHJUncuF\/em7hVbzfek833rdI5JMslhSOwxmq\/mds0hkyp5rVIxbJHYYqtIwoaT3qvJIPWqIGymqUzVLNIPWqc0g9apEtkDt83eioXcbqKZNzQikb1qyjtjrRRXnnqkiu3rUgY+tFFXEiQ\/cfWm7jmiitUc8hQxpNx5ooqzNkTMcVBIzZ60UVRJWmY1SmY0UUySo7ndRRRVCP\/\/Z",
+    "base64String": "something",
     "height": "100",
     "width": "100"
   }

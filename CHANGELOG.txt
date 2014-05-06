@@ -1,5 +1,125 @@
 fh-forms
 -------
+0.5.10 - 2014-05-01 - IR226 - Niall Donnelly
+-------------------------------------
+* 6795 - fixed Numerical comparison not working in rules engine
+
+0.5.9 - 2014-04-30 - IR226 - Niall Donnelly
+-------------------------------------
+* 5824 - fixed date fields not populating across devices.
+
+0.5.8 - 2014-04-28 - IR226 - Niall Donnelly
+-------------------------------------
+* 7007 - Fixedfile not working on Android.
+
+0.5.7 - 2014-04-17 - IR226 - Niall Donnelly
+-------------------------------------
+* 6744 - file limit not working.
+
+0.5.6 - 2014-04-17 - IR225 - Niall Donnelly
+-------------------------------------
+* 6706 - get submission for client Api.
+
+0.5.5 - 2014-04-16 - IR225 - cbrookes
+-------------------------------------
+* 6827 fix for empty group values
+
+0.5.4 - 2014-04-11 - IR225 - mmurphy
+---------------------------------------
+* 6663 - Change placeholder in submissions notifications messages to avoid HTML characters - part of fix for notifications emails
+
+0.5.3 - 2014-04-10 - IR224 - Niall Donnelly
+---------------------------------------
+* 6646 - Add margin and padding to themes.
+
+0.5.1 - 2014-04-03 - IR224 - mmurphy
+---------------------------------------
+bumping version number only due to broken npm
+
+0.4.2 - 2014-04-03 - IR224 - mmurphy
+---------------------------------------
+* 6468 - Form theme edit always shows FeedHenry logo as theme logo
+
+0.4.1 - 2014-04-03 - IR224 - mmurphy
+---------------------------------------
+* 6649 - Change baseTheme Template to show error text as black on red backround - Error flagging in on-device App forms setting font to red on red
+
+0.4.0 - 2014-04-02 - IR224 - mmurphy
+---------------------------------------
+bumping version number only due to broken npm
+
+0.3.01 - 2014-03-26 - IR225 - cbrookes
+---------------------------------------
+6378 fix for log levels and logger in config
+
+
+0.3.00 - 2014-03-26 - IR225 - cbrookes
+----------------------------------------
+* 6515 expose submissions api
+
+0.2.55 - 2014-03-26 - IR225 - cbrookes
+-------------------------------------------
+*6516 getPopulatedFormsList implimentation
+
+0.2.54 - 2014-03-26 - IR224 - cbrookes
+---------------------------------------
+* 5400-validateImmediately enable checking for validateImmediately
+
+0.2.53 - 2014-03-26 - IR224 - mmurphy
+--------------------------------------
+* 5974 - fix field formatting in submission notifications
+
+0.2.52 - 2014-03-21 - IR223 - cbrookes
+--------------------------------------
+minor fix for list submissions
+
+0.2.51 - 2014-03-21 - IR223 - cbrookes
+---------------------------------------
+* 6454 - changes to add form def to submission and match values (useful for studio and wfm)
+deploy note : ensure that all submissions are deleted in beta
+
+0.2.50 - 2014-03-25 - IR224 - Martin Murphy
+---------------------------------------
+* 6356 - Calling List Form Apps API without Forms Admin user results in error
+
+0.2.49 - 2014-03-24 - IR224 - Martin Murphy
+---------------------------------------
+* 5901 - Allow numeric strings in as values in number field submissions
+
+0.2.48 - 2014-03-21 - IR223 - Niall Donnelly
+---------------------------------------
+* 6420 - Fixed updatedBy not being added to theme update/create
+
+0.2.47 - 2014-03-19 - IR223 - Craig Brookes
+---------------------------------------
+* form submission changes to add page data to fields to allow for removed feilds to
+be rendered properly in studio
+
+0.2.46 - 2014-03-19 - IR223 - Niall Donnelly
+---------------------------------------
+* 6391 - Add appClientId to submissions.
+
+0.2.45 - 2014-03-18 - IR223 - mmurphy
+---------------------------------------
+* Fix jshint errors in constructed rules engine file
+
+0.2.44 - 2014-03-18 - IR223 - mmurphy
+---------------------------------------
+* 5901 - Add validator for strings containing numeric data
+
+0.2.40 - 2014-02-25 - IR222 - cbrookes
+---------------------------------------
+* 6192 - cant have empty file submission when not required field
+
+0.2.40 - 2014-02-25 - IR222 - cbrookes
+---------------------------------------
+* 5270 - submissions changes to add page id and name to submission
+* changes to ignore validation when flag passed
+
+0.2.39 - 2014-02-25 - IR222 - mmurphy
+---------------------------------------
+* 6146 - change config_admin_user to list of device ids
+
 0.2.38 - 2014-02-21 - IR221 - mmurphy
 ---------------------------------------
 * 6058 - forms module - emit log events which can be listened to in other places.
@@ -28,7 +148,7 @@ fh-forms
 
 0.2.24 - 2014-02-10 - IR221 - mmurphy
 ---------------------------------------
-* 5961 - add forms to existing apps needs to filter apps by group 
+* 5961 - add forms to existing apps needs to filter apps by group
 
 0.2.23 - 2014-02-10 - IR221 - Niall Donnelly
 ---------------------------------------
@@ -96,11 +216,9 @@ fh-forms
 	#5322  fix rulesEngine closure wrapping async
 	#5328  fix bug in rulesEngine.checkRules where rules reference an field not submitted
 	#5338  Update rulesengine.validateForm to return per-field values errors and per-field errors
- 
+
 0.2.3 - IR216 - Martin Murphy
         #5244  Add app and forms names to submissions list
 
 previous versions
 0.2.2 - added ne rules-engine
-
-

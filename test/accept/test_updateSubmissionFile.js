@@ -6,6 +6,7 @@ var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var fs = require('fs');
 var assert = require('assert');
+var util = require('util');
 
 var testFilePath = "./test/Fixtures/test.pdf";
 var testPhotoPath = "./test/Fixtures/test.jpg";
@@ -15,7 +16,8 @@ var globalFormId = undefined;
 var globalFieldIds = undefined;
 
 var testSubmitFormBaseInfo = {
-  "appId": "appId123456",
+  "appId": "thisisnowaprojectId123456",
+  "appClientId": "thisistheidpassedbytheclient",
   "appCloudName": "appCloudName123456",
   "appEnvironment": "devLive",
   "userId": "user123456",
@@ -59,7 +61,7 @@ module.exports.testUpdateSubmissionFile = function(finish){
   //previous file should be deleted -- new file should be saved.
   var file2Details = {
     "fileName" : "test.jpg",
-    "fileSize" : 123456,
+    "fileSize" : 1000,
     "fileType" : "image/jpeg",
     "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder124124"
@@ -67,7 +69,7 @@ module.exports.testUpdateSubmissionFile = function(finish){
 
   var file1Details = {
     "fileName" : "test.pdf",
-    "fileSize" : 1234567,
+    "fileSize" : 1000,
     "fileType" : "application/pdf",
     "fileUpdateTime" : new Date().getTime(),
     "hashName" : "filePlaceHolder124125"
@@ -83,7 +85,12 @@ module.exports.testUpdateSubmissionFile = function(finish){
   forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
     assert.ok(!err);
     assert.ok(dataSaveResult);
-    assert.ok(dataSaveResult.submissionId);
+    assert.ok(dataSaveResult.submissionId, "Expected submissionId from result but got nothing: submitFormData");
+    assert.ok(dataSaveResult.formSubmission, "Expected form submission return object but got nothing");
+    assert.ok(dataSaveResult.formSubmission.appId, "Expected appId from result but got nothing: submitFormData: " + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appClientId, "Expected clientAppId from result but got nothing: submitFormData" + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appId === "thisisnowaprojectId123456", "Expected result appId to be thisisnowaprojectId123456 but was " + dataSaveResult.formSubmission.appId);
+    assert.ok(dataSaveResult.formSubmission.appClientId === "thisistheidpassedbytheclient", "Expected result clientAppId to be thisistheidpassedbytheclient but was " + dataSaveResult.formSubmission.clientAppId);
 
     var testFileSubmissionGroupId;
     var testFileSubmission2GroupId;

@@ -12,7 +12,7 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
 
 var TEST_TOTAL_NUM_SUBMISSIONS = 1;
-var TEST_SUBMISSION_APPID = "appId123456";
+var TEST_SUBMISSION_APPID = "thisisnowaprojectId123456";
 var TEST_UNUSED_APPID = "ThisDidNotSubmit";
 var TEST_APP_NAME_UNKNOWN = 'Unknown';
 var TEST_APP_NAME = 'Joe';
@@ -37,6 +37,7 @@ var testFilePath = "./test/Fixtures/test.pdf";
 
 var testSubmitFormBaseInfo = {
   "appId": TEST_SUBMISSION_APPID,
+  "appClientId": "thisistheidpassedbytheclient",
   "appCloudName": "appCloudName123456",
   "timezoneOffset" : 120,
   "appEnvironment": "devLive",
@@ -379,15 +380,15 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(fi
   });
 };
 
-module.exports.testGetAllSubmissionsForNonExistantAppAndGoodFormId = function(finish){
+module.exports.testGetSubmissionsArraySubids = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
-  forms.getSubmissions(options, {appId: TEST_UNUSED_APPID, formId: TEST_SUBMISSION_FORMID}, function (err, results){
+  forms.getSubmissions(options, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, 0); // should be empty list returned
+    assert.strictEqual(submissions.length, 1); // should be empty list returned
     finish();
   });
 };
@@ -459,6 +460,12 @@ function submitData(assert, filesToSubmit, cb){
     assert.ok(!err, "problem submitting test form data - err: " + util.inspect(err));
     assert.ok(dataSaveResult.submissionId, "problem submitting test form data - returned submissionId: " + util.inspect(dataSaveResult.submissionId));
     submissionId = dataSaveResult.submissionId;
+    assert.ok(dataSaveResult.formSubmission, "Expected form submission return object but got nothing");
+    assert.ok(dataSaveResult.formSubmission.appId, "Expected appId from result but got nothing: submitFormData: " + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appClientId, "Expected clientAppId from result but got nothing: submitFormData" + util.inspect(dataSaveResult));
+    assert.ok(dataSaveResult.formSubmission.appId === "thisisnowaprojectId123456", "Expected result appId to be thisisnowaprojectId123456 but was " + dataSaveResult.formSubmission.appId);
+    assert.ok(dataSaveResult.formSubmission.appClientId === "thisistheidpassedbytheclient", "Expected result clientAppId to be thisistheidpassedbytheclient but was " + dataSaveResult.formSubmission.clientAppId);
+
     TEST_SUBMISSION_ID = submissionId.toString();
     cb();
   });

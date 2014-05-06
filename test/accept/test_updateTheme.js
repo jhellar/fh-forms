@@ -111,12 +111,30 @@ module.exports.testUpdateTheme = function(finish){
 function checkTheme(assert, expectedThemeData, actualThemeData){
   assert.ok(actualThemeData);
   assert.ok(actualThemeData._id);//Check id exists
-  assert.ok(actualThemeData.lastUpdated);//Check id exists
+  assert.ok(actualThemeData.lastUpdated);//Check lastUpdated exists
+  assert.ok(actualThemeData.updatedBy);
+  assert.ok(actualThemeData.updatedBy === options.userEmail, "Expected updatedBy to be: " + options.userEmail + " but was " + actualThemeData.updatedBy);
   assert.ok(actualThemeData.css);
-  assert.ok(actualThemeData.css != "ERROR_GENERATING_CSS");
+  assert.ok(actualThemeData.css.indexOf("Error Generating Appforms CSS") == -1);
 
-  //delete actualThemeData._id;//Should be equal bar the id
-  for(var key in expectedThemeData){
-    assert.ok(lodash.isEqual(expectedThemeData[key], actualThemeData[key]), 'expected: ' + util.inspect(expectedThemeData[key]) + ', actual: ' + util.inspect(actualThemeData[key]));
-  }
+  var expectedSections = expectedThemeData.sections;
+  var actualSections = actualThemeData.sections;
+  assert.ok(expectedSections, "Expected Sections Not Present: "+ JSON.stringify(expectedThemeData));
+  assert.ok(actualSections, "Actual Sections Not Present: "+ JSON.stringify(actualThemeData));
+
+  expectedSections.forEach(function(expectedSection, index){
+    var actualSection = actualSections[index];
+
+    assert.ok(lodash.isEqual(expectedSection.id, actualSection.id), "Expected section id " + expectedSection.id + " ACTUAL: " + actualSection.id);
+    assert.ok(lodash.isEqual(expectedSection.label,actualSection.label), "Expected section id " + expectedSection.id + " ACTUAL: " + actualSection.id);
+
+    var expectedSubSections = expectedSection.sub_sections;
+    var actualSubSections = actualSection.sub_sections;
+
+    expectedSubSections.forEach(function(expectedSubSection, index){
+      var actualSubSection = actualSubSections[index];
+
+      assert.ok(lodash.isEqual(expectedSubSection, actualSubSection), "Expected sub section: " + JSON.stringify(expectedSubSection) + " ACTUAL: " + JSON.stringify(actualSubSection) );
+    });
+  });
 }

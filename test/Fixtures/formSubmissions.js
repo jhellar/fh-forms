@@ -80,9 +80,21 @@ module.exports = {
     "required":false,
     "fieldOptions":{
       "definition":{
-        "file_size": 100,
+        "file_size": 1000,
         "maxRepeat":5,
         "minRepeat":2
+      }
+    }
+  },
+  "fileFieldDataOne":{
+    "name":"fileField",
+    "helpText":"This is a file field",
+    "type":"file",
+    "repeating":false,
+    "required":false,
+    "fieldOptions":{
+      "definition":{
+        "file_size": 100
       }
     }
   },
@@ -286,34 +298,24 @@ module.exports = {
       "definition": {
         "options":[
           {
-            "red":{
-              "value":1,
-              "checked":true
-            }
+            "label": "red",
+            "checked":true
           },
           {
-            "blue":{
-              "value":2,
-              "checked":false
-            }
+            "label": "blue",
+            "checked":false
           },
           {
-            "green":{
-              "value":3,
-              "checked":false
-            }
+            "label": "green",
+            "checked":false
           },
           {
-            "purple":{
-              "value":4,
-              "checked":false
-            }
+            "label": "purple",
+            "checked":false
           },
           {
-            "black":{
-              "value":5,
-              "checked":true
-            }
+            "label": "black",
+            "checked":false
           }
         ],
         "minRepeat":2,
@@ -378,7 +380,7 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "definition" : {
-        "dateTimeUnit": "date",
+        "datetimeUnit": "date",
         "timeAutopopulate":true,
         "maxRepeat":6,
         "minRepeat":1
@@ -394,7 +396,7 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "definition" : {
-        "dateTimeUnit": "time",
+        "datetimeUnit": "time",
         "timeAutopopulate":false,
         "maxRepeat":6,
         "minRepeat":2
@@ -410,7 +412,7 @@ module.exports = {
     "required":false,
     "fieldOptions": {
       "definition" : {
-        "dateTimeUnit": "dateTime",
+        "datetimeUnit": "datetime",
         "timeAutopopulate":true,
         "maxRepeat":6,
         "minRepeat":1

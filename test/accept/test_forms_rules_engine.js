@@ -41,6 +41,11 @@ var TEST_BASIC_FORM_1_PAGE_1_FIELD_8_NAME = "TEST_BASIC_FORM_1_PAGE_1_FIELD_8_NA
 var TEST_BASIC_FORM_1_PAGE_1_FIELD_8_TYPE = "text";
 var TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID = "000000000000000000000009";
 
+var TEST_BASIC_FORM_1_PAGE_1_FIELD_9_NAME_NUMBERTEST = "TEST_BASIC_FORM_1_PAGE_1_FIELD_9_NAME";
+var TEST_BASIC_FORM_1_PAGE_1_FIELD_9_TYPE_NUMBERTEST = "number";
+var TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST = "000000000000000000000010";
+var TEST_BASIC_FORM_1_PAGE_1_FIELD_9_MAX_VALUE_NUMBERTEST = 100;
+
 
 
 
@@ -185,7 +190,7 @@ var TEST_BASIC_FORM_1_DEFINITION = {
   },
   "appsUsing":123,
   "submissionsToday":1234,
-  "submissionsTotal":124125  
+  "submissionsTotal":124125
 };
 
 var TEST_BASIC_FORM_2_DEFINITION = { // no page or field rules
@@ -306,7 +311,7 @@ var TEST_BASIC_FORM_2_DEFINITION = { // no page or field rules
   },
   "appsUsing":123,
   "submissionsToday":1234,
-  "submissionsTotal":124125  
+  "submissionsTotal":124125
 };
 
 var TEST_BASIC_FORM_1_SUBMISSION_1 = {
@@ -579,7 +584,7 @@ module.exports.testBasicForm1ValidateForm = function (finish) {
 module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
   var TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
   TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD.formFields[2].fieldValues[0] = TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE + 1;   //  This should trigger an invalid form, field 3 value is greater than max
-  
+
   var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
 
   async.series([
@@ -738,6 +743,320 @@ module.exports.testBasicForm1ValidateFieldValueRequiredTextFields = function tes
         assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
         assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID], 'Should be details for field 8');
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID].valid, 'Field 8 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_8_ID]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err);
+    finish();
+  });
+};
+
+module.exports.testBasicForm1ValidateFieldValueRequiredNumberFields = function testBasicForm1ValidateFieldValueRequiredNumberFields(finish) {
+  var numberField = {
+    "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_9_NAME_NUMBERTEST,
+    "helpText":"This is a number field",
+    "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_9_TYPE_NUMBERTEST,
+    "required":true,
+    "fieldOptions":{
+    },
+    "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST,
+    "repeating":false
+  };
+
+  var form = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_DEFINITION));
+  form.pages[0].fields.push(numberField);
+
+  var engine = formsRulesEngine(form);
+
+  async.series([
+    function testInvalidNotPresentUndefined(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, undefined, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotPresentNull(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, null, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotPresentEmptyString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotNumeric(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "hello", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotNumericSuffix(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "27x", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotNumericPrefix(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "x27", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumericString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "27", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumericString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, " 27 ", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumeric(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, 27, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err);
+    finish();
+  });
+};
+
+module.exports.testBasicForm1ValidateFieldValueOptionalNumberFields = function testBasicForm1ValidateFieldValueOptionalNumberFields(finish) {
+  var numberField = {
+    "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_9_NAME_NUMBERTEST,
+    "helpText":"This is a number field",
+    "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_9_TYPE_NUMBERTEST,
+    "required":false,
+    "fieldOptions":{
+    },
+    "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST,
+    "repeating":false
+  };
+
+  var form = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_DEFINITION));
+  form.pages[0].fields.push(numberField);
+
+  var engine = formsRulesEngine(form);
+
+  async.series([
+    function testInvalidNotPresentUndefined(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, undefined, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotPresentNull(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, null, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotPresentEmptyString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotNumeric(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "hello", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotNumericSuffix(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "27x", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testInvalidNotNumericPrefix(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "x27", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked invalid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumericString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "27", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumericString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, " 27 ", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumericBlankString(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, "  ", function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID]);
+        assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID]);
+
+        return cb();
+      });
+    },
+    function testValidNumeric(cb) {
+      engine.validateFieldValue(TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST, 27, function testInvalidCallback(err, results) {
+        assert.ok(!err, 'unexpected error from validateField: ' + util.inspect(err));
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST], 'Should be details for field 9');
+        assert.ok(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST].valid, 'Optional Field 9 should be marked Valid: ' + util.inspect(results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST]));
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID]);
         assert.ok(!results.validation[TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID]);
@@ -1422,7 +1741,7 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithField3Invisible = function
 
   var TEST_BASIC_FORM_1_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
   TEST_BASIC_FORM_1_SUBMISSION_2.formFields[0].fieldValues[0] = "hide 3";   //  This should trigger rule that causes field 3 to be hidden
-  
+
   var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
   engine.initSubmission(TEST_BASIC_FORM_1_SUBMISSION_2);
 
@@ -1621,4 +1940,3 @@ module.exports.testBasicFormCheckRulesFieldSetToShowInRule = function (finish) {
       finish();
   });
 };
-

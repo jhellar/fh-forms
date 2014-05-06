@@ -20,7 +20,8 @@ var required2FieldIds = {};
 var requiredForm2Id = undefined;
 
 var testSubmitFormBaseInfo = {
-  "appId": "appId123456",
+  "appId": "thisisnowaprojectId123456",
+  "appClientId": "thisistheidpassedbytheclient",
   "appCloudName": "appCloudName123456",
   "appEnvironment": "devLive",
   "userId": "user123456",
@@ -348,7 +349,7 @@ module.exports.testSubmitNumber = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["numberField"],
-    "fieldValues": [12, 12]
+    "fieldValues": [12, " 12 "]
   }];
 
   submission.formFields = testValues;
@@ -1188,10 +1189,15 @@ function submitAndCheckForm(assert, submission, options, cb ){
       return cb(result.error, result);
     } else {
       if(result.error) console.log(result.error);
-      assert.ok(!err);
-      assert.ok(!result.error);
-      assert.ok(result);
-      assert.ok(result.submissionId);
+      assert.ok(!err, "No error expected for submitFormData " + util.inspect(err));
+      assert.ok(result, "Result Object Expected for submitFormData");
+      assert.ok(!result.error, "No error expected for submitFormData " + util.inspect(result.error));
+      assert.ok(result.submissionId, "Expected submissionId from result but got nothing: submitFormData");
+      assert.ok(result.formSubmission, "Expected form submission return object but got nothing");
+      assert.ok(result.formSubmission.appId, "Expected appId from result but got nothing: submitFormData: " + util.inspect(result));
+      assert.ok(result.formSubmission.appClientId, "Expected clientAppId from result but got nothing: submitFormData" + util.inspect(result));
+      assert.ok(result.formSubmission.appId === "thisisnowaprojectId123456", "Expected result appId to be thisisnowaprojectId123456 but was " + result.formSubmission.appId);
+      assert.ok(result.formSubmission.appClientId === "thisistheidpassedbytheclient", "Expected result clientAppId to be thisistheidpassedbytheclient but was " + result.formSubmission.clientAppId);
 
       if(options.newFormDefinition){
         assert.ok(result.updatedFormDefinition);
