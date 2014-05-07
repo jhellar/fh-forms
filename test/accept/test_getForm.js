@@ -44,6 +44,23 @@ module.exports.testGetFormWorksSinglePage = function(finish){
   });
 };
 
+module.exports.testExportFormWorks = function(finish){
+  forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
+    assert.ok(!err);
+    assert.ok(result);
+
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id,"export":true}, function(err, result){
+      if(err) console.log(err);
+      assert.ok(!err, util.inspect(err));
+      assert.ok(result);
+      assert.ok(undefined === result.pages[0]._id);
+      assert.ok(undefined === result._id);
+      assert.ok(undefined === result.pages[0].fields[0]._id);
+      finish();
+    });
+  });
+};
+
 module.exports.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err, util.inspect(err));
