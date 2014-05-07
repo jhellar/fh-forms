@@ -222,6 +222,9 @@ module.exports.testUpdateFormWithPagesWithFields = function(finish) {
 
       assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
 
+      assert.equal(populatedFormDoc.pages[0].name, TEST_PAGE_NAME1);
+      assert.equal(populatedFormDoc.pages[1].name, TEST_PAGE_NAME2);
+
       function checkFields(actualFieldsPage1, expectedFieldsPage1) {
         var actualFieldsLen = actualFieldsPage1.length;
         var expectedFieldsLen = expectedFieldsPage1.length;
