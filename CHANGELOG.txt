@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.5.11 - 2014-05-07 - IR226 - Cbrookes
+----------------------------------------
+* 7044 add export to fhc forms
+
 0.5.10 - 2014-05-01 - IR226 - Niall Donnelly
 -------------------------------------
 * 6795 - fixed Numerical comparison not working in rules engine
