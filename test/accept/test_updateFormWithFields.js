@@ -22,8 +22,9 @@ var fieldModel;
 var TEST_PAGE_NAME1 = 'page1 with fields to be updated';
 var TEST_PAGE_DESCRIPTION1 = 'this is page 1';
 var TEST_PAGE_NAME2 = 'page2 with fields to be updated';
+var TEST_PAGE_NAME3 = 'page3 with fields to be updated';
 var TEST_PAGE_DESCRIPTION2 = 'this is page 2';
-var TEST_PAGE_NAMES = [TEST_PAGE_NAME1, TEST_PAGE_NAME2];
+var TEST_PAGE_NAMES = [TEST_PAGE_NAME1, TEST_PAGE_NAME2,TEST_PAGE_NAME3];
 
 var TEST_INITIAL_FIELD2_HELPTEXT = 'this is the initial helptext';
 var TEST_UPDATED_FIELD2_HELPTEXT  = 'this is the updated helptext';
@@ -108,6 +109,96 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
               }
            },
            "repeating":true
+        }
+      ]
+    },{
+      name: TEST_PAGE_NAME3,
+      description: TEST_PAGE_DESCRIPTION2,
+      "fields": [
+        {
+          "name":"field_p2_f1",
+          "helpText":"This is a text field on page2",
+          "type":"text",
+          "required":false,
+          "fieldOptions": {
+            validation: {
+              "min":20,
+              "max":100
+            },
+            definition: {
+              "maxRepeat":5,
+              "minRepeat":2
+            }
+          },
+          "repeating":true
+        },
+        {
+          "name":"field_p2_f3",
+          "helpText":"This is a text field on page2",
+          "type":"text",
+          "required":false,
+          "fieldOptions": {
+            validation: {
+              "min":20,
+              "max":100
+            },
+            definition: {
+              "maxRepeat":5,
+              "minRepeat":2
+            }
+          },
+          "repeating":true
+        },
+        {
+          "name":"field_p2_f3",
+          "helpText":"This is a text field on page2",
+          "type":"text",
+          "required":false,
+          "fieldOptions": {
+            validation: {
+              "min":20,
+              "max":100
+            },
+            definition: {
+              "maxRepeat":5,
+              "minRepeat":2
+            }
+          },
+          "repeating":true
+        },
+        {
+          "name":"field_p2_f3",
+          "helpText":"This is a text field on page2",
+          "type":"text",
+          "required":false,
+          "fieldOptions": {
+            validation: {
+              "min":20,
+              "max":100
+            },
+            definition: {
+              "maxRepeat":5,
+              "minRepeat":2
+            }
+          },
+          "repeating":true
+        },
+        {
+          "name":"field_p2_f2",
+          "helpText":"This is a text area field on page2",
+          "type":"textarea",
+          "required":false,
+          "fieldOptions":{
+            validation: {
+              "min":50,
+              "max":100
+            },
+            definition: {
+              "maxRepeat":5,
+              "minRepeat":3
+            }
+          },
+          "repeating":true
         }
       ]
     }],
@@ -224,6 +315,7 @@ module.exports.testUpdateFormWithPagesWithFields = function(finish) {
 
       assert.equal(populatedFormDoc.pages[0].name, TEST_PAGE_NAME1);
       assert.equal(populatedFormDoc.pages[1].name, TEST_PAGE_NAME2);
+      assert.equal(populatedFormDoc.pages[2].name, TEST_PAGE_NAME3);
 
       function checkFields(actualFieldsPage1, expectedFieldsPage1) {
         var actualFieldsLen = actualFieldsPage1.length;
