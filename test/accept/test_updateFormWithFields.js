@@ -131,7 +131,9 @@ var TEST_FORM_2_PAGES_WITH_FIELDS = {
             }
           },
           "repeating":true
-        }],
+        }
+      ]
+    }],
     "fieldRules": [],
     "pageRules": []
 };
