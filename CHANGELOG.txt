@@ -1,5 +1,9 @@
 fh-forms
 -------
+0.5.16 - 2014-05-14 - IR227 - Niall Donnelly
+-----------------------------------------
+* 5619 Fix for deleting field and page rules when a field or page is deleted.
+
 0.5.15 - 2014-05-12 - IR227 - Niall Donnelly
 -----------------------------------------
 * 6913 Radio alignment is now to the left.
