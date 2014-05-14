@@ -1,8 +1,11 @@
 fh-forms
 -------
-0.5.14 - 2014-05-12 - IR227 - Cbrookes
+0.5.15 - 2014-05-12 - IR227 - Niall Donnelly
 -----------------------------------------
 * 6913 Radio alignment is now to the left.
+
+0.5.14 - 2014-05-12 - IR227 - Cbrookes
+-----------------------------------------
 * 6918 Fix for button layout for client.
 
 0.5.13 - 2014-05-07 - IR227 - Cbrookes
