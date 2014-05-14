@@ -219,103 +219,103 @@ function assertFormNamedFound(assert, name, msg, cb) {
   });
 }
 
-//module.exports.testUpdateFormWithPagesWithFields = function (finish) {
-//  var saveDeletedFieldId;
-//  async.waterfall([
-//    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
-//    function (cb) {
-//      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
-//        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
-//        cb();
-//      });
-//    },
-//    function (cb) {
-//      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
-//        assert.ok(!err, 'should have found form');
-//        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
-//        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
-//        //Now populate the fields in each page
-//        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
-//          assert.ok(!err, "Error getting fields for form");
-//          return cb(undefined, updatedForm.toJSON());
-//        });
-//
-//      });
-//    },
-//    function (populatedFormDoc, cb) {
-//      assert.ok(populatedFormDoc, 'should have data');
-//      assertEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length, 'Incorrect number of pages in created form');
-//
-//      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[0].name);
-//      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[1].name);
-//
-//      assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
-//
-//      assert.equal(populatedFormDoc.pages[0].name, TEST_PAGE_NAME1);
-//      assert.equal(populatedFormDoc.pages[1].name, TEST_PAGE_NAME2);
-//      assert.equal(populatedFormDoc.pages[2].name, TEST_PAGE_NAME3);
-//
-//      function checkFields(actualFieldsPage1, expectedFieldsPage1) {
-//        var actualFieldsLen = actualFieldsPage1.length;
-//        var expectedFieldsLen = expectedFieldsPage1.length;
-//        assertEqual(actualFieldsLen, expectedFieldsLen, "Incorrect number of fields");
-//        for (var i = 0; i < actualFieldsPage1.length; i += 1) {
-//          assertEqual(actualFieldsPage1[i].name, expectedFieldsPage1[i].name);
-//        }
-//      }
-//
-//      for (var i = 0; i < TEST_FORM_2_PAGES_WITH_FIELDS.pages.length; i += 1) {
-//        checkFields(populatedFormDoc.pages[i].fields, TEST_FORM_2_PAGES_WITH_FIELDS.pages[i].fields);
-//      }
-//
-//      populatedFormDoc.pages[0].fields[1].helpText = TEST_UPDATED_FIELD2_HELPTEXT;
-//      saveDeletedFieldId = populatedFormDoc.pages[0].fields[0]._id;  // save this to verify it's not deleted from database
-//      populatedFormDoc.pages[0].fields.splice(0, 1);  // delete field1
-//      populatedFormDoc.pages[0].fields.push(TEST_PAGE1_NEW_FIELD);
-//
-//      populatedFormDoc.pages.push(TEST_NEW_PAGE_TO_ADD);
-//
-//      var allFields = populatedFormDoc.pages[0].fields.concat(populatedFormDoc.pages[1].fields);
-//      forms.updateForm(options, populatedFormDoc, function (err, doc) {
-//        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
-//        return cb(err, populatedFormDoc);
-//      });
-//
-//    },
-//
-//    function (populatedFormDoc, cb) {
-//      assert.ok(populatedFormDoc, 'should have data');
-//      assertEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length + 1, 'Incorrect number of pages in created form');  // have add a new page
-//
-//      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[0].name);
-//      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[1].name);
-//
-//      assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
-//
-//      function checkFields(actualFieldsPage1, expectedFieldsPage1) {
-//        var actualFieldsLen = actualFieldsPage1.length;
-//        var expectedFieldsLen = expectedFieldsPage1.length;
-//        assertEqual(actualFieldsLen, expectedFieldsLen, "Incorrect number of fields");
-//        for (var i = 0; i < actualFieldsPage1.length; i += 1) {
-//          assertEqual(actualFieldsPage1[i].name, expectedFieldsPage1[i].name);
-//        }
-//      }
-//
-//      assertEqual(populatedFormDoc.pages[0].fields[0].name, TEST_FORM_2_PAGES_WITH_FIELDS.pages[0].fields[1].name, "new field1 should match initial field2");
-//      assertEqual(populatedFormDoc.pages[0].fields[0].helpText, TEST_UPDATED_FIELD2_HELPTEXT, "helpText field should have been updated");
-//      assertEqual(populatedFormDoc.pages[0].fields[1].name, TEST_PAGE1_NEW_FIELD.name, "new field should have been added");
-//
-//      fieldModel.findById(saveDeletedFieldId, function (err, data) {
-//        assert.ok(!err, 'should not return error: ' + util.inspect(err));
-//        assert.ok(data, "unreferenced field should still exist in database" + util.inspect(data));
-//        return cb(err);
-//      });
-//    }
-//  ], function (err) {
-//    assert.ok(!err, "received error: " + util.inspect(err));
-//    finish();
-//  });
-//};
+module.exports.testUpdateFormWithPagesWithFields = function (finish) {
+  var saveDeletedFieldId;
+  async.waterfall([
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
+    function (cb) {
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+
+      });
+    },
+    function (populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      assertEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length, 'Incorrect number of pages in created form');
+
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[0].name);
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[1].name);
+
+      assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
+
+      assert.equal(populatedFormDoc.pages[0].name, TEST_PAGE_NAME1);
+      assert.equal(populatedFormDoc.pages[1].name, TEST_PAGE_NAME2);
+      assert.equal(populatedFormDoc.pages[2].name, TEST_PAGE_NAME3);
+
+      function checkFields(actualFieldsPage1, expectedFieldsPage1) {
+        var actualFieldsLen = actualFieldsPage1.length;
+        var expectedFieldsLen = expectedFieldsPage1.length;
+        assertEqual(actualFieldsLen, expectedFieldsLen, "Incorrect number of fields");
+        for (var i = 0; i < actualFieldsPage1.length; i += 1) {
+          assertEqual(actualFieldsPage1[i].name, expectedFieldsPage1[i].name);
+        }
+      }
+
+      for (var i = 0; i < TEST_FORM_2_PAGES_WITH_FIELDS.pages.length; i += 1) {
+        checkFields(populatedFormDoc.pages[i].fields, TEST_FORM_2_PAGES_WITH_FIELDS.pages[i].fields);
+      }
+
+      populatedFormDoc.pages[0].fields[1].helpText = TEST_UPDATED_FIELD2_HELPTEXT;
+      saveDeletedFieldId = populatedFormDoc.pages[0].fields[0]._id;  // save this to verify it's not deleted from database
+      populatedFormDoc.pages[0].fields.splice(0, 1);  // delete field1
+      populatedFormDoc.pages[0].fields.push(TEST_PAGE1_NEW_FIELD);
+
+      populatedFormDoc.pages.push(TEST_NEW_PAGE_TO_ADD);
+
+      var allFields = populatedFormDoc.pages[0].fields.concat(populatedFormDoc.pages[1].fields);
+      forms.updateForm(options, populatedFormDoc, function (err, doc) {
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        return cb(err, populatedFormDoc);
+      });
+
+    },
+
+    function (populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      assertEqual(populatedFormDoc.pages.length, TEST_PAGE_NAMES.length + 1, 'Incorrect number of pages in created form');  // have add a new page
+
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[0].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[0].name);
+      assert.ok(TEST_PAGE_NAMES.indexOf(populatedFormDoc.pages[1].name) >= 0, 'Unexpected page name in created form: ' + populatedFormDoc.pages[1].name);
+
+      assert.notEqual(populatedFormDoc.pages[0].name, populatedFormDoc.pages[1].name, 'page names in created form should be different');
+
+      function checkFields(actualFieldsPage1, expectedFieldsPage1) {
+        var actualFieldsLen = actualFieldsPage1.length;
+        var expectedFieldsLen = expectedFieldsPage1.length;
+        assertEqual(actualFieldsLen, expectedFieldsLen, "Incorrect number of fields");
+        for (var i = 0; i < actualFieldsPage1.length; i += 1) {
+          assertEqual(actualFieldsPage1[i].name, expectedFieldsPage1[i].name);
+        }
+      }
+
+      assertEqual(populatedFormDoc.pages[0].fields[0].name, TEST_FORM_2_PAGES_WITH_FIELDS.pages[0].fields[1].name, "new field1 should match initial field2");
+      assertEqual(populatedFormDoc.pages[0].fields[0].helpText, TEST_UPDATED_FIELD2_HELPTEXT, "helpText field should have been updated");
+      assertEqual(populatedFormDoc.pages[0].fields[1].name, TEST_PAGE1_NEW_FIELD.name, "new field should have been added");
+
+      fieldModel.findById(saveDeletedFieldId, function (err, data) {
+        assert.ok(!err, 'should not return error: ' + util.inspect(err));
+        assert.ok(data, "unreferenced field should still exist in database" + util.inspect(data));
+        return cb(err);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "received error: " + util.inspect(err));
+    finish();
+  });
+};
 
 //When deleting fields, any page/field rules associated with the field should also be deleted.
 module.exports.testUpdateFormDeleteField = function (finish) {
@@ -422,13 +422,11 @@ module.exports.testUpdateFormDeleteField = function (finish) {
       var pageRuleId = updatedFormDefinition.pageRules[0]._id;
 
       //Deleting field 0 on page 1 should remove fieldRule2
-      //console.log("FORMDATA BEFORE: ", updatedFormDefinition);
       var fieldRemoved = updatedFormDefinition.pages[1].fields.splice(0, 1)[0];
       assert.ok(fieldRemoved, "Expected field removed to be defined");
       assert.ok(updatedFormDefinition.fieldRules[1].targetField.toString() === fieldRemoved._id.toString(), "Expected the target field of fieldRule2 to be " + util.inspect(fieldRemoved) + " but was " + util.inspect(fieldRule2Id));
 
       //Update the form
-      //console.log("FORMDATA AFTER: ", updatedFormDefinition);
       forms.updateForm(options, updatedFormDefinition, function (err, doc) {
         assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
         cb(undefined, fieldRemoved, fieldRuleId, fieldRule2Id, pageRuleId);
@@ -448,7 +446,6 @@ module.exports.testUpdateFormDeleteField = function (finish) {
       formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
         assert.ok(!err, "Unexpected error getting form: " + util.inspect(err));
         var formJSON = data.toJSON();
-        console.log(formJSON);
         assert.ok(formJSON.fieldRules.length === 1, "Expected 1 field rule but got " + util.inspect(formJSON.fieldRules));
         assert.ok(formJSON.fieldRules[0]._id.toString() === fieldRuleId.toString(), "Expected field rule with Id " + fieldRuleId.toString() + " but got " + formJSON.fieldRules[0]._id.toString());
         assert.ok(formJSON.pageRules.length === 1, "Expected 1 page rule but got " + util.inspect(formJSON.pageRules));
@@ -470,7 +467,6 @@ module.exports.testUpdateFormDeleteField = function (finish) {
     function(formData, cb){
       //Now delete field 0 on page 0, should delete the remaining rules
       var deletedField = formData.pages[0].fields.splice(0,1);
-      console.log("FORMDATA: ", formData);
       forms.updateForm(options, formData, function (err, doc) {
         assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
         cb(undefined);
@@ -490,12 +486,12 @@ module.exports.testUpdateFormDeleteField = function (finish) {
       //Check rules are deleted from the database
       pageRuleModel.find({}, function(err, pageRules){
         assert.ok(!err, "Unexpected error getting pageRuleModel: " + util.inspect(err));
-        var pRArray = pageRules.toArray();
+        var pRArray = pageRules;
         assert.ok(pRArray.length === 0, "Expect 0 page rules but got " + util.inspect(pRArray));
         fieldRuleModel.find({}, function(err, fieldRules){
           assert.ok(!err, "Unexpected error getting fieldRuleModel: " + util.inspect(err));
 
-          var fRArray = pageRules.toArray();
+          var fRArray = fieldRules;
           assert.ok(fRArray.length === 0, "Expect 0 page rules but got " + util.inspect(fRArray));
           cb();
         });
