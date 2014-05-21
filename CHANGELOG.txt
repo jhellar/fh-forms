@@ -1,5 +1,10 @@
 fh-forms
 -------
+
+0.5.17 - 2014-05-21 - IR227 - Niall Donnelly
+-----------------------------------------
+* 7214 Fix for updating rules causing client to be out of sync.
+
 0.5.16 - 2014-05-14 - IR227 - Niall Donnelly
 -----------------------------------------
 * 5619 Fix for deleting field and page rules when a field or page is deleted.
