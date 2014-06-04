@@ -32,8 +32,7 @@ exports.testBasicQuery = function (finish){
     assert.ok(query, " there should be a query returned");
     assert.ok(query["$and"][0]);
     assert.ok(query["$and"][1].formId === queryParams.formId);
-    var fieldValue = query["$and"][2]["$or"][0].formFields["$elemMatch"].fieldValues;
-    console.log(query["$and"][2]["$or"][0].formFields["$elemMatch"].fieldValues);
+    var fieldValue = query["$and"][3]["$or"][0].formFields["$elemMatch"].fieldValues;
     assert.ok(fieldValue.toString() === /.*\.test.*$/.toString());
     finish();
   });
