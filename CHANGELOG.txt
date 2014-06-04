@@ -4,6 +4,10 @@ fh-forms
 -----------------------------------------
 * 7242 submission search 
 
+0.5.19 - 2014-05-29 - IR228 - Niall Donnelly
+-----------------------------------------
+* 7301 Fix for invalid value in rules engine.
+
 0.5.17 - 2014-05-21 - IR227 - Niall Donnelly
 -----------------------------------------
 * 7214 Fix for updating rules causing client to be out of sync.
