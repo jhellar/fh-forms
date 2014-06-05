@@ -6,6 +6,7 @@ var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var assert = require('assert');
 var util = require('util');
+var moment =require('moment');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -23,10 +24,14 @@ var globalFormId;
 var globalFieldIds;
 var globalNumberField;
 var globalTextField;
+var globalDateField;
 var submissionId;
 var subids = [];
 var testFilePath = "./test/Fixtures/test.pdf";
 savedFields = [];
+var lessDateValue = moment().startOf('day').fromNow();
+var greaterValue =  moment().endOf('day').fromNow();
+var dateValue = moment().format('YYYY-MM-DD hh:mm');
 
 var testSubmitFormBaseInfo = {
   "appId": TEST_SUBMISSION_APPID,
@@ -160,7 +165,7 @@ module.exports.testSubmissionSearchMeta = function (finish){
         "value": "192.168",
         "fieldId": "deviceIPAddress"}]}}, function (err, ok){
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
-        assert.ok(ok.submissions.length === 0, "should have found two submissions",ok.submissions);
+        assert.ok(ok.submissions.length === 0, "should have found no submissions",ok.submissions);
         callback();
       });
     },
@@ -183,11 +188,13 @@ module.exports.testSubmissionSearchMeta = function (finish){
           assert.ok(ok.submissions.length === 2, "should have found two submissions",ok.submissions);
           callback();
       });
-    }], finish);
-},
+    }
+], finish);
+};
 
 module.exports.testSubmissionSearchText = function (finish){
-  async.series([
+  async.series(
+   [
     function testEqualTo (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is equal to","value":"some value"}]}}, function (err, ok){
         console.log("Submission search ", err, ok);
@@ -198,10 +205,10 @@ module.exports.testSubmissionSearchText = function (finish){
       });
     },
     function testNotEqualTo (callback){
-      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is not equal to","value":"some value"}]}}, function (err, ok){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is not","value":"some value"}]}}, function (err, ok){
         console.log("Submission search ", err, ok);
-        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
-        assert.ok(ok.submissions.length === 0, "should have found two submissions");
+        assert.ok(! err, "no error should be returned for submission search ");
+        assert.ok(ok.submissions.length === 0, "should have found no submissions");
         callback();
       });
     },
@@ -211,6 +218,31 @@ module.exports.testSubmissionSearchText = function (finish){
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalTextField, "some value");
+        callback();
+      });
+    },
+    function testIs (callback){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is","value":"some"}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 0, "should have found no submissions");
+        callback();
+      });
+    },
+    function testIs (callback){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is","value":"some value"}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 2, "should have found two submissions");
+        assertValueExists(ok.submissions, globalTextField, "some value");
+        callback();
+      });
+    },
+    function testDoesNotContain (callback){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"does not contain","value":"some"}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 0, "should have found no submissions");
         callback();
       });
     },
@@ -232,7 +264,52 @@ module.exports.testSubmissionSearchText = function (finish){
         callback();
       });
     }
-  ],finish);
+  ]
+  ,finish);
+};
+
+
+module.exports.testSubmissionSearchDate = function (finish){
+  async.series([
+    function testIsAt (callback){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is at","value":dateValue}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 2, "should have found two submissions");
+        assertValueExists(ok.submissions, globalDateField, dateValue);
+        callback();
+      });
+    },
+    function testIsBefore (callback){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is before","value":dateValue}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 0, "should have found no submissions");
+
+        callback();
+      });
+    },
+    function testIsBefore (callback){
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is before","value":greaterValue}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 2, "should have found no submissions");
+        assertValueExists(ok.submissions, globalDateField, dateValue);
+        callback();
+      });
+    },
+    function testIsAfter (callback){
+      console.log("LEss date value ", lessDateValue,  dateValue);
+      forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is after","value":lessDateValue}]}}, function (err, ok){
+        console.log("Submission search ", err, ok);
+        assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
+        assert.ok(ok.submissions.length === 2, "should have found two submissions");
+        assertValueExists(ok.submissions, globalDateField, dateValue);
+        callback();
+      });
+    }
+
+  ], finish);
 };
 
 
@@ -244,28 +321,30 @@ module.exports.setUp = function(finish){
       assert.ok(!err, 'error creating test data - err: ' + util.inspect(err));
       assert.ok(globalFormId, 'form has not been created during test setup');
       assert.notEqual(globalFormId, TEST_UNUSED_FORMID, "generated formid happens to match need to re-run");
-     console.log("GLOBAL FORM ID ", globalFormId);
      var submission = testSubmitFormBaseInfo;
       submission.formFields = [];
       submission.formId = globalFormId;
-     console.log("Making submission against fields ", savedFields);
      for(var i=0; i < savedFields.length; i++){
         console.log("saved field *** ", savedFields[i], " ***");
         var savedField = JSON.parse(savedFields[i]);
         var val = ("number" === savedField.type) ? 100 : "some value";
+        val = ("dateTime" === savedField.type) ? dateValue : val;
+
         if(! globalNumberField && "number" == savedField.type){
             globalNumberField = savedField._id;
         }else if(! globalTextField && "text" == savedField.type){
             globalTextField = savedField._id;
+        }else if(! globalDateField && "dateTime" == savedField.type){
+          globalDateField = savedField._id;
         }
         submission.formFields.push({
            "fieldId":savedField._id,
            "fieldValues":[val]
         });
      }
-
-     console.log("SUbmission prepared ", submission);
-
+     console.log("CREATED SUBMISSION ", submission.formFields);
+//      finish();
+//
       async.series([
         async.apply(doSubmission,submission),
         async.apply(completeSubmission, assert),
@@ -288,8 +367,10 @@ module.exports.tearDown = function(finish){
 function doSubmission (submission,cb){
   async.series([function (callback){
     forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
+      console.log('DONE SUBMISSION ***** ', dataSaveResult,err, " **** ");
       if(err) console.log(err);
       assert.ok(!err, "problem submitting test form data - err: " + util.inspect(err));
+      console.log('DONE SUBMISSION ***** ', dataSaveResult, " **** ");
       submissionId = dataSaveResult.submissionId;
       subids.push(submissionId);
       callback();
@@ -344,10 +425,14 @@ function createTestData(assert, cb){
   var numberField = testData.numberFieldData;
   delete numberField.repeating;
   var numField = new Field(numberField);
+  var dateFieldOrig = testData.dateTimeFieldData;
+  dateFieldOrig.repeating = false;
+  var dateField = new Field(dateFieldOrig);
 
 
   var fields = [];
   fields.push(numField);
+  fields.push(dateField);
 
   var testField;
   for(var i = 0; i < 2; i += 1) {
@@ -357,6 +442,7 @@ function createTestData(assert, cb){
     delete testField.fieldOptions.definition;
     fields.push(new Field(testField));
   }
+
 
   saveSingleForm(fields, testRequiredPage, requiredForm, function(err, formId, fieldIds){
     assert.ok(!err, 'error saving form - err: ' + util.inspect(err));

@@ -417,7 +417,7 @@ module.exports = {
         "maxRepeat":6,
         "minRepeat":1
       },
-      "validation" : {}
+      "validation" : {"validateImmediately":true}
     }
   },
   "sectionBreakFieldData":{
