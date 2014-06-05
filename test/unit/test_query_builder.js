@@ -1,4 +1,5 @@
 var queryBuilder = require('../../lib/impl/searchSubmissions').queryBuilder;
+var escaper = require('../../lib/impl/searchSubmissions').escapeForRegex;
 var util = require('util');
 var assert = require('assert');
 
@@ -38,5 +39,16 @@ exports.testBasicQuery = function (finish){
   });
 
 };
+
+exports.testEscapeForRegex = function (finish){
+  var toEscape = [{"val":".test.com","test":"\\.test\\.com"},{"val":"10.0.2.2","test":"10\\.0\\.2\\.2"},{"val":".test\\/test","test":"\\.test\\\\/test"},{val:".*?test+]^","test":"\\.\\*\\?test\\\+\\]\\^"}
+  ,{"val":"\\[^test]$test(){test}=!<>|","test":"\\\\\\[\\^test\\]\\$test\\\(\\\)\\{test\\\}\\\=\\!\\<\\>\\|"}];
+  for(var i=0; i < toEscape.length; i++){
+    var escaped = escaper(toEscape[i].val);
+    console.log("escaped", escaped,toEscape[i].test);
+    assert.ok(escaped === toEscape[i].test);
+  }
+  finish();
+}
 
 
