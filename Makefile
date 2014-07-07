@@ -38,7 +38,7 @@ test_accept_cov: npm_deps
 coverage: test_unit_cov test_accept_cov
 	rm -rf coverage
 	./node_modules/.bin/istanbul report
-	#./node_modules/.bin/istanbul report --report cobertura
+	./node_modules/.bin/istanbul report --report cobertura
 	@echo "See html coverage at: `pwd`/coverage/lcov-report/index.html"
 
 npm_deps: 
