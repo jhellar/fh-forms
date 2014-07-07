@@ -21,7 +21,8 @@ RELEASE_DIR = $(PACKAGE)-$(VERSION)-$(BUILD_NUMBER)
 
 all: clean npm_deps test
 
-test: test_unit_cov test_accept_cov
+test: test_unit_cov 
+	#test_accept_cov
 
 test_accept: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/turbo --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/ --series=true
@@ -35,9 +36,11 @@ test_unit_cov: npm_deps
 test_accept_cov: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept --series=true
 
-coverage: test_unit_cov test_accept_cov
+coverage: test_unit_cov 
+	#test_accept_cov
 	rm -rf coverage
 	./node_modules/.bin/istanbul report
+	./node_modules/.bin/istanbul report --report cobertura
 	@echo "See html coverage at: `pwd`/coverage/lcov-report/index.html"
 
 npm_deps: 
