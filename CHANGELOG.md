@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.6.00 - 2014-05-27 - IR231 - Niall Donnelly
+
+* 7414 - Upgrade theme editor to bootstrap.
+
 ##0.5.20 - 2014-05-27 - IR228 - Cbrookes
 
 * 7242 submission search

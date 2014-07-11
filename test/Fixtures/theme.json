@@ -272,12 +272,20 @@
             "right": "10",
             "bottom": "11",
             "left": "12"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#623442"
           }
 
         },
         {
           "id": "title",
           "label": "Title",
+          "background": {
+            "background_color": "#456784"
+          },
           "typography": {
             "fontSize": "12pt",
             "fontFamily": "times",
@@ -295,6 +303,11 @@
             "right": "10",
             "bottom": "11",
             "left": "12"
+          },
+          "border": {
+            "thickness": "thin",
+            "style": "double",
+            "colour": "#623442"
           }
 
         },
@@ -746,31 +759,33 @@
   "structure": {
     "logo": {
       "staticCSS": [
-        {"key": "background-position", "value": "center"},
-        {"key": "background-repeat", "value": "no-repeat"},
-        {"key": "width", "value": "100%"},
-        {"key": "display", "value": "inline-block"}
+        {
+          "key": "background-position",
+          "value": "center"
+        },
+        {
+          "key": "background-repeat",
+          "value": "no-repeat"
+        },
+        {
+          "key": "background-size",
+          "value": "100% 100%"
+        },
+        {
+          "key": "display",
+          "value": "inline-block"
+        },
+        {
+          "key": "max-height",
+          "value": "150px"
+        },
+        {
+          "key": "max-width",
+          "value": "90%"
+        }
       ]
     },
     "sections": [
-      {
-        "id": "body",
-        "label": "Body",
-        "sub_sections": [
-          {
-            "id": "area",
-            "label": "Area",
-            "style": {
-              "typography": false,
-              "background": true,
-              "border": false,
-              "margin": false,
-              "padding": false
-            },
-            "staticCSS": []
-          }
-        ]
-      },
       {
         "id": "form",
         "label": "Form",
@@ -782,8 +797,18 @@
               "typography": false,
               "background": true,
               "border": true,
-              "margin": false,
-              "padding": false
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
             ]
@@ -795,31 +820,21 @@
               "typography": true,
               "background": false,
               "border": false,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
-              {
-                "key": "text-align",
-                "value": "center"
-              }
-            ]
-          },
-          {
-            "id": "description",
-            "label": "Description",
-            "style": {
-              "typography": true,
-              "background": false,
-              "border": false,
-              "margin": true,
-              "padding": true
-            },
-            "staticCSS": [
-              {
-                "key": "text-align",
-                "value": "center"
-              }
+
             ]
           }
         ]
@@ -835,21 +850,20 @@
               "typography": true,
               "background": false,
               "border": false,
-              "margin": true,
-              "padding": true
-            },
-            "staticCSS": [{
-              "key": "text-align",
-              "value": "center"
-            },
-              {
-                "key": "width",
-                "value": "100%"
+              "margin": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
               },
-              {
-                "key": "display",
-                "value": "inline-block"
-              }]
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
+            },
+            "staticCSS": []
           },
           {
             "id": "description",
@@ -858,8 +872,18 @@
               "typography": true,
               "background": false,
               "border": false,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": []
           },
@@ -871,52 +895,24 @@
               "typography": false,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
-              {
-                "key": "width",
-                "value": "100%"
-              }
+
             ],
             "classAdditions": [
-              {
-                "classNameAddition": " td",
-                "cssAdditions": [
-                  {
-                    "key": "text-align",
-                    "value": "center"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": " td .active .page_title",
-                "cssAdditions": [
-                  {
-                    "key": "text-align",
-                    "value": "center"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": " .page_title",
-                "cssAdditions": [
-                  {
-                    "key": "display",
-                    "value": "none"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": " .number",
-                "cssAdditions": [
-                  {
-                    "key": "padding",
-                    "value": "5px 10px 5px 10px"
-                  }
-                ]
-              }
+
             ]
           },
           {
@@ -927,30 +923,46 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": false,
-              "padding": false
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              }
             },
             "staticCSS": [
               {
-                "key": "display",
-                "value": "inline-block"
-              },
-              {
                 "key": "border-radius",
-                "value": "13px"
+                "value": "0px"
               }
             ]
           },
           {
             "id": "progress_steps_number_container_active",
-            "class_name": "progress_steps td.active .number_container",
+            "class_name": "progress_steps li.active .number_container",
             "label": "Page Number Container (Active)",
             "style": {
               "typography": true,
               "background": true,
               "border": true,
-              "margin": false,
-              "padding": false
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              }
             },
             "staticCSS": []
           }
@@ -966,14 +978,24 @@
             "style": {
               "typography": false,
               "background": true,
-              "border": false,
-              "margin": true,
-              "padding": true
+              "border": true,
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
               }
             ]
           },
@@ -982,16 +1004,23 @@
             "label": "Title",
             "style": {
               "typography": true,
-              "background": false,
-              "border": false,
-              "margin": true,
-              "padding": true
+              "background": true,
+              "border": true,
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
-              {
-                "key": "text-align",
-                "value": "center"
-              }
+
             ]
           },
           {
@@ -1001,14 +1030,21 @@
               "typography": true,
               "background": false,
               "border": false,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
-              {
-                "key": "text-align",
-                "value": "center"
-              }
+
             ]
           }
         ]
@@ -1024,30 +1060,23 @@
               "typography": false,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
-            },
-            "staticCSS": [
-              {
-                "key": "border-radius",
-                "value": "5px"
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
               }
-            ]
-          },
-          {
-            "id": "instructions",
-            "label": "Instructions",
-            "style": {
-              "typography": true,
-              "background": true,
-              "border": true,
-              "margin": true,
-              "padding": true
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
               }
             ]
           },
@@ -1058,17 +1087,50 @@
               "typography": true,
               "background": true,
               "border": false,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
-                "key": "display",
-                "value": "block"
+                "key": "border-radius",
+                "value": "0px"
+              }
+            ]
+          },
+          {
+            "id": "instructions",
+            "label": "Instructions",
+            "style": {
+              "typography": true,
+              "background": true,
+              "border": true,
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
               },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
+            },
+            "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
               }
             ]
           },
@@ -1079,67 +1141,27 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
-              },
-              {
-                "key": "line-height",
-                "value": "1.4em"
-              },
-              {
-                "key": "display",
-                "value": "inline-block"
-              },
-              {
-                "key": "width",
-                "value": "100%"
+                "value": "0px"
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": " .radio",
-                "cssAdditions": [
-                ]
-              },
-              {
-                "classNameAddition": " .checkbox",
-                "cssAdditions": [
-                  {
-                    "key": "display",
-                    "value": "inline"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": " .choice",
-                "cssAdditions": [
-                  {
-                    "key": "display",
-                    "value": "inline"
-                  },
-                  {
-                    "key": "margin-left",
-                    "value": "5px"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".repeating",
-                "cssAdditions": [
 
-                ]
-              },
-              {
-                "classNameAddition": ".non_repeating",
-                "cssAdditions": [
-
-                ]
-              }
             ]
           },
           {
@@ -1149,13 +1171,27 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "height",
+                "value": "100%"
               }
             ]
           },
@@ -1166,26 +1202,21 @@
               "typography": true,
               "background": true,
               "border": false,
-              "margin": false,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
-              {
-                "key": "display",
-                "value": "inline"
-              },
-              {
-                "key": "float",
-                "value": "left"
-              },
-              {
-                "key": "width",
-                "value": "15%"
-              },
-              {
-                "key": "text-align",
-                "value": "center"
-              }
+
             ]
           },
           {
@@ -1195,17 +1226,29 @@
               "typography": true,
               "background": false,
               "border": false,
-              "margin": false,
-              "padding": false
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              }
             },
-            "staticCSS": [{
-              "key": "content",
-              "value": "\"*\""
-            },
+            "staticCSS": [
+              {
+                "key": "content",
+                "value": "\"*\""
+              },
               {
                 "key": "vertical-align",
                 "value": "top"
-              }],
+              }
+            ],
             "class_name": "field_required:after"
           }
         ]
@@ -1221,13 +1264,23 @@
               "typography": false,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": true,
+                "right": false,
+                "bottom": true,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
-                "key": "text-align",
-                "value": "center"
+                "key": "border-spacing",
+                "value": "5px 0px"
               }
             ]
           },
@@ -1238,78 +1291,62 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "white-space",
+                "value": "normal"
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": ".fh_appform_two_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%!important"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".fh_appform_three_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "30%!important"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "100%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_addInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%"
-                  }
-                ]
-              }
+
             ]
           },
           {
             "id": "default_active",
-            "class_name": "button_default:active",
+            "class_name": "button_default:active, #fh_appform_container .button_default.active",
             "label": "Default (Active)",
             "style": {
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "white-space",
+                "value": "normal"
               }
             ],
             "classAdditions": [
@@ -1323,78 +1360,62 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "white-space",
+                "value": "normal"
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": ".fh_appform_two_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%!important"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".fh_appform_three_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "30%!important"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "100%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%!important"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_addInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%!important"
-                  }
-                ]
-              }
+
             ]
           },
           {
             "id": "action_active",
-            "class_name": "button_action:active",
+            "class_name": "button_action:active ,#fh_appform_container .fh_appform_button_action.active",
             "label": "Action (Active)",
             "style": {
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "white-space",
+                "value": "normal"
               }
             ],
             "classAdditions": [
@@ -1408,78 +1429,62 @@
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "white-space",
+                "value": "normal"
               }
             ],
             "classAdditions": [
-              {
-                "classNameAddition": ".fh_appform_two_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".fh_appform_three_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "33.3%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "100%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_removeInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%"
-                  }
-                ]
-              },
-              {
-                "classNameAddition": ".special_button.fh_appform_addInputBtn",
-                "cssAdditions": [
-                  {
-                    "key": "width",
-                    "value": "45%"
-                  }
-                ]
-              }
+
             ]
           },
           {
             "id": "cancel_active",
-            "class_name": "button_cancel:active",
+            "class_name": "button_cancel:active, #fh_appform_container .button_cancel.active",
             "label": "Cancel (Active)",
             "style": {
               "typography": true,
               "background": true,
               "border": true,
-              "margin": true,
-              "padding": true
+              "margin": {
+                "top": false,
+                "right": false,
+                "bottom": false,
+                "left": false
+              },
+              "padding": {
+                "top": true,
+                "right": true,
+                "bottom": true,
+                "left": true
+              }
             },
             "staticCSS": [
               {
                 "key": "border-radius",
-                "value": "5px"
+                "value": "0px"
+              },
+              {
+                "key": "white-space",
+                "value": "normal"
               }
             ],
             "classAdditions": [
@@ -1488,7 +1493,8 @@
           }
         ]
       }
-    ]},
+    ]
+  },
   "logo": {
     "base64String": "something",
     "height": "100",

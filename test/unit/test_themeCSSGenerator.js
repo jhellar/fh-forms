@@ -68,7 +68,7 @@ module.exports.testGenerateCSSBackground = function (finished) {
         sub_sections: [
           {
             "id": "test_subsection",
-            "label": "Some Test SubSection",
+            "label": "Some Test SubSection1",
             "background": {
               "background_color": "#123423"
             }
@@ -86,13 +86,13 @@ module.exports.testGenerateCSSBackground = function (finished) {
         sub_sections: [
           {
             "id": "test_subsection",
-            "label": "Some Test SubSection",
+            "label": "Some Test SubSection1",
             "style": {
               "background": true,
               "border": false,
               "typography": false,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -100,7 +100,7 @@ module.exports.testGenerateCSSBackground = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": true, "border": false, "typography": false, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": true, "border": false, "typography": false, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result);
   assert.ok(typeof result == "string");
   assert.ok(result.indexOf("background-color:#123423;") > -1);
@@ -136,8 +136,8 @@ module.exports.testGenerateCSSBackgroundDoesNotExist = function (finished) {
               "background": true,
               "border": false,
               "typography": false,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -145,7 +145,7 @@ module.exports.testGenerateCSSBackgroundDoesNotExist = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": true, "border": false, "typography": false, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": true, "border": false, "typography": false, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.equal(result, null);
   finished();
 };
@@ -184,8 +184,8 @@ module.exports.testGenerateCSSBorder = function (finished) {
               "background": false,
               "border": true,
               "typography": false,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -193,7 +193,7 @@ module.exports.testGenerateCSSBorder = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": true, "typography": false, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": true, "typography": false, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result);
   assert.ok(typeof result == "string");
   assert.ok(result.indexOf("border-style:solid;") > -1);
@@ -231,8 +231,8 @@ module.exports.testGenerateCSSBorderDoesNotExist = function (finished) {
               "background": false,
               "border": true,
               "typography": false,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -240,7 +240,7 @@ module.exports.testGenerateCSSBorderDoesNotExist = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": true, "typography": false, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": true, "typography": false, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.equal(result, null);
   finished();
 };
@@ -258,7 +258,7 @@ module.exports.testGenerateCSSTypography = function (finished) {
             "typography": {
               "fontFamily": "times",
               "fontStyle": "italic",
-              "fontSize": "12px",
+              "fontSize": 1.2,
               "fontColour": "#1234321"
             }
           }
@@ -280,8 +280,8 @@ module.exports.testGenerateCSSTypography = function (finished) {
               "background": false,
               "border": false,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -289,12 +289,13 @@ module.exports.testGenerateCSSTypography = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": true, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": true, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result);
   assert.ok(typeof result == "string");
+  console.log(result);
   assert.ok(result.indexOf("font-family:times;") > -1);
   assert.ok(result.indexOf("font-style:italic;") > -1);
-  assert.ok(result.indexOf("font-size:12px;") > -1);
+  assert.ok(result.indexOf("font-size:1.2em;") > -1);
   assert.ok(result.indexOf("color:#1234321;") > -1);
   assert.ok(result.indexOf("font-weight:normal;") > -1);
   finished();
@@ -329,8 +330,8 @@ module.exports.testGenerateCSSTypographyDoesNotExist = function (finished) {
               "background": false,
               "border": false,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -338,7 +339,7 @@ module.exports.testGenerateCSSTypographyDoesNotExist = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": true, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": true, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.equal(result, null);
   finished();
 };
@@ -378,17 +379,17 @@ module.exports.testGenerateMarginCSS = function(finished){
               "background": false,
               "border": false,
               "typography": false,
-              "margin": true,
-              "padding": false
+              "margin": {top: true, right: true, bottom: true, left: true},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
       }
     ]
   };
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": true, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": {top: true, right: true, bottom: true, left: true}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result);
-  assert.ok(result.indexOf("margin:") > -1, "Expected 'margin:' to be in the result string but got " + result);
+  assert.ok(result.indexOf("margin") > -1, "Expected 'margin:' to be in the result string but got " + result);
   assert.ok(result.indexOf("5px") > -1, "Expected '5px' to be in the result string but got " + result);
   assert.ok(result.indexOf("6px") > -1, "Expected '6px' to be in the result string but got " + result);
   assert.ok(result.indexOf("7px") > -1, "Expected '7px' to be in the result string but got " + result);
@@ -435,17 +436,17 @@ module.exports.testGenerateMarginCSSNumbers = function(finished){
               "background": false,
               "border": false,
               "typography": false,
-              "margin": true,
-              "padding": false
+              "margin": {top: true, right: true, bottom: true, left: true},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
       }
     ]
   };
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": true, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": {top: true, right: true, bottom: true, left: true}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result);
-  assert.ok(result.indexOf("margin:") > -1, "Expected 'margin:' to be in the result string but got " + result);
+  assert.ok(result.indexOf("margin") > -1, "Expected 'margin:' to be in the result string but got " + result);
   assert.ok(result.indexOf("5px") > -1, "Expected '5px' to be in the result string but got " + result);
   assert.ok(result.indexOf("6px") > -1, "Expected '6px' to be in the result string but got " + result);
   assert.ok(result.indexOf("7px") > -1, "Expected '7px' to be in the result string but got " + result);
@@ -486,15 +487,15 @@ module.exports.testGenerateMarginCSSDoesNotExist = function(finished){
               "background": false,
               "border": false,
               "typography": false,
-              "margin": true,
-              "padding": false
+              "margin": {top: true, right: true, bottom: true, left: true},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
       }
     ]
   };
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": true, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": {top: true, right: true, bottom: true, left: true}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result === null);
   finished();
 };
@@ -531,15 +532,15 @@ module.exports.testGenerateMarginCSSElementDoesNotExist = function(finished){
               "background": false,
               "border": false,
               "typography": false,
-              "margin": true,
-              "padding": false
+              "margin": {top: true, right: true, bottom: true, left: true},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
       }
     ]
   };
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": true, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": {top: true, right: true, bottom: true, left: true}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result === null);
   finished();
 };
@@ -579,15 +580,15 @@ module.exports.testGenerateMarginCSSElementNotAValidNumber = function(finished){
               "background": false,
               "border": false,
               "typography": false,
-              "margin": true,
-              "padding": false
+              "margin": {top: true, right: true, bottom: true, left: true},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
       }
     ]
   };
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": true, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": {top: true, right: true, bottom: true, left: true}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result === null);
   finished();
 };
@@ -627,15 +628,15 @@ module.exports.testGeneratePaddingCSS = function(finished){
               "background": false,
               "border": false,
               "typography": false,
-              "margin": false,
-              "padding": true
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: true, right: true, bottom: true, left: true}
             }
           }
         ]
       }
     ]
   };
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": false, "padding": true});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": false, "border": false, "typography": false, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: true, right: true, bottom: true, left: true}});
   assert.ok(result);
   assert.ok(result.indexOf("padding:") > -1, "Expected 'margin:' to be in the result string but got " + result);
   assert.ok(result.indexOf("5px") > -1, "Expected '5px' to be in the result string but got " + result);
@@ -662,7 +663,7 @@ module.exports.testGenerateCSSALL = function (finished) {
             "typography": {
               "fontFamily": "times",
               "fontStyle": "italic",
-              "fontSize": "12px",
+              "fontSize": 1.2,
               "fontColour": "#1234321"
             },
             "border": {
@@ -692,8 +693,8 @@ module.exports.testGenerateCSSALL = function (finished) {
               "background": true,
               "border": true,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -701,12 +702,12 @@ module.exports.testGenerateCSSALL = function (finished) {
     ]
   };
 
-  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": true, "border": true, "typography": true, "margin": false, "padding": false});
+  var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSS("test_section", "test_subsection", {"background": true, "border": true, "typography": true, "margin": {top: false, right: false, bottom: false, left: false}, "padding": {top: false, right: false, bottom: false, left: false}});
   assert.ok(result);
   assert.ok(typeof result == "string");
   assert.ok(result.indexOf("font-family:times;") > -1);
   assert.ok(result.indexOf("font-style:italic;") > -1);
-  assert.ok(result.indexOf("font-size:12px;") > -1);
+  assert.ok(result.indexOf("font-size:1.2em;") > -1);
   assert.ok(result.indexOf("color:#1234321;") > -1);
   assert.ok(result.indexOf("font-weight:normal;") > -1);
   assert.ok(result.indexOf("border-style:solid;") > -1);
@@ -729,7 +730,7 @@ module.exports.testGenerateCSSClassName = function (finished) {
             "typography": {
               "fontFamily": "times",
               "fontStyle": "italic",
-              "fontSize": "12px",
+              "fontSize": 1.2,
               "fontColour": "#1234321"
             },
             "border": {
@@ -759,8 +760,8 @@ module.exports.testGenerateCSSClassName = function (finished) {
               "background": true,
               "border": true,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -771,7 +772,7 @@ module.exports.testGenerateCSSClassName = function (finished) {
   var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSSClassName("test_section", "test_subsection");
   assert.ok(result);
   assert.ok(typeof result == "string");
-  assert.equal(result, ".fh_appform_container .fh_appform_test_section_test_subsection");
+  assert.equal(result, "#fh_appform_container .fh_appform_test_section_test_subsection");
   finished();
 };
 
@@ -788,7 +789,7 @@ module.exports.testGenerateCSSClassNameClassDefined = function (finished) {
             "typography": {
               "fontFamily": "times",
               "fontStyle": "italic",
-              "fontSize": "12px",
+              "fontSize": 1.2,
               "fontColour": "#1234321"
             },
             "border": {
@@ -818,8 +819,8 @@ module.exports.testGenerateCSSClassNameClassDefined = function (finished) {
               "background": true,
               "border": true,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -830,7 +831,7 @@ module.exports.testGenerateCSSClassNameClassDefined = function (finished) {
   var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateCSSClassName("test_section", "test_subsection", "someClass");
   assert.ok(result);
   assert.ok(typeof result == "string");
-  assert.equal(result, ".fh_appform_container .fh_appform_someClass");
+  assert.equal(result, "#fh_appform_container .fh_appform_someClass");
   finished();
 };
 
@@ -848,7 +849,7 @@ module.exports.testGenerateStaticCSS = function (finished) {
             "typography": {
               "fontFamily": "times",
               "fontStyle": "italic",
-              "fontSize": "12px",
+              "fontSize": 1.2,
               "fontColour": "#1234321"
             },
             "border": {
@@ -878,8 +879,8 @@ module.exports.testGenerateStaticCSS = function (finished) {
               "background": true,
               "border": true,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -909,7 +910,7 @@ module.exports.testGenerateClassAdditions = function (finished) {
             "typography": {
               "fontFamily": "times",
               "fontStyle": "italic",
-              "fontSize": "12px",
+              "fontSize": 1.2,
               "fontColour": "#1234321"
             },
             "border": {
@@ -939,8 +940,8 @@ module.exports.testGenerateClassAdditions = function (finished) {
               "background": true,
               "border": true,
               "typography": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
@@ -984,7 +985,7 @@ module.exports.testGenerateLogo = function (finished) {
   var result = themeCSSGenerator(testJSON, testStructure).generationFunctions.generateLogoCSS();
   assert.ok(result);
   assert.ok(typeof result == "string");
-  assert.ok(result.indexOf(".fh_appform_container .fh_appform_logo") > -1);
+  assert.ok(result.indexOf("#fh_appform_container .fh_appform_logo") > -1);
   assert.ok(result.indexOf("background-image:url(\"SOMEBASE64LOGO\");") > -1);
   assert.ok(result.indexOf("height:100px;") > -1);
   assert.ok(result.indexOf("width:150px;") > -1);
@@ -1033,8 +1034,8 @@ module.exports.testSingleSectionGeneration = function (finished) {
               "typography": true,
               "background": true,
               "border": true,
-              "margin": false,
-              "padding": false
+              "margin": {top: false, right: false, bottom: false, left: false},
+              "padding": {top: false, right: false, bottom: false, left: false}
             }
           }
         ]
