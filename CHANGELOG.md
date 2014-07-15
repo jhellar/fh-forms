@@ -1,6 +1,10 @@
 #fh-forms
 
-##0.6.00 - 2014-05-27 - IR231 - Niall Donnelly
+##0.6.01 - 2014-07-15 - IR232 - Niall Donnelly
+
+* Updated theme editor css (Related to ticket 7414)
+
+##0.6.00 - 2014-07-11 - IR231 - Niall Donnelly
 
 * 7414 - Upgrade theme editor to bootstrap.
 
