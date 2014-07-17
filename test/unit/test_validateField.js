@@ -28,7 +28,7 @@ var testSubmitFormBaseInfo = {
 function fieldValidator(fieldDef, submission) {
   var retVal;
   var engine = formsRulesEngine({"submission" : null, "definition" : null});
-  engine.validateFieldInternal(submission, fieldDef, function (err, results) {
+  engine.validateFieldInternal(submission, fieldDef, {}, true, function (err, results) {
     if(err) {
       retVal = err;
     } else {

@@ -1321,6 +1321,8 @@ function createTestData(assert, cb){
     var photoField = new Field(testData.photoFieldData);
     var signatureField = new Field(testData.photoFieldData);
 
+    console.log("*************************", numberField, "*************************");
+
 
     var fields = [];
     fields.push(textField);
