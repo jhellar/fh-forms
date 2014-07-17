@@ -44,6 +44,13 @@ coverage: test_unit_cov test_accept_cov
 npm_deps: 
 	npm install .
 
+jshint:
+	./node_modules/.bin/jshint lib/*.js lib/**/*.js
+
+plato:
+	./node_modules/.bin/plato -r -d plato -l .jshintrc lib
+	@echo Open the Plato report in `pwd`/plato/index.html 
+
 # Uses grunt to combine forms-rules-engine with async inside closure, for use in apps
 client_rules_engine:
 	./node_modules/.bin/grunt
