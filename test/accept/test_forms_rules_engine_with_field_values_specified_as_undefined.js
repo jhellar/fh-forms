@@ -466,6 +466,79 @@ var FORMDEF = {
       "submissionsTotal": 124125
    };
 
+var FORMDEF_PHOTO_REQUIRED = {
+  "updatedBy": "user@example.com",
+  "name": "testPhotoFieldRule",
+  "description": "This form is for testing file and photo required fields fields.",
+  "lastUpdatedTimestamp": 1385647845865,
+  "lastUpdated": "2013-11-28T14:10:45.865Z",
+  "dateCreated": "2013-11-28T14:10:45.865Z",
+  "_id": "527d4539639f521e0a0000f5",
+  "pageRules": [],
+  "fieldRules": [{
+    "type": "hide",
+    "targetField": "52974ee55e272dcb3d0000n7",
+    "_id": "52974ee55e272dcb3d0000a9",
+    "ruleConditionalStatements": [{
+      "sourceField": "527d4539639f521e0a000006",
+      "restriction": "contains",
+      "sourceValue": "val"
+    }],
+    "ruleConditionalOperator": "and"
+  }],
+  "pages": [{
+    "name": "testPage",
+    "description": "This is a test page for the win.",
+    "_id": "527d4539639f521e0a000005",
+    "fields": [{
+      "name": "textField",
+      "helpText": "This is a text field",
+      "type": "text",
+      "required": true,
+      "fieldOptions": {
+        "definition": {
+        },
+        "validation": {
+        }
+      },
+      "_id": "527d4539639f521e0a000006",
+      "repeating": false
+    }, {
+      "name": "photoField",
+      "helpText": "This is a photo field",
+      "type": "photo",
+      "required": true,
+      "fieldOptions": {
+        "definition": {
+          "photoHeight": 200,
+          "photoWidth": 300,
+          "photoQuality": 50,
+          "maxRepeat": 5,
+          "minRepeat": 2
+        }
+      },
+      "_id": "52974ee55e272dcb3d0000n7",
+      "repeating": true
+    }]
+  }],
+  "pageRef": {
+    "527d4539639f521e0a000005": 0
+  },
+  "fieldRef": {
+    "527d4539639f521e0a000006": {
+      "page": 0,
+      "field": 0
+    },
+    "52974ee55e272dcb3d0000n7": {
+      "page": 0,
+      "field": 1
+    }
+  },
+  "appsUsingForm": 123,
+  "submissionsToday": 1234,
+  "submissionsTotal": 124125
+};
+
 
 
 
@@ -548,6 +621,35 @@ var SUBMISSION = {
   "timezoneOffset": 0
 };
 
+var SUBMISSION_REQUIRED_PHOTO = {
+  "_id": null,
+  "_type": "submission",
+  "_ludid": "527d4539639f521e0a000004_submission_1386777426898",
+  "_localLastUpdate": 1386777426898,
+  "formName": "testFieldsForm",
+  "formId": "527d4539639f521e0a0000f5",
+  "deviceFormTimestamp": 1385647845865,
+  "status": "new",
+  "createDate": "2013-12-11T15:57:06.898Z",
+  "appId": "8P-SzpQTu1EqHLYrZQAdUzPQ",
+  "timezoneOffset" : 120,
+  "appEnvironment": "dev",
+  "appCloudName": "",
+  "comments": [],
+  "formFields": [{
+    "fieldId": "527d4539639f521e0a000006",
+    "fieldValues": ["val"]
+  }, {
+    "fieldId": "52974ee55e272dcb3d0000n7",
+    "fieldValues": []
+  }],
+  "saveDate": null,
+  "submitDate": null,
+  "uploadStartDate": null,
+  "submittedDate": null,
+  "timezoneOffset": 0
+}
+
 
 
 
@@ -580,6 +682,24 @@ module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
       engine.validateForm(SUBMISSION, function (err, results) {
         assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
         assert.ok(!results.validation.valid, "UnExpected valid result: " + util.inspect(results.validation));
+        return cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
+    finish();
+  });
+};
+
+
+module.exports.testRequiredPhotoFieldHidden = function (finish) {
+  var engine = formsRulesEngine(FORMDEF_PHOTO_REQUIRED);
+
+  async.series([
+    function (cb) {
+      engine.validateForm(SUBMISSION_REQUIRED_PHOTO, function (err, results) {
+        assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
+        assert.ok(results.validation.valid, "UnExpected invalid result: " + util.inspect(results.validation));
         return cb();
       });
     }

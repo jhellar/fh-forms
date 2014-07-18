@@ -8,6 +8,10 @@
 
 * 7414 - Upgrade theme editor to bootstrap.
 
+##0.5.21 - 2014-07-17 - IR232 - Niall Donnelly
+
+* 7637 Fixed rules engine bug where hidden fields were being validated for input elements
+
 ##0.5.20 - 2014-05-27 - IR228 - Cbrookes
 
 * 7242 submission search

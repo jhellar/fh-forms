@@ -7,6 +7,7 @@ var initDatabase = require('./../setup.js').initDatabase;
 var assert = require('assert');
 var util = require('util');
 var moment =require('moment');
+var _ = require('underscore');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -418,7 +419,8 @@ function createTestData(assert, cb){
   var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
   var testRequiredPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
-  var testData = require("./../Fixtures/formSubmissions.js");
+  var realTestData = require("./../Fixtures/formSubmissions.js");
+  var testData = JSON.parse(JSON.stringify(realTestData));
 
 
   var textFieldOrig = testData.textFieldData;
@@ -428,7 +430,6 @@ function createTestData(assert, cb){
   var dateFieldOrig = testData.dateTimeFieldData;
   dateFieldOrig.repeating = false;
   var dateField = new Field(dateFieldOrig);
-
 
   var fields = [];
   fields.push(numField);

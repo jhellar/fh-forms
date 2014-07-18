@@ -1048,7 +1048,6 @@ module.exports.testSingleSectionGeneration = function (finished) {
   assert.equal(result.generationResult.failed, false);
   var resultCSS = result.generatedCSS;
   assert.ok(resultCSS);
-//  console.log(resultCSS);
   finished();
 };
 
@@ -1064,7 +1063,6 @@ module.exports.testFullThemeGeneration = function (finished) {
   var resultCSS = result.generatedCSS;
   assert.ok(resultCSS);
   assert.ok(typeof resultCSS == "string");
-  console.log(resultCSS);
   finished();
 };
 
