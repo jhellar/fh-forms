@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.6.02 - 2014-08-13 - IR233 - Niall Donnelly
+
+* Updated theme editor css (Related to ticket 7414)
+
 ##0.6.01 - 2014-07-15 - IR232 - Niall Donnelly
 
 * Updated theme editor css (Related to ticket 7414)
