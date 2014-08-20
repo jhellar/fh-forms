@@ -145,6 +145,13 @@ function assertFormNamedNotFound(assert, name, msg, cb) {
   });
 }
 
+function removeForm(assert, name, msg, cb) {
+  formModel.remove({name: name}, function (err, data) {
+    assert.ok(!err, 'should not return error: ' + util.inspect(err));
+    assertFormNamedNotFound(assert, name, msg, cb);
+  });
+}
+
 function loadForm(data, cb) {
   if (!cb) cb = data;
   formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name}).populate('pages').populate('fieldRules').exec(function (err, data) {
@@ -236,7 +243,109 @@ module.exports.it_should_save_field_rules = function(finish) {
     }
   ], function(err){
     assert.ok(!err, "received error: " + util.inspect(err));
-    finish();
+
+    //Can remove the form when finished
+    removeForm(assert, TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name, 'should not have found form - not added yet - found: ', function(err){
+      assert.ok(!err);
+      finish();
+    });
+  });
+};
+
+module.exports.it_should_save_field_rules_with_multiple_targets = function(finish) {
+  async.waterfall([
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name, 'should not have found form - not added yet - found: '),
+    function(cb) {
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES, function(err, doc){
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    loadForm,
+    function addFieldRule(populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      var fieldRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[0]._id,
+          restriction: 'does not contain',
+          sourceValue: 'dammit'
+        }],
+        targetField: [populatedFormDoc.pages[0].fields[0]._id, populatedFormDoc.pages[0].fields[1]._id]
+      };
+
+      var fieldRule2 = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[1]._id,
+          restriction: 'does not contain',
+          sourceValue: 'foo'
+        }],
+        targetField: [populatedFormDoc.pages[0].fields[1]._id, populatedFormDoc.pages[1].fields[0]._id]
+      };
+
+      forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule, fieldRule2]}, function(err, frs){
+        assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+        assert.ok(frs.length === 2, "Expected 2 rules from updateField rules" + util.inspect(frs));
+        assert.ok(frs[0].ruleConditionalStatements[0].sourceValue === "dammit", "Expected source value to be dammit " + util.inspect(frs[0].ruleConditionalStatements[0]));
+        assert.ok(frs[0].targetField[0].toString() === populatedFormDoc.pages[0].fields[0]._id.toString(), "Expected target field 0 to be " + populatedFormDoc.pages[0].fields[0]._id + " but was " + frs[0].targetField[0]);
+        assert.ok(frs[0].targetField[1].toString() === populatedFormDoc.pages[0].fields[1]._id.toString(), "Expected target field 1 to be " + populatedFormDoc.pages[0].fields[1]._id + " but was " + frs[0].targetField[1]);
+
+        assert.ok(frs[1].ruleConditionalStatements[0].sourceValue === "foo", "Expected source value to be foo " + util.inspect(frs[1].ruleConditionalStatements[0]));
+        assert.ok(frs[1].targetField[0].toString() === populatedFormDoc.pages[0].fields[1]._id.toString(), "Expected target field 0 to be " + populatedFormDoc.pages[0].fields[1]._id + " but was " + frs[1].targetField[0]);
+        assert.ok(frs[1].targetField[1].toString() === populatedFormDoc.pages[1].fields[0]._id.toString(), "Expected target field 1 to be " + populatedFormDoc.pages[1].fields[0]._id + " but was " + frs[1].targetField[1]);
+        return cb();
+      });
+    },
+    loadForm,
+    function updateFieldRule(populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      assert.equal(populatedFormDoc.fieldRules.length, 2, 'fieldRule not saved');
+
+      var frules = populatedFormDoc.fieldRules;
+      frules[0].ruleConditionalStatements[0].sourceValue = 'dammit2';
+      frules[0].targetField = [populatedFormDoc.pages[1].fields[0]._id];
+
+      // and add another rule
+      var fieldRule3 = {
+        type: "show",
+        ruleConditionalOperator : "and",
+        ruleConditionalStatements : [{
+          sourceField: populatedFormDoc.pages[0].fields[1]._id,
+          restriction: 'does not contain',
+          sourceValue: 'bar'
+        }],
+        targetField: [populatedFormDoc.pages[0].fields[0]._id, populatedFormDoc.pages[0].fields[1]._id]
+      };
+      frules.push(fieldRule3);
+
+      forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: frules}, function(err, frs){
+        assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+        assert.equal(frs[0].ruleConditionalStatements[0].sourceValue, 'dammit2', 'fieldRule not updated correctly, got: ', frs[0].ruleConditionalStatements[0].sourceValue);
+        assert.ok(frs[0].targetField.length === 1, "Expected updated rules to be size 1 but was " + frs[0].targetField.length);
+        assert.ok(frs[0].targetField[0].toString() === populatedFormDoc.pages[1].fields[0]._id.toString(), "Expected target field to be " + populatedFormDoc.pages[1].fields[0]._id + " but was " + frs[0].targetField[0]);
+        assert.equal(frs.length, 3, 'Expected 3 rules to be saved, got: ' + util.inspect(frs));
+        cb(null, populatedFormDoc);
+      });
+    },
+
+    function deleteFieldRule(populatedFormDoc, cb) {
+      forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: []}, function(err, frs){
+        assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+        assert.equal(frs.length, 0);
+        cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err, "received error: " + util.inspect(err));
+
+    //Can remove the form when finished
+    removeForm(assert, TEST_FORM_2_PAGES_WITH_FIELDS_AND_FIELD_RULES.name, 'should not have found form - not added yet - found: ', function(err){
+      assert.ok(!err);
+      finish();
+    });
   });
 };
 

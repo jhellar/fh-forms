@@ -147,6 +147,13 @@ function assertFormNamedNotFound(assert, name, msg, cb) {
   });
 }
 
+function removeForm(assert, name, msg, cb) {
+  formModel.remove({name: name}, function (err, data) {
+    assert.ok(!err, 'should not return error: ' + util.inspect(err));
+    assertFormNamedNotFound(assert, name, msg, cb);
+  });
+}
+
 module.exports.it_should_save_page_rules = function(finish) {
 
   async.waterfall([
@@ -213,7 +220,95 @@ module.exports.it_should_save_page_rules = function(finish) {
     }
   ], function(err){
     assert.ok(!err, "received error: " + util.inspect(err));
-    finish();
+
+    removeForm(assert, TEST_FORM_2_PAGES_WITH_FIELDS_AND_PAGE_RULES.name, 'should not have found form - not added yet - found: ', function(err){
+      assert.ok(!err);
+      finish();
+    });
+  });
+};
+
+/**
+ * Updating page rules should also be able to deal with handling multiple page targets.
+ * @param finish
+ */
+module.exports.it_should_save_page_rules_with_mutliple_targets = function(finish) {
+
+  async.waterfall([
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS_AND_PAGE_RULES.name, 'should not have found form - not added yet - found: '),
+    function(cb) {
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS_AND_PAGE_RULES, function(err, doc){
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function(cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS_AND_PAGE_RULES.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function(err, updatedForm){
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+      });
+    },
+    function addPageRule(populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      var pageRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [{
+          sourceField: populatedFormDoc.pages[0].fields[0]._id,
+          restriction: 'does not contain',
+          sourceValue: 'dammit'
+        }],
+        targetPage: [populatedFormDoc.pages[0]._id, populatedFormDoc.pages[1]._id]
+      };
+
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function(err, frs){
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+        assert.ok(frs[0].targetPage.length === 2, "Expected 2 target pages but got " + util.inspect(frs[0].targetPage));
+        assert.ok(frs[0].targetPage[0].toString() === populatedFormDoc.pages[0]._id.toString(), "Expected target page 0 to be " + populatedFormDoc.pages[0]._id + " but was " + frs[0].targetPage[0]);
+        assert.ok(frs[0].targetPage[1].toString() === populatedFormDoc.pages[1]._id.toString(), "Expected target page 1 to be " + populatedFormDoc.pages[1]._id + " but was " + frs[0].targetPage[1]);
+
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS_AND_PAGE_RULES.name}).populate('pages').populate('pageRules').exec(function (err, data) {
+          return cb(err, data);
+        });
+      });
+    },
+
+    function updatePageRule(populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+      assert.equal(populatedFormDoc.pageRules.length, 1, 'pageRule not saved');
+
+      var prules = populatedFormDoc.pageRules;
+      prules[0].ruleConditionalStatements[0].sourceValue = 'dammit2';
+      prules[0].targetPage = [populatedFormDoc.pages[1]._id];
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: prules}, function(err, prs){
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+        assert.equal(prs[0].ruleConditionalStatements[0].sourceValue, 'dammit2', 'pageRule not updated correctly, got: ', prs[0].ruleConditionalStatements[0].sourceValue);
+        assert.ok(prs[0].targetPage.length === 1, "Expected target page length to be 1 but was " + util.inspect(prs[0].targetPage));
+        assert.ok(prs[0].targetPage[0].toString() === populatedFormDoc.pages[1]._id.toString(), "Expected target page id 0 to be " + populatedFormDoc.pages[1]._id + " but was " + prs[0].targetPage[0]);
+
+        cb(null, populatedFormDoc);
+      });
+    },
+
+    function deletePageRule(populatedFormDoc, cb) {
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: []}, function(err, prs){
+        assert.ok(!err, 'testUpdateForm() - error from updatePageules: ' + util.inspect(err));
+        assert.equal(prs.length, 0);
+        cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err, "received error: " + util.inspect(err));
+    removeForm(assert, TEST_FORM_2_PAGES_WITH_FIELDS_AND_PAGE_RULES.name, 'should not have found form - not added yet - found: ', function(err){
+      assert.ok(!err);
+      finish();
+    });
   });
 };
 

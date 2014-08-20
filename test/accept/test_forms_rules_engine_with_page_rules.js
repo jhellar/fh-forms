@@ -50,6 +50,17 @@ var TEST_BASIC_FORM_2_PAGE_2_FIELD_5_NAME = "TEST_BASIC_FORM_2_PAGE_2_FIELD_5_NA
 var TEST_BASIC_FORM_2_PAGE_2_FIELD_5_TYPE = "emailAddress";
 var TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID = "000000000000000000020006";
 
+var TEST_BASIC_FORM_2_PAGE_3_NAME = "TEST_BASIC_FORM_2_PAGE_3_NAME";
+var TEST_BASIC_FORM_2_PAGE_3_ID = "000000000000000000020009";
+
+var TEST_BASIC_FORM_2_PAGE_3_FIELD_6_NAME = "TEST_BASIC_FORM_2_PAGE_3_FIELD_6_NAME";
+var TEST_BASIC_FORM_2_PAGE_3_FIELD_6_TYPE = "text";
+var TEST_BASIC_FORM_2_PAGE_3_FIELD_6_ID = "000000000000000000020010";
+
+var TEST_BASIC_FORM_2_PAGE_3_FIELD_7_NAME = "TEST_BASIC_FORM_2_PAGE_3_FIELD_7_NAME";
+var TEST_BASIC_FORM_2_PAGE_3_FIELD_7_TYPE = "text";
+var TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID = "000000000000000000020011";
+
 var TEST_BASIC_FORM_2_DEFINITION = {
   "updatedBy":"user@example.com",
   "name":"TEST_BASIC_FORM_2_DEFINITION",
@@ -69,6 +80,17 @@ var TEST_BASIC_FORM_2_DEFINITION = {
       }],
       "targetPage": TEST_BASIC_FORM_2_PAGE_2_ID,
       "_id":"527d4539639f521e0a007421"
+    },
+    {
+      "type": "skip",
+      "ruleConditionalOperator": "and",
+      "ruleConditionalStatements": [{
+        "sourceField": TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID,
+        "restriction": "contains",
+        "sourceValue": "hide page 2 and 3"
+      }],
+      "targetPage": [TEST_BASIC_FORM_2_PAGE_2_ID, TEST_BASIC_FORM_2_PAGE_3_ID],
+      "_id":"527d4539639f521e0a007333"
     }
   ],
   "fieldRules":[
@@ -253,6 +275,49 @@ var TEST_BASIC_FORM_2_DEFINITION = {
           "repeating":false
         }
       ]
+    },
+    {
+      "name":TEST_BASIC_FORM_2_PAGE_3_NAME,
+      "description":"This is a test page 3 for the win.",
+      "_id":TEST_BASIC_FORM_2_PAGE_3_ID,
+      "fields":[
+        {
+          "name":TEST_BASIC_FORM_2_PAGE_3_FIELD_6_NAME,
+          "helpText":"This is a text field on page 3",
+          "type":TEST_BASIC_FORM_2_PAGE_3_FIELD_6_TYPE,
+          "required":true,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":2
+            },
+            "validation":{
+              "min":20,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_FORM_2_PAGE_3_FIELD_6_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_2_PAGE_2_FIELD_2_NAME,
+          "helpText":"This is another text field on page 3",
+          "type":TEST_BASIC_FORM_2_PAGE_3_FIELD_7_TYPE,
+          "required":false,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":3
+            },
+            "validation":{
+              "min":50,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID,
+          "repeating":false
+        }
+      ]
     }
   ],
   "pageRef":{
@@ -299,6 +364,14 @@ var TEST_BASIC_FORM_2_DEFINITION = {
     TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID: {
       "page":1,
       "field":4
+    },
+    TEST_BASIC_FORM_2_PAGE_3_FIELD_6_ID: {
+      "page":2,
+      "field":1
+    },
+    TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID: {
+      "page":2,
+      "field":2
     }
   },
   "appsUsing":123,
@@ -350,7 +423,7 @@ var TEST_BASIC_FORM_2_SUBMISSION_1 = {
             "value for email field"
          ]
       },
-            {
+      {
          "fieldId":TEST_BASIC_FORM_2_PAGE_2_FIELD_1_ID,
          "fieldValues":[
             "value for text field (1)"
@@ -386,7 +459,7 @@ module.exports.testBasicForm2SpecificFieldsVisible = function (finish) {
     TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_2_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID,
     TEST_BASIC_FORM_2_PAGE_1_FIELD_4_ID, TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_1_ID,
     TEST_BASIC_FORM_2_PAGE_2_FIELD_2_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_3_ID, TEST_BASIC_FORM_2_PAGE_2_FIELD_4_ID,
-    TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID
+    TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID, TEST_BASIC_FORM_2_PAGE_3_FIELD_6_ID, TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID
   ], function (fieldID, cb) {
     engine.isFieldVisible(fieldID, true, function(err,visible) {
       assert.ok(!err, 'validation should not have returned error, for fieldID:' + fieldID + ' - err: ' + util.inspect(err));
@@ -417,7 +490,9 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithFieldsOnPage2Invisible = f
     { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_2_ID, expectedVisible: false},
     { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_3_ID, expectedVisible: false},
     { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_4_ID, expectedVisible: false},
-    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID, expectedVisible: false}
+    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_3_FIELD_6_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID, expectedVisible: true}
   ], function (field, cb) {
     engine.isFieldVisible(field.fieldID, true, function(err,visible) {
       assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
@@ -428,7 +503,39 @@ module.exports.testBasicForm1SpecificFieldsVisibleWithFieldsOnPage2Invisible = f
     assert.ok(!err);
     finish();
   });
-}; 
+};
+
+module.exports.testBasicForm1SpecificFieldsVisibleWithFieldsOnPage2AndPage3Invisible = function (finish) {
+  var TEST_BASIC_FORM_2_SUBMISSION_3 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_2_SUBMISSION_1));
+  TEST_BASIC_FORM_2_SUBMISSION_3.formFields[0].fieldValues[0] = "hide page 2 and 3";   //  This should trigger rule that causes all fields on page 2 to be hidden
+
+  var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
+  engine.initSubmission(TEST_BASIC_FORM_2_SUBMISSION_3);
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_1_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_2_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_3_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_4_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_2_FIELD_5_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_3_FIELD_6_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID, expectedVisible: false}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, true, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
+  });
+};
 
 
 module.exports.testBasicForm2CheckRulesHidingPage2 = function (finish) {
@@ -445,7 +552,8 @@ module.exports.testBasicForm2CheckRulesHidingPage2 = function (finish) {
         { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, expectedVisible: true}
       ],
       pagesToCheck: [
-        { pageID: TEST_BASIC_FORM_2_PAGE_2_ID, expectedVisible: false}
+        { pageID: TEST_BASIC_FORM_2_PAGE_2_ID, expectedVisible: false},
+        { pageID: TEST_BASIC_FORM_2_PAGE_3_ID, expectedVisible: true}
       ]
     }
   ];
@@ -459,7 +567,7 @@ module.exports.testBasicForm2CheckRulesHidingPage2 = function (finish) {
         assert.ok(results.actions.fields);
         assert.equal(Object.keys(results.actions.fields).length, 2, 'Should only be 2 fields listed, since only 2 targets specified in rules');
         assert.ok(results.actions.pages);
-        assert.equal(Object.keys(results.actions.pages).length, 1, 'Should be 1 pages listed, since 1 page targets specified in rules - actions: ' + util.inspect(results.actions));
+        assert.equal(Object.keys(results.actions.pages).length, 2, 'Should be 2 pages listed, since 2 page targets specified in rules - actions: ' + util.inspect(results.actions));
 
         async.series([
           function(cb) {
@@ -494,4 +602,72 @@ module.exports.testBasicForm2CheckRulesHidingPage2 = function (finish) {
       finish();
   });
 };
+
+//Testing hiding page 2 and page 3.
+module.exports.testBasicForm2CheckRulesHidingPage2AndPage3 = function (finish) {
+  var TEST_BASIC_FORM_2_SUBMISSION_2 = JSON.parse(JSON.stringify(TEST_BASIC_FORM_2_SUBMISSION_1));
+  TEST_BASIC_FORM_2_SUBMISSION_2.formFields[0].fieldValues[0] = "hide page 2 and 3";   //  This should trigger rule that causes all fields on page 2 to be hidden
+
+  var engine = formsRulesEngine(TEST_BASIC_FORM_2_DEFINITION);
+
+  var tests = [
+    {
+      submission: TEST_BASIC_FORM_2_SUBMISSION_2,
+      fieldsToCheck: [
+        { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_3_ID, expectedVisible: true},
+        { fieldID: TEST_BASIC_FORM_2_PAGE_1_FIELD_5_ID, expectedVisible: true}
+      ],
+      pagesToCheck: [
+        { pageID: TEST_BASIC_FORM_2_PAGE_2_ID, expectedVisible: false},
+        { pageID: TEST_BASIC_FORM_2_PAGE_3_ID, expectedVisible: false}
+      ]
+    }
+  ];
+
+  async.eachSeries(tests,   // these tests are using the same "engine" object, can't run in parallel
+    function (oneTest, cb) {
+      engine.checkRules(oneTest.submission, function (err, results) {
+        assert.ok(!err);
+        assert.ok(results);
+        assert.ok(results.actions);
+        assert.ok(results.actions.fields);
+        assert.equal(Object.keys(results.actions.fields).length, 2, 'Should only be 2 fields listed, since only 2 targets specified in rules');
+        assert.ok(results.actions.pages);
+        assert.equal(Object.keys(results.actions.pages).length, 2, 'Should be 2 pages listed, since 2 page targets specified in rules - actions: ' + util.inspect(results.actions));
+
+        async.series([
+          function(cb) {
+            async.each(oneTest.fieldsToCheck, function (fieldTest, cb) {
+              assert.ok(results.actions.fields[fieldTest.fieldID], 'expected field ' + fieldTest.fieldID + ' not listed in results: ' + util.inspect(results.actions.fields));
+              assert.equal(results.actions.fields[fieldTest.fieldID].targetId, fieldTest.fieldID);
+              assert.equal(results.actions.fields[fieldTest.fieldID].action, fieldTest.expectedVisible?"show":"hide", 'expected action ' + (fieldTest.expectedVisible?"show":"hide") + ', for field: ' + fieldTest.fieldID);
+              return cb();
+            }, function (err) {
+              assert.ok(!err);
+              return cb();
+            });
+          },
+          function(cb) {
+            async.each(oneTest.pagesToCheck, function (pageTest, cb) {
+              assert.ok(results.actions.pages[pageTest.pageID], 'expected page ' + pageTest.pageID + ' not listed in results: ' + util.inspect(results.actions.pages));
+              assert.equal(results.actions.pages[pageTest.pageID].targetId, pageTest.pageID);
+              assert.equal(results.actions.pages[pageTest.pageID].action, pageTest.expectedVisible?"show":"hide", 'expected action ' + (pageTest.expectedVisible?"show":"hide") + ', for page: ' + pageTest.pageID);
+              return cb();
+            }, function (err) {
+              assert.ok(!err);
+              return cb();
+            });
+          }
+        ], function (err) {
+          assert.ok(!err);
+          return cb();
+        });
+      });
+    }, function (err) {
+      assert.ok(!err);
+      finish();
+    });
+};
+
+
 

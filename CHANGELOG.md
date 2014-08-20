@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.7.00 - 2014-08-20 - IR234 - Niall Donnelly
+
+* 7821 Added functionality to deal with multiple rule targets for field and page rules.
+
 ##0.6.02 - 2014-08-13 - IR233 - Niall Donnelly
 
 * Updated theme editor css (Related to ticket 7414)

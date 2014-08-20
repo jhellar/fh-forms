@@ -362,6 +362,100 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
    ]
 };
 
+var TEST_BASIC_FORM_1_SUBMISSION_MULTIPLE_TARGETS = {
+  "appId":"appId123456",
+  "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
+  "appEnvironment":"devLive",
+  "deviceId":"device123456",
+  "deviceFormTimestamp":1384800150848,
+  "comments":[
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is a comment"
+    },
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is another comment"
+    }
+  ],
+  "formFields":[
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+      "fieldValues":[
+        "value for text field (1)"
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+      "fieldValues":[
+        "value for text field (2)56789012345678901234567890"
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+      "fieldValues":[
+        TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+      "fieldValues":[
+        "testing@example.com"
+      ]
+    }
+  ]
+};
+
+var TEST_BASIC_FORM_1_SUBMISSION_MULTIPLE_TARGETS_ALL_SHOWN = {
+  "appId":"appId123456",
+  "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
+  "appEnvironment":"devLive",
+  "deviceId":"device123456",
+  "deviceFormTimestamp":1384800150848,
+  "comments":[
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is a comment"
+    },
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is another comment"
+    }
+  ],
+  "formFields":[
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+      "fieldValues":[
+        "show 5 and 1"
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+      "fieldValues":[
+        "value for text field (2)56789012345678901234567890"
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+      "fieldValues":[
+        TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+      "fieldValues":[
+        "testing@example.com"
+      ]
+    }
+  ]
+};
+
 var TEST_BASIC_FORM_1_SUBMISSION_REQUIRED_FIELD_MISSING = {
    "appId":"appId123456",
    "appCloudName":"appCloudName123456",
@@ -492,6 +586,154 @@ var TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING = {
          ]
       }
    ]
+};
+
+/**
+ * Used to validate that a rule can "show" and "hide" multiple fields.
+ * @type {{updatedBy: string, name: string, lastUpdated: string, lastUpdatedTimestamp: number, dateCreated: string, description: string, _id: string, pageRules: Array, fieldRules: Array, pages: Array, pageRef: {TEST_BASIC_FORM_1_PAGE_1_ID: number}, fieldRef: {TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID: {page: number, field: number}, TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID: {page: number, field: number}, TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID: {page: number, field: number}, TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID: {page: number, field: number}, TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID: {page: number, field: number}}, appsUsing: number, submissionsToday: number, submissionsTotal: number}}
+ */
+var TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED = {
+  "updatedBy":"user@example.com",
+  "name":"TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED",
+  "lastUpdated":"2013-11-08T20:10:33.819Z",
+  "lastUpdatedTimestamp": 1384800150848,
+  "dateCreated":"2013-11-08T20:10:33.819Z",
+  "description":"This form is for testing rules.",
+  "_id":"527d4539639f521e0a000054",
+  "pageRules":[],
+  "fieldRules":[
+    {
+      "type": "hide",
+      "ruleConditionalOperator": "and",
+      "ruleConditionalStatements": [{
+        "sourceField": TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+        "restriction": "contains",
+        "sourceValue": "hide 3 and 4"
+      }],
+      "targetField": [TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID],
+      "_id":"527d4539639f521e0a059876"
+    },
+    {
+      "type": "show",
+      "ruleConditionalOperator": "and",
+      "ruleConditionalStatements": [{
+        "sourceField": TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+        "restriction": "contains",
+        "sourceValue": "show 5 and 1"
+      }],
+      "targetField": [TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID],
+      "_id":"527d4539639f521e0a001234"
+    }
+  ],
+  "pages":[
+    {
+      "name":TEST_BASIC_FORM_1_PAGE_1_NAME,
+      "description":"This is a test page for the win.",
+      "_id":TEST_BASIC_FORM_1_PAGE_1_ID,
+      "fields":[
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_NAME,
+          "helpText":"This is a text field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_TYPE,
+          "required":true,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":2
+            },
+            "validation":{
+              "min":20,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_NAME,
+          "helpText":"This is a text area field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_TYPE,
+          "required":false,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":3
+            },
+            "validation":{
+              "min":50,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_NAME,
+          "helpText":"This is a number field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_TYPE,
+          "required":false,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":2
+            },
+            "validation":{
+              "min":0,
+              "max": TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE
+            }
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_NAME,
+          "helpText":"This is a sectionBreak field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_TYPE, //"sectionBreak",
+          "required":false,
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_NAME,
+          "helpText":"This is a Email field",
+          "type":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_TYPE, //"emailAddress",
+          "required":true,
+          "fieldOptions":{
+          },
+          "_id":TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID,
+          "repeating":false
+        }
+      ]
+    }
+  ],
+  "pageRef":{
+    TEST_BASIC_FORM_1_PAGE_1_ID:0
+  },
+  "fieldRef": {
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID: {
+      "page":0,
+      "field":0
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID: {
+      "page":0,
+      "field":1
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID: {
+      "page":0,
+      "field":2
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID: {
+      "page":0,
+      "field":3
+    },
+    TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID: {
+      "page":0,
+      "field":4
+    }
+  },
+  "appsUsing":123,
+  "submissionsToday":1234,
+  "submissionsTotal":124125
 };
 
 module.exports.testBasicForm1AllFieldsVisible = function (finish) {
@@ -626,6 +868,59 @@ module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
   });
 };
 
+
+/**
+ * This test validates that a field rule targeting multiple fields actions upon multiple fields. Satisfying none of the rule conditions should mark fields 2 and 5 to be hidden.
+ * @param finish
+ */
+module.exports.testBasicForm1ValidateMultipleTargets = function (finish){
+  var engine = formsRulesEngine(TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED);
+  engine.initSubmission(TEST_BASIC_FORM_1_SUBMISSION_MULTIPLE_TARGETS);
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: false},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: false}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, true, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
+  });
+};
+
+
+/**
+ * This test validates that a field rule targeting multiple fields actions upon multiple fields. Satisfying the show condition should mark all fields as visible.
+ * @param finish
+ */
+module.exports.testBasicForm1ValidateMultipleTargets = function (finish){
+  var engine = formsRulesEngine(TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED);
+  engine.initSubmission(TEST_BASIC_FORM_1_SUBMISSION_MULTIPLE_TARGETS_ALL_SHOWN);
+
+  async.each([
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_2_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_3_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_4_ID, expectedVisible: true},
+    { fieldID: TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID, expectedVisible: true}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, true, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
+  });
+};
 
 
 // sample result from validateField
