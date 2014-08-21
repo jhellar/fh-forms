@@ -16,10 +16,11 @@ DIST_DIR  = ./dist
 OUTPUT_DIR  = ./output
 MODULES = ./node_modules
 COV_DIR = ./lib-cov
+PLATO_DIR = ./plato
 RELEASE_FILE = $(PACKAGE)-$(VERSION)-$(BUILD_NUMBER).tar.gz
 RELEASE_DIR = $(PACKAGE)-$(VERSION)-$(BUILD_NUMBER)
 
-all: clean npm_deps test
+all: clean npm_deps jshint test plato
 
 test: test_unit_cov test_accept_cov
 
@@ -68,6 +69,6 @@ dist: npm_deps client_rules_engine
 	cp  ./client/output/cssGenerator.js $(DIST_DIR)
 
 clean:
-	rm -rf $(DIST_DIR) $(OUTPUT_DIR) $(MODULES) $(COV_DIR)
+	rm -rf $(DIST_DIR) $(OUTPUT_DIR) $(MODULES) $(COV_DIR) $(PLATO_DIR)
 
 .PHONY: test dist clean npm_deps client_rules_engine
