@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.7.01 - 2014-08-20 - IR234 - Niall Donnelly
+
+* Fixed bug related to saving forms with multiple targets.
+
 ##0.7.00 - 2014-08-20 - IR234 - Niall Donnelly
 
 * 7821 Added functionality to deal with multiple rule targets for field and page rules.
