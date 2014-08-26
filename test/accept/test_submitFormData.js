@@ -1302,6 +1302,9 @@ function createTestData(assert, cb){
     var testData = require("./../Fixtures/formSubmissions.js");
 
     var textField = new Field(testData.textFieldData);
+    var adminTestFieldData = JSON.parse(JSON.stringify(testData.textFieldData));
+    adminTestFieldData.adminOnly = true;
+    var textAdminField = new Field(adminTestFieldData);
     var textAreaField = new Field(testData.textAreaFieldData);
     var numberField = new Field(testData.numberFieldData);
     var emailAddressField = new Field(testData.emailAddressFieldData);
@@ -1324,6 +1327,7 @@ function createTestData(assert, cb){
 
     var fields = [];
     fields.push(textField);
+    fields.push(textAdminField);
     fields.push(textAreaField);
     fields.push(numberField);
     fields.push(sectionBreakField);

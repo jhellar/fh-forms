@@ -47,10 +47,178 @@ var TEST_BASIC_FORM_1_PAGE_1_FIELD_9_ID_NUMBERTEST = "000000000000000000000010";
 var TEST_BASIC_FORM_1_PAGE_1_FIELD_9_MAX_VALUE_NUMBERTEST = 100;
 
 
+/**
+ * START ADMIN Form Testing deinition
+ * @type {string}
+ */
 
+var TEST_BASIC_ADMIN_FORM_1_NAME = "TEST_BASIC_ADMIN_FORM_1_NAME";
+
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_NAME = "TEST_BASIC_ADMIN_FORM_1_PAGE_1_NAME";
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_ID = "000000000000000000000112";
+
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_NAME = "TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_NAME";
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_TYPE = "text";
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID = "000000000000000000000113";
+
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_NAME = "TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_NAME";
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_TYPE = "number";
+var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID = "000000000000000000000114";
+
+
+var TEST_BASIC_ADMIN_FORM_1_DEFINITION = { // no page or field rules
+  "updatedBy":"user@example.com",
+  "name":"TEST_BASIC_ADMIN_FORM_1_NAME",
+  "lastUpdated":"2013-11-08T20:10:33.819Z",
+  "lastUpdatedTimestamp": 1384800150848,
+  "dateCreated":"2013-11-08T20:10:33.819Z",
+  "description":"This form is for testing admin fields in the rules engine.",
+  "_id":"527d4539639f521e0a000044",
+  "pageRules":[],
+  "fieldRules":[],
+  "pages":[
+    {
+      "name":TEST_BASIC_ADMIN_FORM_1_PAGE_1_NAME,
+      "description":"This is a test page for the win.",
+      "_id":TEST_BASIC_ADMIN_FORM_1_PAGE_1_ID,
+      "fields":[
+        {
+          "name":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_NAME,
+          "helpText":"This is a non-admin text field",
+          "type":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_TYPE,
+          "required":true,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":2
+            },
+            "validation":{
+              "min":0,
+              "max":100
+            }
+          },
+          "_id":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID,
+          "repeating":false
+        },
+        {
+          "name":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_NAME,
+          "helpText":"This is a number admin field",
+          "type":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_TYPE,
+          "required":true,
+          "fieldOptions":{
+            "definition":{
+              "maxRepeat":5,
+              "minRepeat":3
+            },
+            "validation":{
+              "min":0,
+              "max":41
+            }
+          },
+          "_id":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID,
+          "repeating":false,
+          "adminOnly": true
+        }
+      ]
+    }
+  ],
+  "pageRef":{
+    TEST_BASIC_ADMIN_FORM_1_PAGE_1_ID:0
+  },
+  "fieldRef": {
+    TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID: {
+      "page":0,
+      "field":0
+    },
+    TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID: {
+      "page":0,
+      "field":1
+    }
+  },
+  "appsUsing":123,
+  "submissionsToday":1234,
+  "submissionsTotal":124125
+};
+
+/**
+ * Submission to test that an admin field is not considered when validating a submission
+ * @type {{appId: string, appCloudName: string, timezoneOffset: number, appEnvironment: string, deviceId: string, deviceFormTimestamp: number, comments: Array, formFields: Array}}
+ */
+var TEST_BASIC_ADMIN_FORM_1_SUBMISSION_1 = {
+  "appId":"appId123456",
+  "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
+  "appEnvironment":"devLive",
+  "deviceId":"device123456",
+  "deviceFormTimestamp":1384800150848,
+  "comments":[
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is a comment"
+    },
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is another comment"
+    }
+  ],
+  "formFields":[
+    {
+      "fieldId":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID,
+      "fieldValues":[
+        "value for text field (1)"
+      ]
+    }
+  ]
+};
+
+/**
+ * Submission to test that an admin field is not considered when validating a submission.
+ * If an admin field is submitted to the rules engine, it should produce an error. Any submission to the rules engine containing admin fields is an error.
+ * @type {{appId: string, appCloudName: string, timezoneOffset: number, appEnvironment: string, deviceId: string, deviceFormTimestamp: number, comments: Array, formFields: Array}}
+ */
+var TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2 = {
+  "appId":"appId123456",
+  "appCloudName":"appCloudName123456",
+  "timezoneOffset" : 120,
+  "appEnvironment":"devLive",
+  "deviceId":"device123456",
+  "deviceFormTimestamp":1384800150848,
+  "comments":[
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is a comment"
+    },
+    {
+      "madeBy":"somePerson@example.com",
+      "madeOn":1384800150848,
+      "value":"This is another comment"
+    }
+  ],
+  "formFields":[
+    {
+      "fieldId":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID,
+      "fieldValues":[
+        "value for text field (1)"
+      ]
+    },
+    {
+      "fieldId":TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID,
+      "fieldValues":[
+        43
+      ]
+    }
+  ]
+};
+
+/**
+ * END ADMIN Form Testing deinition
+ */
 
 var TEST_BASIC_FORM_1_DEFINITION = {
- "updatedBy":"user@example.com",
+  "updatedBy":"user@example.com",
   "name":"TEST_BASIC_FORM_1_DEFINITION",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,
@@ -194,7 +362,7 @@ var TEST_BASIC_FORM_1_DEFINITION = {
 };
 
 var TEST_BASIC_FORM_2_DEFINITION = { // no page or field rules
- "updatedBy":"user@example.com",
+  "updatedBy":"user@example.com",
   "name":"TEST_BASIC_FORM_1_DEFINITION",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,
@@ -734,6 +902,36 @@ var TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED = {
   "appsUsing":123,
   "submissionsToday":1234,
   "submissionsTotal":124125
+};
+
+
+module.exports.testAdminFieldsNotConsidered = function(finish){
+  var engine = formsRulesEngine(TEST_BASIC_ADMIN_FORM_1_DEFINITION);
+  engine.initSubmission(TEST_BASIC_ADMIN_FORM_1_SUBMISSION_1);
+
+  async.each([
+    { fieldID: TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID, expectedVisible: true}
+  ], function (field, cb) {
+    engine.isFieldVisible(field.fieldID, true, function(err,visible) {
+      assert.ok(!err, 'validation should not have returned error, for fieldID:' + field.fieldID + ' - err: ' + util.inspect(err));
+      assert.ok(field.expectedVisible === visible, 'Field:' + field.fieldID + ' should ' + (field.expectedVisible?"":" NOT ") + 'be marked as visible');
+      return cb();
+    });
+  }, function (err) {
+    assert.ok(!err);
+    finish();
+  });
+};
+
+module.exports.testAdminFieldsNotConsideredAdminFieldSubmitted = function(finish){
+  var engine = formsRulesEngine(TEST_BASIC_ADMIN_FORM_1_DEFINITION);
+  engine.initSubmission(TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2);
+
+  engine.isFieldVisible(TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID, true, function(err,visible) {
+    assert.ok(err, 'validation should  have returned error, for fieldID:' + TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID + ' - err: null');
+    assert.ok(err.message.indexOf('Admin fields cannot be passed to the rules engine') > -1);
+    finish();
+  });
 };
 
 module.exports.testBasicForm1AllFieldsVisible = function (finish) {
@@ -2235,3 +2433,9 @@ module.exports.testBasicFormCheckRulesFieldSetToShowInRule = function (finish) {
       finish();
   });
 };
+
+
+/**
+ * This is a test of the admin fields in the rules engine.
+ * The rules engine should not consider the admin fields when validating a submission
+ */
