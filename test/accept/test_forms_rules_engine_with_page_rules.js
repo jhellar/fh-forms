@@ -745,8 +745,8 @@ module.exports.testAdminFormSubmissionContainingAdminField = function(finish){
 
   engine.checkRules(TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2, function (err, results) {
     assert.ok(err, "Expected an error when checking rules on an admin field");
-    assert.ok(err.message.indexOf("Admin fields cannot be passed to the rules engine") > -1, "Expected field error to be admin field error but was " + err.message);
-    assert.ok(err.message.indexOf(TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID > -1), "Expected the error field to be " + TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID + " ", util.inspect(err));
+    assert.ok(err.indexOf("Admin fields cannot be passed to the rules engine") > -1, "Expected field error to be admin field error but was " + err.message);
+    assert.ok(err.indexOf(TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID > -1), "Expected the error field to be " + TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID + " ", util.inspect(err));
     finish();
   });
 };

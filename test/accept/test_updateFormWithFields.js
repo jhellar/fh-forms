@@ -740,8 +740,7 @@ module.exports.testUpdateFormWithAdminField = function(finish){
       fieldRuleModel.findOne({"_id": fieldRuleId}, function(err, foundFieldRules){
         assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
 
-        var resArray = foundFieldRules ? foundFieldRules.toArray() : [];
-        assert.ok(resArray.length === 0, "Expected an empty array but got: " + util.inspect(resArray));
+        assert.ok(foundFieldRules === null, "Expected an empty result but got: " + util.inspect(foundFieldRules));
         cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
       });
     },

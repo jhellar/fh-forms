@@ -927,7 +927,7 @@ module.exports.testAdminFieldsNotConsideredAdminFieldSubmitted = function(finish
   var engine = formsRulesEngine(TEST_BASIC_ADMIN_FORM_1_DEFINITION);
   engine.initSubmission(TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2);
 
-  engine.isFieldVisible(TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID, true, function(err,visible) {
+  engine.isFieldVisible(TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID, true, function(err,visible) {
     assert.ok(err, 'validation should  have returned error, for fieldID:' + TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_1_ID + ' - err: null');
     assert.ok(err.message.indexOf('Admin fields cannot be passed to the rules engine') > -1);
     finish();

@@ -1304,6 +1304,7 @@ function createTestData(assert, cb){
     var textField = new Field(testData.textFieldData);
     var adminTestFieldData = JSON.parse(JSON.stringify(testData.textFieldData));
     adminTestFieldData.adminOnly = true;
+    adminTestFieldData.name = "textAdminField";
     var textAdminField = new Field(adminTestFieldData);
     var textAreaField = new Field(testData.textAreaFieldData);
     var numberField = new Field(testData.numberFieldData);

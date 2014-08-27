@@ -1,6 +1,10 @@
 #fh-forms
 
-##0.7.01 - 2014-08-20 - IR234 - Niall Donnelly
+##0.8.00 - 2014-08-27 - IR235 - Niall Donnelly
+
+* 7822 Added adminOnly field to form fields.
+
+##0.7.01 - 2014-08-20 - IR235 - Niall Donnelly
 
 * Fixed bug related to saving forms with multiple targets.
 
