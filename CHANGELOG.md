@@ -4,7 +4,7 @@
 
 * 7822 Added adminOnly field to form fields.
 
-##0.7.01 - 2014-08-20 - IR235 - Niall Donnelly
+##0.7.01 - 2014-08-20 - IR234 - Niall Donnelly
 
 * Fixed bug related to saving forms with multiple targets.
 
