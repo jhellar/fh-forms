@@ -39,6 +39,10 @@ module.exports.testGetFormWorksSinglePage = function(finish){
       assert.ok(result);
       assert.ok(result.lastUpdatedTimestamp);
       assert.ok(Date.parse(result.lastUpdatedTimestamp).toString().indexOf("Invalid") === -1);
+
+      //Checking that admin fields are not returned
+      assert.ok(result.pages[0].fields.length === 2);
+
       finish();
     });
   });
@@ -157,6 +161,22 @@ function createTestData(assert, cb){
     "required":false
   });
 
+  var field3 = new Field({
+    "name":"field3Admin",
+    "helpText":"field3 Admin Text",
+    "type":"textarea",
+    "repeating":true,
+    "fieldOptions": {
+      "definition" : {
+        "maxRepeat":6,
+        "minRepeat":1
+      },
+      "validation" : {}
+    },
+    "required":false,
+    "adminOnly": true
+  });
+
   var page1 = new Page({"name" : "page1", "description" : "Page1 Description"});
   var page2 = new Page({"name" : "page2", "description" : "Page2 Description"});
 
@@ -184,6 +204,12 @@ function createTestData(assert, cb){
 
         cb(err);
       });
+    },function(cb){
+      field3.save(function(err){
+        assert.ok(!err);
+
+        cb(err);
+      });
     }], function(err){
       assert.ok(!err);
       console.log("Fields Saved");
@@ -196,6 +222,7 @@ function createTestData(assert, cb){
     //Add fields to the page
     page1.fields.push(field1);
     page1.fields.push(field2);
+    page1.fields.push(field3);
 
     page2.fields.push(field1);
     page2.fields.push(field2);

@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.8.01 - 2014-08-27 - IR235 - Niall Donnelly
+
+* 7822 Stopped returning admin fields to clients.
+
 ##0.8.00 - 2014-08-27 - IR235 - Niall Donnelly
 
 * 7822 Added adminOnly field to form fields.
