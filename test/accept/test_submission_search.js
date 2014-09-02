@@ -30,8 +30,8 @@ var submissionId;
 var subids = [];
 var testFilePath = "./test/Fixtures/test.pdf";
 savedFields = [];
-var lessDateValue = moment().startOf('day').fromNow();
-var greaterValue =  moment().endOf('day').fromNow();
+var lessDateValue = moment().startOf('day');
+var greaterValue =  moment().endOf('day');
 var dateValue = moment().format('YYYY-MM-DD hh:mm');
 
 var testSubmitFormBaseInfo = {

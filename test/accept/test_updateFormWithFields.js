@@ -436,8 +436,7 @@ module.exports.testUpdateFormDeleteField = function (finish) {
       fieldRuleModel.findOne({"_id": fieldRule2Id}, function(err, foundFieldRules){
         assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
 
-        var resArray = foundFieldRules ? foundFieldRules.toArray() : [];
-        assert.ok(resArray.length === 0, "Expected an empty array but got: " + util.inspect(resArray));
+        assert.ok(foundFieldRules === null, "Expected not to find but got: " + util.inspect(foundFieldRules));
         cb(undefined, fieldRemoved, fieldRuleId, fieldRule2Id, pageRuleId);
       });
     },
@@ -504,10 +503,10 @@ module.exports.testUpdateFormDeleteField = function (finish) {
 };
 
 /**
- * Testing that when update form is used, rules are not deleted
- *
- * @param finish
- */
+* Testing that when update form is used, rules are not deleted
+*
+* @param finish
+*/
 module.exports.updateFormWithMulitpleRuleTargets = function(finish){
   async.waterfall([
     function (cb) {
@@ -636,8 +635,8 @@ module.exports.updateFormWithMulitpleRuleTargets = function(finish){
 };
 
 /**
- * When setting any field to admin, if the rule is the target/subject of the rule, then the rule must be removed
- */
+* When setting any field to admin, if the rule is the target/subject of the rule, then the rule must be removed
+*/
 module.exports.testUpdateFormWithAdminField = function(finish){
   async.waterfall([
     function (cb) {
@@ -806,3 +805,592 @@ module.exports.testUpdateFormWithAdminField = function(finish){
   });
 };
 
+/**
+* When a field has been deleted and the rule has multiple targets, the target should be removed only.
+*/
+module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    function (cb) {
+      //Form deleted, Now add a new form
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+      });
+    },
+    function (populatedFormDoc, cb) {
+      //Adding a field rule with multiple targets
+      var pageRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetPage: [populatedFormDoc.pages[1]._id]
+      };
+
+      var fieldRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetField: [populatedFormDoc.pages[1].fields[1]._id, populatedFormDoc.pages[1].fields[0]._id]
+      };
+
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+
+        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
+          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+
+          // read our doc from the database again
+          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+            assert.ok(!err, 'should have found form');
+            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+              assert.ok(!err, 'should have populated form');
+              return cb(err, data.toJSON());
+            });
+          });
+        });
+      });
+    },
+    function (updatedFormDefinition, cb) {
+      assert.ok(updatedFormDefinition, "Updated form definition not found. ");
+      var fieldRuleId = updatedFormDefinition.fieldRules[0]._id;
+      var pageRuleId = updatedFormDefinition.pageRules[0]._id;
+
+      //Deleting field 0 page 1
+      var fieldDeleted = updatedFormDefinition.pages[1].fields.splice(0,1);
+
+      //Update the form
+      forms.updateForm(options, updatedFormDefinition, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb(undefined, fieldDeleted, fieldRuleId, pageRuleId);
+      });
+    },
+    function (fieldRemoved, fieldRuleId, pageRuleId, cb) {
+      /**
+       * Switching p0f0 to admin should have updated the field rule associated with it
+       */
+      fieldRuleModel.findOne({"_id": fieldRuleId}, function(err, foundFieldRule){
+        assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
+        assert.ok(foundFieldRule, "Expected a field rule to be returned");
+        assert.ok(foundFieldRule.targetField.length === 1, "Expected a single target in the field. One of the fields should have been deleted." + util.inspect(foundFieldRule.targetField));
+        assert.ok(foundFieldRule.targetField[0].toString() !==  fieldRemoved[0]._id.toString(), "Expected the deleted field not to be in the target field list, but it was.");
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Expected no error from test series: " + util.inspect(err));
+    finish();
+  });
+};
+
+/**
+* When a field has been switched to admin with multiple rule targets, the target should be removed only.
+*/
+module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    function (cb) {
+      //Form deleted, Now add a new form
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+      });
+    },
+    function (populatedFormDoc, cb) {
+      //Adding a field rule with multiple targets
+      var pageRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetPage: [populatedFormDoc.pages[1]._id]
+      };
+
+      var fieldRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetField: [populatedFormDoc.pages[1].fields[0]._id, populatedFormDoc.pages[1].fields[1]._id]
+      };
+
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+
+        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
+          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+
+          // read our doc from the database again
+          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+            assert.ok(!err, 'should have found form');
+            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+              assert.ok(!err, 'should have populated form');
+              return cb(err, data.toJSON());
+            });
+          });
+        });
+      });
+    },
+    function (updatedFormDefinition, cb) {
+      assert.ok(updatedFormDefinition, "Updated form definition not found. ");
+      var fieldRuleId = updatedFormDefinition.fieldRules[0]._id;
+      var pageRuleId = updatedFormDefinition.pageRules[0]._id;
+
+      //Updating field 0 page 1 to be an admin field
+      var fieldUpdated = updatedFormDefinition.pages[1].fields[0];
+      updatedFormDefinition.pages[1].fields[0].adminOnly = true;
+
+      //Update the form
+      forms.updateForm(options, updatedFormDefinition, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb(undefined, fieldUpdated, fieldRuleId, pageRuleId);
+      });
+    },
+    function (fieldRemoved, fieldRuleId, pageRuleId, cb) {
+      /**
+       * Switching p0f0 to admin should have updated the field rule associated with it
+       */
+      fieldRuleModel.findOne({"_id": fieldRuleId}, function(err, foundFieldRule){
+        assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
+        assert.ok(foundFieldRule, "Expected a field rule to be returned");
+        assert.ok(foundFieldRule.targetField.length === 1, "Expected a single target in the field. One of the fields should have been deleted.");
+        assert.ok(foundFieldRule.targetField[0].toString() !==  fieldRemoved._id.toString(), "Expected the update field not to be in the target field list, but it was.");
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Expected no error from test series: " + util.inspect(err));
+    finish();
+  });
+};
+
+/**
+* When a field has been deleted and condition contains the deleted field - single condition + no flag for deletion from user  - it should delete the field
+*/
+module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    function (cb) {
+      //Form deleted, Now add a new form
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+      });
+    },
+    function (populatedFormDoc, cb) {
+      //Adding a field rule with multiple targets
+      var pageRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetPage: [populatedFormDoc.pages[1]._id]
+      };
+
+      var fieldRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetField: [populatedFormDoc.pages[1].fields[0]._id]
+      };
+
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+
+        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
+          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+
+          // read our doc from the database again
+          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+            assert.ok(!err, 'should have found form');
+            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+              assert.ok(!err, 'should have populated form');
+              return cb(err, data.toJSON());
+            });
+          });
+        });
+      });
+    },
+    function (updatedFormDefinition, cb) {
+      assert.ok(updatedFormDefinition, "Updated form definition not found. ");
+      var fieldRuleId = updatedFormDefinition.fieldRules[0]._id;
+      var pageRuleId = updatedFormDefinition.pageRules[0]._id;
+
+      //Updating field 0 page 1 to be an admin field
+      var fieldUpdated = updatedFormDefinition.pages[0].fields[0]._id;
+      updatedFormDefinition.pages[0].fields[0].adminOnly = true;
+
+      //Update the form
+      forms.updateForm(options, updatedFormDefinition, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb(undefined, fieldUpdated, fieldRuleId, pageRuleId);
+      });
+    },
+    function (fieldRemoved, fieldRuleId, pageRuleId, cb) {
+      /**
+       * Switching p0f0 to admin should have deleted the field rule associated with it
+       */
+      pageRuleModel.findOne({"_id": pageRuleId}, function(err, foundPageRule){
+        assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
+
+        assert.ok(foundPageRule === null, "Expected no page rule to be returned. It should have been deleted");
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Expected no error from test series: " + util.inspect(err));
+    finish();
+  });
+};
+
+
+/**
+* When a field has been switched to admin, - multiple conditions + no flag for deletion from user  - it should update the field conditions.
+*/
+module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    function (cb) {
+      //Form deleted, Now add a new form
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+      });
+    },
+    function (populatedFormDoc, cb) {
+      //Adding a field rule with multiple targets
+      var pageRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          },
+          {
+            sourceField: populatedFormDoc.pages[1].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetPage: [populatedFormDoc.pages[1]._id]
+      };
+
+      var fieldRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetField: [populatedFormDoc.pages[1].fields[1]._id]
+      };
+
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+
+        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
+          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+
+          // read our doc from the database again
+          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+            assert.ok(!err, 'should have found form');
+            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+              assert.ok(!err, 'should have populated form');
+              return cb(err, data.toJSON());
+            });
+          });
+        });
+      });
+    },
+    function (updatedFormDefinition, cb) {
+      assert.ok(updatedFormDefinition, "Updated form definition not found. ");
+      var fieldRuleId = updatedFormDefinition.fieldRules[0]._id;
+      var pageRuleId = updatedFormDefinition.pageRules[0]._id;
+
+      //Updating field 0 page 1 to be an admin field
+      var fieldRemoved = updatedFormDefinition.pages[1].fields[0];
+      updatedFormDefinition.pages[1].fields[0].adminOnly = true;
+
+      //Update the form
+      forms.updateForm(options, updatedFormDefinition, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    },
+    function (fieldRemoved, fieldRuleId, pageRuleId, cb) {
+      /**
+       * Deleting p1f0 without a flag should have updated the field rule associated with it only.
+       */
+      pageRuleModel.findOne({"_id": pageRuleId}, function(err, foundPageRule){
+        assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
+
+        assert.ok(foundPageRule, "Expected a page rule to be returned");
+        assert.ok(foundPageRule.ruleConditionalStatements.length === 1, "Expected only one conditional statement for the field rule but got " + foundPageRule.ruleConditionalStatements.length);
+        assert.ok(foundPageRule.ruleConditionalStatements[0].sourceField.toString() !== fieldRemoved._id.toString(), "Expected the updated field to not be in the rule conditional statement source field but it was.");
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Expected no error from test series: " + util.inspect(err));
+    finish();
+  });
+};
+
+/**
+* When a field has been deleted - multiple conditions + flag for deletion from user - it should delete the field
+*/
+module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    function (cb) {
+      //Form deleted, Now add a new form
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+      });
+    },
+    function (populatedFormDoc, cb) {
+      //Adding a field rule with multiple targets
+      var pageRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetPage: [populatedFormDoc.pages[1]._id]
+      };
+
+      var fieldRule = {
+        type: "show",
+        ruleConditionalOperator: "and",
+        ruleConditionalStatements: [
+          {
+            sourceField: populatedFormDoc.pages[0].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          },
+          {
+            sourceField: populatedFormDoc.pages[1].fields[0]._id,
+            restriction: 'does not contain',
+            sourceValue: 'dammit'
+          }
+        ],
+        targetField: [populatedFormDoc.pages[1].fields[1]._id]
+      };
+
+      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+        assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
+
+        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
+          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
+
+          // read our doc from the database again
+          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+            assert.ok(!err, 'should have found form');
+            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+              assert.ok(!err, 'should have populated form');
+              return cb(err, data.toJSON());
+            });
+          });
+        });
+      });
+    },
+    function (updatedFormDefinition, cb) {
+      assert.ok(updatedFormDefinition, "Updated form definition not found. ");
+      var fieldRuleId = updatedFormDefinition.fieldRules[0]._id;
+      var pageRuleId = updatedFormDefinition.pageRules[0]._id;
+
+      //Updating field 0 page 1 to be an admin field
+      var fieldRemoved = updatedFormDefinition.pages[1].fields.splice(0,1);
+      var fieldRemovedId = fieldRemoved[0]["_id"].toString();
+
+      //Flagging the rule to be deleted for the field removed
+      updatedFormDefinition.ruleDeletionFlags = {};
+      updatedFormDefinition.ruleDeletionFlags[fieldRemovedId] = true;
+
+      //Update the form
+      forms.updateForm(options, updatedFormDefinition, function (err, doc) {
+        assert.ok(!err, 'testUpdateFormDeleteField testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    },
+    function (fieldRemoved, fieldRuleId, pageRuleId, cb) {
+      /**
+       * Deleting p1f0 with a flag should have deleted the field rule associated with it
+       */
+      fieldRuleModel.findOne({"_id": fieldRuleId}, function(err, foundFieldRule){
+        assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
+
+        console.log("foundFieldRule ", foundFieldRule);
+
+        assert.ok(foundFieldRule === null, "Expected no field rule to be returned");
+        cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Expected no error from test series: " + util.inspect(err));
+    finish();
+  });
+};
