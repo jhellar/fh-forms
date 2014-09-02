@@ -30,8 +30,8 @@ var submissionId;
 var subids = [];
 var testFilePath = "./test/Fixtures/test.pdf";
 savedFields = [];
-var lessDateValue = moment().startOf('day');
-var greaterValue =  moment().endOf('day');
+var lessDateValue = moment().subtract(10, 'days').format('YYYY-MM-DD hh:mm');
+var greaterValue =  moment().add(10, 'days').format('YYYY-MM-DD hh:mm');
 var dateValue = moment().format('YYYY-MM-DD hh:mm');
 
 var testSubmitFormBaseInfo = {
@@ -292,9 +292,10 @@ module.exports.testSubmissionSearchDate = function (finish){
     },
     function testIsBefore (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is before","value":greaterValue}]}}, function (err, ok){
+        console.log("LEss date value ", greaterValue,  dateValue);
         console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
-        assert.ok(ok.submissions.length === 2, "should have found no submissions");
+        assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalDateField, dateValue);
         callback();
       });
