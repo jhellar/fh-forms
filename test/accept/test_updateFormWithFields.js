@@ -502,6 +502,217 @@ module.exports.testUpdateFormDeleteField = function (finish) {
   });
 };
 
+
+/**
+ * Updating a field code "fieldCode" should save the code to the database.
+ * @param finish
+ */
+module.exports.testUpdateFieldCode = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
+    function (cb) {
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+
+      });
+    },
+    function (populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+
+      //Updating the field code of field 0 page 0
+      var field = populatedFormDoc.pages[0].fields[0];
+
+      field.fieldCode = "fieldCode1";
+
+      //Updating form
+
+      populatedFormDoc.pages[0].fields[0] = field;
+
+      forms.updateForm(options, populatedFormDoc, function(err, updatedDoc){
+        assert.ok(!err, "received error: " + util.inspect(err));
+
+        assert.ok(updatedDoc);
+
+        var field = updatedDoc.pages[0].fields[0];
+
+        //Checking that the field code was applied.
+        assert.ok(field.fieldCode === "fieldCode1");
+
+        cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "received error: " + util.inspect(err));
+    finish();
+  });
+};
+
+/**
+ * Updating a field code "fieldCode" with an empty string should not save the code as an empty string
+ * @param finish
+ */
+module.exports.testUpdateFieldCodeZeroLength = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
+    function (cb) {
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+
+      });
+    },
+    function (populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+
+      //Updating the field code of field 0 page 0
+      var field = populatedFormDoc.pages[0].fields[0];
+
+      //Updating with an empty string.
+      field.fieldCode = "";
+
+      //Updating form
+
+      populatedFormDoc.pages[0].fields[0] = field;
+
+      forms.updateForm(options, populatedFormDoc, function(err, updatedDoc){
+        assert.ok(!err, "received error: " + util.inspect(err));
+
+        assert.ok(updatedDoc);
+
+        var field = updatedDoc.pages[0].fields[0];
+
+        //Checking that the field code was not applied
+        assert.ok(field.fieldCode === undefined);
+
+        cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "received error: " + util.inspect(err));
+    finish();
+  });
+}
+
+/**
+ * Updating a field code "fieldCode" with a duplicate code should return an error
+ * @param finish
+ */
+module.exports.testUpdateFieldCodeDuplicate = function(finish){
+  async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      formModel.remove({}, function (err) {
+        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
+        fieldRuleModel.remove({}, function(err){
+          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
+          pageRuleModel.remove({}, function(err){
+            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
+            cb();
+          });
+        });
+      });
+    },
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
+    function (cb) {
+      forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
+        assert.ok(!err, 'testUpdateForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function (cb) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+        assert.ok(!err, 'should have found form');
+        assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
+        assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        //Now populate the fields in each page
+        formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
+          assert.ok(!err, "Error getting fields for form");
+          return cb(undefined, updatedForm.toJSON());
+        });
+
+      });
+    },
+    function (populatedFormDoc, cb) {
+      assert.ok(populatedFormDoc, 'should have data');
+
+      //Updating the field code of field 0 page 0
+      var field1 = populatedFormDoc.pages[0].fields[0];
+      //Updating the field code of field 0 page 1 to the same code
+      var field2 = populatedFormDoc.pages[1].fields[0];
+
+      //Updating with an empty string.
+      field1.fieldCode = "fieldCodeDuplicate";
+      field2.fieldCode = "fieldCodeDuplicate";
+
+      //Updating form
+
+      populatedFormDoc.pages[0].fields[0] = field1;
+      populatedFormDoc.pages[1].fields[0] = field2;
+
+      forms.updateForm(options, populatedFormDoc, function(err, updatedDoc){
+        assert.ok(err, "Expected an error when updating the form but got nothing.");
+        //Checking for a duplicate error message
+        assert.ok(err.message.indexOf("Duplicate") > -1);
+        cb();
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "received error: " + util.inspect(err));
+    finish();
+  });
+}
+
 /**
 * Testing that when update form is used, rules are not deleted
 *
