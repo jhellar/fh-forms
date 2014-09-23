@@ -6,6 +6,7 @@ var async = require('async');
 var lodash = require('lodash');
 var assert = require('assert');
 var util = require('util');
+var connection;
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: 'foo@example.com'};
 
@@ -13,13 +14,18 @@ var testThemeData = require('../Fixtures/theme.json');
 
 
 module.exports.setUp = function(finish){
+  connection = mongoose.createConnection(options.uri);
+  models.init(connection);
+  themeModel = models.get(connection, models.MODELNAMES.THEME);
   finish();
 }
 
 module.exports.tearDown = function(finish){
-  forms.tearDownConnection(options, function(err) {
-    assert.ok(!err);
-    finish();
+  connection.close(function(err) {
+    forms.tearDownConnection(options, function(err) {
+      assert.ok(!err);
+      finish();
+    });
   });
 };
 
@@ -34,46 +40,128 @@ module.exports.testCreateTheme = function(finish){
   });
 };
 
-module.exports.testListTheme = function(finish) {
-  forms.updateTheme(options, testThemeData, function(err, result){
-    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-    assert.ok(result);
+/**
+ * Clearing out any themes that may have been created.
+ * @param cb
+ */
+function clearThemes(cb){
+  themeModel.remove({}, cb);
+}
 
-    checkTheme(assert, testThemeData, result);
+/**
+ * Test create theme with the same name.
+ * @param finish
+ */
+module.exports.testCreateThemeDuplicateName = function(finish){
+  clearThemes(function(err){
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
-    forms.getThemes(options, function(err, themes) {
+    forms.updateTheme(options, testThemeData, function(err, result){
       assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-      assert.notEqual(themes.length, 0, "Expected some themes to exist");
-      finish();
+      assert.ok(result);
+
+      checkTheme(assert, testThemeData, result);
+
+      forms.getThemes(options, function(err, result) {
+        assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+        assert.equal(result.themes.length, 1, "Expected one theme to exist " + util.inspect(result));
+
+        //Trying to create another theme with a duplicate name
+        forms.updateTheme(options, testThemeData, function(err, result){
+          assert.ok(err, 'should have gotten an error but got nothing');
+          assert.ok(err.message.toLowerCase().indexOf("duplicate") > -1, "Expected a duplicate error message but got " + err.message);
+          finish();
+        });
+      });
+    });
+  });
+};
+
+/**
+ * Test create theme with the same name but updating the same theme.
+ * @param finish
+ */
+module.exports.testCreateThemeDuplicateNameSameTheme = function(finish){
+  clearThemes(function(err){
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
+
+    forms.updateTheme(options, testThemeData, function(err, result){
+      assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+      assert.ok(result);
+
+      checkTheme(assert, testThemeData, result);
+
+      forms.getThemes(options, function(err, result) {
+        assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+        assert.equal(result.themes.length, 1, "Expected one theme to exist " + util.inspect(result));
+
+        var themeUpdate = JSON.parse(JSON.stringify(testThemeData));
+        assert.ok(result.themes[0]._id, "Expected a theme _id " + util.inspect(result));
+
+        //Assigning the same _id so it is updating the theme and not creating a new one.
+        themeUpdate._id = result.themes[0]._id;
+
+        //Trying to create another theme with a duplicate name
+        forms.updateTheme(options, themeUpdate, function(err, result){
+          assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+          finish();
+        });
+      });
+    });
+  });
+};
+
+module.exports.testListTheme = function(finish) {
+  clearThemes(function(err){
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
+    forms.updateTheme(options, testThemeData, function(err, result){
+      assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+      assert.ok(result);
+
+      checkTheme(assert, testThemeData, result);
+
+      forms.getThemes(options, function(err, themes) {
+        assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+        assert.notEqual(themes.length, 0, "Expected some themes to exist");
+        finish();
+      });
     });
   });
 };
 
 module.exports.testDeleteTheme = function(finish) {
-  forms.updateTheme(options, testThemeData, function(err, result){
-    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-    assert.ok(result);
+  clearThemes(function(err){
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
-    checkTheme(assert, testThemeData, result);
-
-    forms.deleteTheme({uri: options.uri, userEmail: options.userEmail, _id: result._id}, function(err, theme) {
+    forms.updateTheme(options, testThemeData, function(err, result){
       assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-      finish();
+      assert.ok(result);
+
+      checkTheme(assert, testThemeData, result);
+
+      forms.deleteTheme({uri: options.uri, userEmail: options.userEmail, _id: result._id}, function(err, theme) {
+        assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+        finish();
+      });
     });
   });
 };
 
 module.exports.testGetTheme = function(finish) {
-  forms.updateTheme(options, testThemeData, function(err, result){
-    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-    assert.ok(result);
+  clearThemes(function(err){
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
-    checkTheme(assert, testThemeData, result);
-
-    forms.getTheme({uri: options.uri, userEmail: options.userEmail, _id: result._id}, function(err, theme) {
+    forms.updateTheme(options, testThemeData, function(err, result){
       assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-      assert.ok(theme, 'Expected theme to be returned');
-      finish();
+      assert.ok(result);
+
+      checkTheme(assert, testThemeData, result);
+
+      forms.getTheme({uri: options.uri, userEmail: options.userEmail, _id: result._id}, function(err, theme) {
+        assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+        assert.ok(theme, 'Expected theme to be returned');
+        finish();
+      });
     });
   });
 };
@@ -81,29 +169,34 @@ module.exports.testGetTheme = function(finish) {
 module.exports.testUpdateTheme = function(finish){
   var themeToUpdate = JSON.parse(JSON.stringify(testThemeData));  // clone it
   themeToUpdate.name = 'ThemeToUpdate';
-  forms.updateTheme(options, themeToUpdate, function(err, result){
-    assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-    assert.ok(result);
 
-    // verify theme created
-    assert.ok(result._id, 'created theme should have id');
-    var createdThemeId = result._id;
-    assert.strictEqual(result.name, 'ThemeToUpdate');
-    checkTheme(assert, themeToUpdate, result);
+  clearThemes(function(err){
+    assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
-    themeToUpdate.name = 'Updated Name';
-    themeToUpdate._id = createdThemeId;
     forms.updateTheme(options, themeToUpdate, function(err, result){
       assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
       assert.ok(result);
 
       // verify theme created
-      assert.ok(result._id, 'updated theme should have id');
-      assert.equal(JSON.stringify(result._id), JSON.stringify(createdThemeId), 'Id should be them same as the theme created - expected: ' + createdThemeId + ", actual: " + result._id);
-      assert.strictEqual(result.name, 'Updated Name');
+      assert.ok(result._id, 'created theme should have id');
+      var createdThemeId = result._id;
+      assert.strictEqual(result.name, 'ThemeToUpdate');
       checkTheme(assert, themeToUpdate, result);
 
-      finish();
+      themeToUpdate.name = 'Updated Name';
+      themeToUpdate._id = createdThemeId;
+      forms.updateTheme(options, themeToUpdate, function(err, result){
+        assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
+        assert.ok(result);
+
+        // verify theme created
+        assert.ok(result._id, 'updated theme should have id');
+        assert.equal(JSON.stringify(result._id), JSON.stringify(createdThemeId), 'Id should be them same as the theme created - expected: ' + createdThemeId + ", actual: " + result._id);
+        assert.strictEqual(result.name, 'Updated Name');
+        checkTheme(assert, themeToUpdate, result);
+
+        finish();
+      });
     });
   });
 };
