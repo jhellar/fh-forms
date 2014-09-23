@@ -3,6 +3,8 @@
 ##0.9.0 - 2014-09-22 - IR237 - Niall Donnelly
 
 * 7986 Added field codes to form fields.
+* 6582 Duplicate Form Name Verification.
+* 6587 Duplicate Theme Name Verification.
 
 ##0.8.3 - 2014-09-10 - IR236 - Craig Brookes
 
