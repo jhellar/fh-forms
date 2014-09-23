@@ -69,7 +69,7 @@ module.exports.testCreateThemeDuplicateName = function(finish){
         //Trying to create another theme with a duplicate name
         forms.updateTheme(options, testThemeData, function(err, result){
           assert.ok(err, 'should have gotten an error but got nothing');
-          assert.ok(err.message.toLowerCase().indexOf("duplicate") > -1, "Expected a duplicate error message but got " + err.message);
+          assert.ok(err.message.toLowerCase().indexOf("already exists") > -1, "Expected a duplicate error message but got " + err.message);
           finish();
         });
       });
