@@ -63,6 +63,7 @@ var TEST_BASIC_FORM_2_PAGE_3_FIELD_7_ID = "000000000000000000020011";
 
 var TEST_BASIC_FORM_2_DEFINITION = {
   "updatedBy":"user@example.com",
+  "createdBy": "user@example.com",
   "name":"TEST_BASIC_FORM_2_DEFINITION",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,

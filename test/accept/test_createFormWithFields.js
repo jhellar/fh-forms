@@ -26,6 +26,7 @@ var TEST_PAGE_DESCRIPTION2 = 'this is page 2';
 var TEST_PAGE_NAMES = [TEST_PAGE_NAME1, TEST_PAGE_NAME2];
 var TEST_FORM_2_PAGES_WITH_FIELDS = {
     "name": "Simple Form with 2 pages with 2 fields each",
+    "createdBy":"test@example.com",
     "description": "This is my form.",
     "lastUpdated": "2013-10-16 06:13:52",
     "pages": [{

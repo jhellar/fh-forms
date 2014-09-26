@@ -528,7 +528,7 @@ function createTestData(assert, cb){
   var Field = models.get(connection, models.MODELNAMES.FIELD);
   var Page = models.get(connection, models.MODELNAMES.PAGE);
 
-  var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : TEST_FORM_NAME, "description": "This form is for testing fields."});
+  var requiredForm = new Form({"updatedBy" : "user@example.com", "createdBy":"test@example.com", "name" : TEST_FORM_NAME, "description": "This form is for testing fields."});
   var testRequiredPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
   var testData = require("./../Fixtures/formSubmissions.js");

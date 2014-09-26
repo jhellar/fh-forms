@@ -6,6 +6,7 @@ var formsRulesEngine = require('../../lib/common/forms-rule-engine.js');
 
 var TEST_FORMDEF_1 = {
       "updatedBy": "user@example.com",
+      "createdBy": "user@example.com",
       "name": "testFieldsForm",
       "description": "This form is for testing fields.",
       "lastUpdatedTimestamp": 1385647845865,

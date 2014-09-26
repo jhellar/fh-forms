@@ -148,7 +148,7 @@ function createTestData(assert, cb){
   var Field = models.get(connection, models.MODELNAMES.FIELD);
   var Page = models.get(connection, models.MODELNAMES.PAGE);
 
-  var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
+  var requiredForm = new Form({"updatedBy" : "user@example.com", "createdBy":"user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
   var testRequiredPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
   var testData = require("./../Fixtures/formSubmissions.js");
@@ -189,6 +189,7 @@ function createTestData(assert, cb){
       testFieldsForm.save(function(err){
         if(err) console.log(err);
         assert.ok(!err);
+        assert.ok(testFieldsForm.createdBy);
 
         assert.ok(testFieldsForm._id);
         globalFormId = testFieldsForm._id;

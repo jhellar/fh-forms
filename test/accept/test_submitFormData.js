@@ -1244,8 +1244,8 @@ function createTestData(assert, cb){
   });
 
   function saveNotRequiredForm(cb){
-    var requiredForm = new Form({"updatedBy" : "user2@example.com", "name" : "requiredForm2", "description": "This form2 is for testing required fields."});
-    var testRequiredPage = new Page({"name" : "testRequiredPage2", "description": "This is a test page for required fields."});
+    var requiredForm = new Form({"updatedBy" : "user2@example.com", "createdBy" : "user2@example.com", "name" : "requiredForm2", "description": "This form2 is for testing required fields."});
+    var testRequiredPage = new Page({"name" : "testRequiredPage2", "createdBy" : "user2@example.com", "description": "This is a test page for required fields."});
     var fields = [];
 
     var requiredField1 = new Field({
@@ -1296,7 +1296,7 @@ function createTestData(assert, cb){
   }
 
   function saveBigForm(cb){
-    var testFieldsForm = new Form({"updatedBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
+    var testFieldsForm = new Form({"updatedBy" : "user@example.com", "createdBy" : "user@example.com", "name" : "testFieldsForm", "description": "This form is for testing fields."});
     var testPage = new Page({"name" : "testPage", "description": "This is a test page for the win."});
 
     var testData = require("./../Fixtures/formSubmissions.js");
@@ -1355,7 +1355,7 @@ function createTestData(assert, cb){
   }
 
   function saveRequiredForm(cb){
-    var requiredForm = new Form({"updatedBy" : "user@example.com", "name" : "requiredForm", "description": "This form is for testing required fields."});
+    var requiredForm = new Form({"updatedBy" : "user@example.com", "createdBy" : "user@example.com", "name" : "requiredForm", "description": "This form is for testing required fields."});
     var testRequiredPage = new Page({"name" : "testRequiredPage", "description": "This is a test page for required fields."});
     var fields = [];
 

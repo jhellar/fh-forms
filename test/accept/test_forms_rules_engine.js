@@ -68,6 +68,7 @@ var TEST_BASIC_ADMIN_FORM_1_PAGE_1_FIELD_2_ID = "000000000000000000000114";
 
 var TEST_BASIC_ADMIN_FORM_1_DEFINITION = { // no page or field rules
   "updatedBy":"user@example.com",
+  "createdBy":"test@example.com",
   "name":"TEST_BASIC_ADMIN_FORM_1_NAME",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,
@@ -219,6 +220,7 @@ var TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2 = {
 
 var TEST_BASIC_FORM_1_DEFINITION = {
   "updatedBy":"user@example.com",
+  "createdBy":"user@example.com",
   "name":"TEST_BASIC_FORM_1_DEFINITION",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,
@@ -363,6 +365,7 @@ var TEST_BASIC_FORM_1_DEFINITION = {
 
 var TEST_BASIC_FORM_2_DEFINITION = { // no page or field rules
   "updatedBy":"user@example.com",
+  "createdBy":"user@example.com",
   "name":"TEST_BASIC_FORM_1_DEFINITION",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,
@@ -762,6 +765,7 @@ var TEST_BASIC_FORM_1_SUBMISSION_OPTIONAL_FIELD_MISSING = {
  */
 var TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED = {
   "updatedBy":"user@example.com",
+  "createdBy":"user@example.com",
   "name":"TEST_BASIC_FORM_1_MULTIPLE_FIELD_TARGETED",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,

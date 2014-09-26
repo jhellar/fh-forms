@@ -32,6 +32,7 @@ var TEST_BASIC_FORM_1_PAGE_1_FIELD_5_ID = "000000000000000000000006";
 
 var TEST_BASIC_FORM_1_DEFINITION = {
  "updatedBy":"user@example.com",
+  "createdBy":"user@example.com",
   "name":"TEST_BASIC_FORM_1_DEFINITION",
   "lastUpdated":"2013-11-08T20:10:33.819Z",
   "lastUpdatedTimestamp": 1384800150848,

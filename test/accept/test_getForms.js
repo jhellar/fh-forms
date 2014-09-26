@@ -117,8 +117,8 @@ function createTestData(assert, cb){
   var Form = models.get(connection, models.MODELNAMES.FORM);
   var AppForm = models.get(connection, models.MODELNAMES.APP_FORMS);
 
-  var form1 = new Form({"updatedBy": "test@example.com", "name": "Test Form 1", "description": "This is a test form 1."});
-  var form2 = new Form({"updatedBy": "test@example.com", "name": "Test Form 2", "description": "This is a test form 2."});
+  var form1 = new Form({"updatedBy": "test@example.com", "createdBy":"test@example.com", "name": "Test Form 1", "description": "This is a test form 1."});
+  var form2 = new Form({"updatedBy": "test@example.com", "createdBy":"test@example.com", "name": "Test Form 2", "description": "This is a test form 2."});
 
   //Save the forms
   async.series([function(cb){
