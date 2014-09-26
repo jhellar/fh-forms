@@ -1,8 +1,14 @@
 #fh-forms
 
+##0.9.0 - 2014-09-23 - IR237 - Niall Donnelly
+
+* 7986 Added field codes to form fields.
+* 6582 Duplicate Form Name Verification.
+* 6587 Duplicate Theme Name Verification.
+
 ##0.8.3 - 2014-09-10 - IR236 - Craig Brookes
 
-7906 teams collab minor change to allow get submissions to take an array of forms
+* 7906 teams collab minor change to allow get submissions to take an array of forms
 
 ##0.8.2 - 2014-09-02 - IR235 - Niall Donnelly
 

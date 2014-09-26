@@ -109,10 +109,13 @@ module.exports.tearDown = function(finish){
 };
 
 function assertFormNamedNotFound(assert, name, msg, cb) {
-  formModel.findOne({name: name}, function (err, data) {
-    assert.ok(!err, 'should not return error: ' + util.inspect(err));
-    assert.equal(data, null, msg + util.inspect(data));
-    cb();
+  formModel.remove({name: name}, function(err){
+    assert.ok(!err, "Unexpected Error: " + util.inspect(err));
+    formModel.findOne({name: name}, function (err, data) {
+      assert.ok(!err, 'should not return error: ' + util.inspect(err));
+      assert.equal(data, null, msg + util.inspect(data));
+      cb();
+    });
   });
 }
 
@@ -172,6 +175,78 @@ module.exports.testAddForm = function(finish) {
         assert.ok(!err, 'should have found form');
         assert.strictEqual(data.formDescription, TEST_FORM_SIMPLE.formDescription, "new description should ahve been added");
         assert.strictEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
+        cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err);
+    finish();
+  });
+};
+
+/**
+ * Testing Adding a form with a duplicate name.
+ *
+ */
+module.exports.testAddFormDuplicateName = function(finish){
+  async.series([
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_SIMPLE.name, 'should not have found form - not added yet - found: '),
+    function(cb) {
+      //No form yet, so this form addition should succeed.
+      forms.updateForm(options, TEST_FORM_SIMPLE, function(err, doc){
+        assert.ok(!err, 'testAddFormDuplicateName() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function(cb) {
+      //Form already exists, should not save again.
+      forms.updateForm(options, TEST_FORM_SIMPLE, function(err, doc){
+        assert.ok(err, 'testAddFormDuplicateName() - expected an error but got nothing ');
+        assert.ok(err.message.toLowerCase().indexOf("already exists") > -1, "Expected duplicate error but got " + util.inspect(err.message));
+        cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err);
+    finish();
+  });
+};
+
+/**
+ * Testing Adding a form with a duplicate name but it is the same form. This is a legal update.
+ *
+ */
+module.exports.testAddFormDuplicateNameSameForm = function(finish){
+  var formId = null;
+  async.series([
+    async.apply(assertFormNamedNotFound, assert, TEST_FORM_SIMPLE.name, 'should not have found form - not added yet - found: '),
+    function(cb) {
+      //No form yet, so this form addition should succeed.
+      forms.updateForm(options, TEST_FORM_SIMPLE, function(err, doc){
+        //Need to assign the form _id to test data.
+        formId = doc._id;
+        assert.ok(formId, "Expected a form id but got " + util.inspect(formId));
+        assert.ok(!err, 'testAddFormDuplicateNameSameForm() - error fom updateForm: ' + util.inspect(err));
+        cb();
+      });
+    },
+    function(cb) {
+      var updatedFormDef = JSON.parse(JSON.stringify(TEST_FORM_SIMPLE));
+
+      updatedFormDef._id = formId;
+      updatedFormDef.description = "Updated Description";
+      //No form yet, so this form addition should succeed.
+      forms.updateForm(options, updatedFormDef, function(err, doc){
+        assert.ok(!err, 'testAddFormDuplicateNameSameForm() - unexpected error ' + util.inspect(err));
+        assert.ok(doc.description === "Updated Description", "Expected an updated description but got " + util.inspect(doc));
+        cb();
+      });
+    },
+    function(cb) {//Checking that there is only one form with the same name in the database.
+      formModel.count({name: TEST_FORM_SIMPLE.name}, function(err, count){
+        assert.ok(!err, "Unexpected error " + util.inspect(err));
+
+        assert.ok(count === 1);
         cb();
       });
     }

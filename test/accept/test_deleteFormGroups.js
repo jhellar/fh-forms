@@ -65,7 +65,10 @@ module.exports.setUp = function(finish){
     connection = mongoose.createConnection(options.uri);
     models.init(connection);
     formModel = models.get(connection, models.MODELNAMES.FORM);
-    finish();
+    //Removing any forms
+    formModel.remove({}, function(err){
+      finish();
+    });
   });
 };
 
@@ -87,6 +90,10 @@ function createForms(cb) {
   var noaccess = 'user3@example.com';
 
   async.series([
+    function(cb){
+      //Removing any forms
+      formModel.remove({}, cb);
+    },
     function(cb) {
       forms.updateForm(options, TEST_FORM1, function(err, form){
         assert.ok(!err, 'Error in updateForm: ' + util.inspect(err));
