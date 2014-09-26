@@ -1,5 +1,7 @@
 #fh-forms
 
+##0.9.1 - 2014-09-26 - IR237 - Craig Brookes
+* 8027 add createdBy field. set createdBy on update to be lastUpdated by if no createdby set
 ##0.9.0 - 2014-09-23 - IR237 - Niall Donnelly
 
 * 7986 Added field codes to form fields.
