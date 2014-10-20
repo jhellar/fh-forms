@@ -24,7 +24,7 @@ var formsRulesEngine = require('../../lib/common/forms-rule-engine.js');
 module.exports.testTextStyleConditions = function (finish) {
   var engine = formsRulesEngine({"submission" : null, "definition" : null});
 
-  var fieldTypes = ["select", "text", "emailAddress", "textarea", "radio"];
+  var fieldTypes = ["dropdown", "text", "emailAddress", "textarea", "radio"];
 
   var fieldValue = "hello";
   var testValues = [

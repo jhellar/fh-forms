@@ -1143,3 +1143,63 @@ exports.testValidateSectionBreak = function(finish){
     finish();
   });
 }
+
+
+/**
+ * Testing barcode data entry.
+ * @param finish
+ */
+exports.testValidateBarcode = function(finish){
+  var testField = exampleFields.barcodeFieldData;
+
+  var testSubmission = testSubmitFormBaseInfo;
+
+  testSubmission.fieldValues = [{
+    text: "barcode-data",
+    format: "QR_CODE"
+  }];
+
+  var validator = fieldValidator(testField, testSubmission);
+
+  validator.validate(function(err){
+    assert.ok(!err, 'Unexpected error, but was: ' + util.inspect(err));
+
+    finish();
+  });
+}
+
+exports.testValidateBarcodeNoText = function(finish){
+  var testField = exampleFields.barcodeFieldData;
+
+  var testSubmission = testSubmitFormBaseInfo;
+
+  testSubmission.fieldValues = [{
+    format: "QR_CODE"
+  }];
+
+  var validator = fieldValidator(testField, testSubmission);
+
+  validator.validate(function(err){
+    assert.ok(err, 'Expected error, but was: ' + util.inspect(err));
+
+    finish();
+  });
+}
+
+exports.testValidateBarcodeNoFormat = function(finish){
+  var testField = exampleFields.barcodeFieldData;
+
+  var testSubmission = testSubmitFormBaseInfo;
+
+  testSubmission.fieldValues = [{
+    text: "barcode-data"
+  }];
+
+  var validator = fieldValidator(testField, testSubmission);
+
+  validator.validate(function(err){
+    assert.ok(err, 'Expected error, but was: ' + util.inspect(err));
+
+    finish();
+  });
+}

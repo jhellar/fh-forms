@@ -22,7 +22,7 @@ RELEASE_DIR = $(PACKAGE)-$(VERSION)-$(BUILD_NUMBER)
 
 all: clean npm_deps jshint test plato
 
-test: test_unit_cov test_accept_cov
+test: jshint test_unit_cov test_accept_cov
 
 test_accept: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/turbo --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/ --series=true
@@ -45,7 +45,7 @@ coverage: test_unit_cov test_accept_cov
 npm_deps: 
 	npm install .
 
-jshint:
+jshint: npm_deps
 	./node_modules/.bin/jshint lib/*.js lib/**/*.js
 
 plato:

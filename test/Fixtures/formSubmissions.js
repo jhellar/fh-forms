@@ -435,5 +435,13 @@ module.exports = {
     "repeating":false,
     "required":false,
     "fieldOptions": {}
+  },
+  "barcodeFieldData":{
+    "name":"barcodeField",
+    "helpText":"This is a Barcode field",
+    "type":"barcode",
+    "repeating":false,
+    "required":false,
+    "fieldOptions": {}
   }
 }
