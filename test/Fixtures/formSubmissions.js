@@ -443,5 +443,52 @@ module.exports = {
     "repeating":false,
     "required":false,
     "fieldOptions": {}
+  },
+  "sliderNumberData":{
+    "name":"sliderNumberField",
+    "helpText":"This is a Slider Number field",
+    "type":"sliderNumber",
+    "repeating":false,
+    "required":false,
+    "fieldOptions": {
+      "definition": {
+        "stepSize": 2
+      },
+      "validation":{
+        "min":5,
+        "max":100
+      }
+    }
+  },
+  "sliderOptionsData":{
+    "name":"sliderOptionsField",
+    "helpText":"This is a Slider Options field",
+    "type":"sliderOptions",
+    "repeating":true,
+    "required":false,
+    "fieldOptions":{
+      "definition":{
+        "maxRepeat":2,
+        "minRepeat":2,
+        "options":[
+          {
+            "label": "sliderOption1",
+            "checked": false
+          },
+          {
+            "label": "sliderOption2",
+            "checked": false
+          },
+          {
+            "label": "sliderOption3 selected",
+            "checked": true
+          },
+          {
+            "label": "sliderOption4",
+            "checked": false
+          }
+        ]
+      }
+    }
   }
 }
