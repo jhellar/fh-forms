@@ -1,7 +1,11 @@
 #fh-forms
 
-##0.10.0 - 2014-10-22 - IR239 - Niall Donnelly
+##0.10.0 - 2014-10-24 - IR239 - Niall Donnelly
 * 7890 Added barcode and slider fields to forms.
+
+##0.9.2 - 2014-10-24 - IR239 - Niall Donnelly
+
+* 8109 Added file name to file download url
 
 ##0.9.1 - 2014-09-26 - IR237 - Craig Brookes
 * 8027 add createdBy field. set createdBy on update to be lastUpdated by if no createdby set
