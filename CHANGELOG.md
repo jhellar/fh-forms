@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.9.2 - 2014-09-26 - IR239 - Niall Donnelly
+
+* 8109 Added file name to file download url
+
 ##0.9.1 - 2014-09-26 - IR237 - Craig Brookes
 * 8027 add createdBy field. set createdBy on update to be lastUpdated by if no createdby set
 ##0.9.0 - 2014-09-23 - IR237 - Niall Donnelly
