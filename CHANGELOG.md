@@ -1,9 +1,13 @@
 #fh-forms
 
-##0.10.0 - 2014-10-24 - IR239 - Niall Donnelly
+##0.10.0 - 2014-10-31 - IR239 - Niall Donnelly
 * 7890 Added barcode and slider fields to forms.
 
-##0.9.2 - 2014-10-24 - IR239 - Niall Donnelly
+## 0.9.3 - 2014-10-30 - IR239 - Wei Li
+
+* 8212 - Update fh-amqp-js version
+
+##0.9.2 - 2014-09-26 - IR239 - Niall Donnelly
 
 * 8109 Added file name to file download url
 
