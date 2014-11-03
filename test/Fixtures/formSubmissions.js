@@ -459,36 +459,5 @@ module.exports = {
         "max":100
       }
     }
-  },
-  "sliderOptionsData":{
-    "name":"sliderOptionsField",
-    "helpText":"This is a Slider Options field",
-    "type":"sliderOptions",
-    "repeating":true,
-    "required":false,
-    "fieldOptions":{
-      "definition":{
-        "maxRepeat":2,
-        "minRepeat":2,
-        "options":[
-          {
-            "label": "sliderOption1",
-            "checked": false
-          },
-          {
-            "label": "sliderOption2",
-            "checked": false
-          },
-          {
-            "label": "sliderOption3 selected",
-            "checked": true
-          },
-          {
-            "label": "sliderOption4",
-            "checked": false
-          }
-        ]
-      }
-    }
   }
 }
