@@ -1,5 +1,9 @@
 #fh-forms
 
+##0.11.1 - 2015-01-13 - IR245 - Niall Donnelly
+
+* 8627 fixed forms submission populate query.
+
 ##0.11.0 - 2014-10-31 - IR244 - cbrookes
 
 * 8450 forms and themes createdBy fields
