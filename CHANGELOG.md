@@ -2,6 +2,14 @@
 ##0.11.0 - 2015-02-04 - IR246 - Niall Donnelly
 * 8742 Added fh-forms event emitter functionality for submission events.
 
+##0.11.1 - 2015-01-13 - IR245 - Niall Donnelly
+
+* 8627 fixed forms submission populate query.
+
+##0.11.0 - 2014-10-31 - IR244 - cbrookes
+
+* 8450 forms and themes createdBy fields
+ 
 ##0.10.0 - 2014-10-31 - IR239 - Niall Donnelly
 * 7890 Added barcode and slider fields to forms.
 

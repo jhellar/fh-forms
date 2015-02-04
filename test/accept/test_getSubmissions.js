@@ -184,7 +184,7 @@ module.exports.testGetAllSubmissionsByAppWithRestrictions = function(finish){
           assert.ok(results);  // should have returned results
           var submissions = results.submissions;
           assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+          assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
           return cb();
         });
       },
@@ -202,7 +202,7 @@ module.exports.testGetAllSubmissionsByAppWithRestrictions = function(finish){
           assert.ok(results);  // should have returned results
           var submissions = results.submissions;
           assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, 0, 'should not have returned submissions for user without access to forms: ' + util.inspect(submissions)); 
+          assert.strictEqual(submissions.length, 0, 'should not have returned submissions for user without access to forms: ' + util.inspect(submissions));
           return cb();
         });
       }
@@ -221,7 +221,7 @@ module.exports.testGetAllSubmissions = function(finish){
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + submissions[0]._id + ", expected: " + TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
@@ -239,7 +239,7 @@ module.exports.testGetAllSubmissionsWithAppMap = function(finish){
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + submissions[0]._id + ", expected: " + TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
@@ -259,7 +259,7 @@ module.exports.testGetAllSubmissionsByApp = function(finish){
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
@@ -275,11 +275,31 @@ module.exports.testGetAllSubmissionsByForm = function(finish){
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
     finish();
+  });
+};
+
+module.exports.testGetAllSubmissionsByFormObject = function(finish){
+// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
+
+  forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : TEST_SUBMISSION_FORMID}, function(err, result){
+    assert.ok(!err, "Unexpected Error When Getting A Form: ", err);
+
+    forms.getSubmissions(options, {formId: [result]}, function (err, results){
+      assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
+      assert.ok(results);  // should have returned results
+      var submissions = results.submissions;
+      assert.ok(submissions);  // should have returned submissions in results
+      assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
+      assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
+      assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
+      assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
+      finish();
+    });
   });
 };
 
@@ -291,40 +311,40 @@ module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
     assert.ok(results);  // should have returned results
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
-    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS); 
+    assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
     assert.strictEqual(submissions[0]._id, TEST_SUBMISSION_ID);
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
     assert.strictEqual(submissions[0].formFields.length, 3, "should be 3 fields returned in summary submissions list, actual: " + submissions[0].formFields.length);
 
     assert.ok(submissions[0].formFields[0].fieldId.name.indexOf(TEST_FIELD_NAME_PREFIX) === 0,
-              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX + 
+              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX +
               ", but actual name was: " + submissions[0].formFields[0].fieldId.name);
 
     assert.ok(Array.isArray(submissions[0].formFields[0].fieldValues), "expected an array of values but actual was: " + util.inspect(submissions[0].formFields[0].fieldValues));
     assert.ok(submissions[0].formFields[0].fieldValues[0].indexOf(TEST_FIELD_VALUE_PREFIX) === 0,
-              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX + 
+              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX +
               ", but actual name was: " + submissions[0].formFields[0].fieldValues[0]);
 
     assert.ok(submissions[0].formFields[1].fieldId.name.indexOf(TEST_FIELD_NAME_PREFIX) === 0,
-              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX + 
+              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX +
               ", but actual name was: " + submissions[0].formFields[1].fieldId.name);
 
     assert.ok(Array.isArray(submissions[0].formFields[1].fieldValues), "expected an array of values but actual was: " + util.inspect(submissions[0].formFields[0].fieldValues));
     assert.ok(submissions[0].formFields[1].fieldValues[0].indexOf(TEST_FIELD_VALUE_PREFIX) === 0,
-              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX + 
+              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX +
               ", but actual name was: " + submissions[0].formFields[1].fieldValues[0]);
 
     assert.ok(submissions[0].formFields[2].fieldId.name.indexOf(TEST_FIELD_NAME_PREFIX) === 0,
-              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX + 
+              "incorrect field in summary field list, expected to start with: " + TEST_FIELD_NAME_PREFIX +
               ", but actual name was: " + submissions[0].formFields[2].fieldId.name);
 
     assert.ok(Array.isArray(submissions[0].formFields[2].fieldValues), "expected an array of values but actual was: " + util.inspect(submissions[0].formFields[0].fieldValues));
     assert.ok(submissions[0].formFields[2].fieldValues[0].indexOf(TEST_FIELD_VALUE_PREFIX) === 0,
-              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX + 
+              "incorrect field value in summary field list, expected to start with: " + TEST_FIELD_VALUE_PREFIX +
               ", but actual name was: " + submissions[0].formFields[2].fieldValues[0]);
 
-    finish();    
+    finish();
   });
 };
 
