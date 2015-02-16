@@ -1,4 +1,8 @@
 #fh-forms
+
+##0.13.0 - 2015-02-16- IR247 - Wei Li
+* 8757 - Update fh-amqp-js module
+
 ##0.11.0 - 2015-02-04 - IR246 - Niall Donnelly
 * 8742 Added fh-forms event emitter functionality for submission events.
 
