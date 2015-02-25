@@ -38,14 +38,13 @@ module.exports.setUp = function(finish){
   },
   function setUpForm (callback){
       forms.updateForm(options, TEST_FORM, function(err,form){
-       console.log("setup form ", err, form);
+       assert.ok(!err, "Expected No Error When Updating A Form");
        testForm = form;
        callback(undefined, form);
       });
   },
   function setUpAppForms(form,callback){
     forms.updateAppForms(options, {appId: TEST_APPID, forms: [form._id]}, function(err, appForms){
-      console.log("set up app forms ", appForms);
       assert.ok(!err, 'Error in setUpAppForms: ' + util.inspect(err));
       assert.equal(appForms.appId, TEST_APPID);
       return callback();
@@ -71,7 +70,6 @@ module.exports.setUp = function(finish){
   },
   function setUpGroup(callback){
     forms.createGroup(options, {name: TEST_GROUP_NAME, apps: [TEST_APPID], forms: [], users: [], themes: []}, function(err, group){
-      console.log("setupGroup done ", group);
       assert.ok(!err, 'Error in createGroup: ' + util.inspect(err));
       return callback();
     });
@@ -80,37 +78,33 @@ module.exports.setUp = function(finish){
     var params = JSON.parse(JSON.stringify(TEST_APP_CONFIG));
     params.appId = '12345';
     params.client.quality = 80;
-    console.log("params ", params);
     forms.setAppConfig(options, params, function(err, result) {
-      console.log("setup app config ", err, result);
       assert.ok(!err, 'should have updated appConfig: ' + util.inspect(err));
       return callback();
     });
   },
-  function setUpSubmission(callback){
-    testForm.populate("pages",function (err, form){
-
-      var fieldId = form.pages[0].fields[0];
-      var testValues = [{
-        "fieldId" : fieldId,
-        "fieldValues": ["test1test1test1test1test1test1"]
-      }];
+    function setUpSubmission(callback) {
+      var fieldId = testForm.pages[0].fields[0]._id;
+      var testValues = [
+        {
+          "fieldId": fieldId,
+          "fieldValues": ["test1test1test1test1test1test1"]
+        }
+      ];
       var submission = testSubmitFormBaseInfo;
       submission.formId = testForm._id;
       submission.formFields = testValues;
-      forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission" : submission}, function(err, result){
-        console.log("submission created ", err, result);
-        if(err) assert.fail(err);
-        forms.completeFormSubmission({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission" :result}, function(err, ok){
-          console.log("completed form submission ", util.inspect(err), ok);
+      forms.submitFormData({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function (err, result) {
+        assert.ok(!err, "Expected No Error When Submitting Form Data " + util.inspect(err));
+        assert.ok(!result.error, "Expected No Error Response: " + result.error);
+
+        forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {submissionId: result.submissionId}}, function (err, ok) {
+          assert.ok(!err, "Expected No Error When Completing A Submission Form Data " + JSON.stringify(err));
           callback();
         });
       });
-    });
-  }
-
+    }
   ],  function seriesComplete (err, oks){
-    console.log("finished set up");
     if(err) assert.fail(err);
     finish();
   });
@@ -129,7 +123,6 @@ module.exports.tearDown = function(finish){
 
 
 module.exports.it_should_delete_app_refs = function(finish) {
-  console.log("called test delete app refs");
   //set up has been done we have a form so can perform a delete app refs and assert all is as expected.
 
   var params = {
@@ -235,6 +228,7 @@ var TEST_APP_CONFIG = {
 
 var testSubmitFormBaseInfo = {
   "appId": TEST_APPID,
+  "appClientId": "aClientId",
   "appCloudName": "appCloudName123456",
   "appEnvironment": "devLive",
   "timezoneOffset" : 120,

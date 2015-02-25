@@ -5,25 +5,44 @@ var models = require('../../lib/common/models.js')();
 var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
 var assert = require('assert');
+var dataSource = require('../Fixtures/dataSource.js');
+var handyFieldData = require('../Fixtures/formSubmissions.js');
+var util = require('util');
+var _ = require('underscore');
+var simpleForm = require('../Fixtures/simple.js');
+var Form;
+var connection;
 
-var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
+var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 var appId = "123456789";
 
 module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
+    connection = mongoose.createConnection(options.uri);
+
     createTestData(assert, function(err){
       assert.ok(!err);
       finish();
     });
   });
+};
+
+function cleanUp(cb){
+  Form.remove({}, function(err){
+    assert.ok(!err, "Expected No Error When Clearing Forms");
+    cb();
+  });
 }
 
 module.exports.tearDown = function(finish){
-  forms.tearDownConnection(options, function(err) {
-    assert.ok(!err);
-    finish();
+  connection.close(function(err){
+    if(err) console.log(err);
+    forms.tearDownConnection(options, function(err) {
+      assert.ok(!err);
+      finish();
+    });
   });
 };
 
@@ -31,13 +50,11 @@ module.exports.testGetFormsWorks = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
 
-    assert.ok(result);
-    assert.ok(result.forms);
-    assert.ok(Array.isArray(result.forms));
-    assert.ok(result.forms.length === 2);// Should have 2 forms associated with the appId
+    assert.ok(Array.isArray(result));
+    assert.ok(result.length === 2);// Should have 2 forms associated with the appId
 
-    checkForm(result.forms[0], {"name": "Test Form 1", "description" : "This is a test form 1."});
-    checkForm(result.forms[1], {"name": "Test Form 2", "description" : "This is a test form 2."});
+    checkForm(result[0], {"name": "Test Form 1", "description" : "This is a test form 1."});
+    checkForm(result[1], {"name": "Test Form 2", "description" : "This is a test form 2."});
 
     finish();
   });
@@ -62,10 +79,8 @@ module.exports.testGetFormsNoAppId = function(finish){
 module.exports.testGetFormsNoAppExists = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
     assert.ok(!err);
-    assert.ok(result);
-    assert.ok(result.forms);
-    assert.ok(Array.isArray(result.forms));
-    assert.ok(result.forms.length === 0);
+    assert.ok(Array.isArray(result));
+    assert.ok(result.length === 0);
     finish();
   });
 }
@@ -74,20 +89,175 @@ module.exports.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
-    assert.ok(result.forms);
-    assert.equal(2, result.forms.length);
+    assert.ok(result);
+    assert.equal(2, result.length);
 
-    checkAllForms(result.forms[0], {"name": "Test Form 1", "description" : "This is a test form 1."});
-    checkAllForms(result.forms[1], {"name": "Test Form 2", "description" : "This is a test form 2."});
+    checkAllForms(result[0], {"name": "Test Form 1", "description" : "This is a test form 1."});
+    checkAllForms(result[1], {"name": "Test Form 2", "description" : "This is a test form 2."});
 
 
     finish();
   });
 };
 
-//Statistics should be generated
-module.exports.testGetFormSubmissionStatistics = function(finish){
-  finish();
+/**
+ * Testing the scenario where a data source has been updated, the forms list should include a lastDataRefresh field.
+ * This will allow clients to determine if the form has been updated or not.
+ * @param finish
+ */
+module.exports.testGetFormsDataSourceUpdated = function (finish) {
+  var testForm = simpleForm.getBaseForm()
+  var testDropdownField = _.clone(handyFieldData.dropdownFieldData);
+
+  testForm.pages[0].fields[0] = testDropdownField;
+
+  var firstRefreshTime, secondRefreshTime;
+
+  var testDataSource = _.clone(dataSource);
+  var testCacheOptions = [
+    {
+      label: "Option 1",
+      checked: false
+    },
+    {
+      label: "Option 2",
+      checked: false
+    },
+    {
+      label: "Option 3",
+      checked: true
+    }
+  ];
+
+  var updatedCacheOptions = [
+    {
+      label: "Changed Option 1",
+      checked: false
+    },
+    {
+      label: "Changed Option 2",
+      checked: true
+    }
+  ];
+
+  async.waterfall([
+    cleanUp,
+    function createDataSource(cb) {
+      console.log("Creating Data Source");
+      forms.dataSources.create(options, testDataSource, function (err, createdDataSource) {
+        assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+
+        assert.ok(createdDataSource._id, "Expected A Data Source ID");
+
+        cb(undefined, createdDataSource);
+      });
+    },
+    function createForm(createdDataSource, cb) {
+      forms.updateForm(options, testForm, function (err, createdForm) {
+        assert.ok(!err, "Expected No Error When Creating A New Form " + util.inspect(err));
+
+        return cb(undefined, createdDataSource, createdForm);
+      });
+    },
+    function getFormsNoDataSources(createdDataSource, createdForm, cb){
+      //If there is no data source associated with the form, then the lastDataRefresh should be the same as the lastUpdated field.
+
+      forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, response){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        //There should only be one form
+        assert.equal(response.length, 1);
+
+        var formMeta = response[0];
+
+
+
+        assert.equal(new Date(formMeta.lastUpdated).getTime(), new Date(formMeta.lastDataRefresh).getTime());
+        cb(undefined, createdDataSource, createdForm);
+      });
+    },
+    function updateDataSourceCache(createdDataSource, createdForm, cb){
+      var testCacheData = {
+        _id: createdDataSource._id,
+        data: {
+          fieldType: "singleChoice",
+          options: testCacheOptions
+        }
+      };
+
+      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+        assert.ok(!err, "Expected No Error When Updating Data Cache ", + err);
+
+        firstRefreshTime = updateResult.validDataSourceUpdates[0].lastRefreshed;
+
+        setTimeout(function(){
+          return cb(undefined, createdDataSource, createdForm);
+        }, 1000);
+      });
+    },
+    function addDataSourceToField(createdDataSource, createdForm, cb){
+      createdForm.pages[0].fields[0].dataSourceType = "dataSource";
+      createdForm.pages[0].fields[0].dataSource = createdDataSource._id;
+
+      //Updating The Form
+      forms.updateForm(options, createdForm, function(err, updatedForm){
+        assert.ok(!err, "Expected no error when updating a form " + util.inspect(err));
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function checkUpdatedDataTimestamp(createdDataSource, updatedForm, cb){
+      //The form meta should now have the updated last data update field
+
+      forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, response){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        //There should only be one form
+        assert.equal(response.length, 1);
+
+        var formMeta = response[0];
+
+        assert.equal(new Date(formMeta.lastUpdated).getTime(), new Date(formMeta.lastDataRefresh).getTime());
+        cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function updateCacheAgain(createdDataSource, updatedForm, cb){
+      var testCacheData = {
+        _id: createdDataSource._id,
+        data: {
+          fieldType: "singleChoice",
+          options: updatedCacheOptions
+        }
+      };
+
+      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+        assert.ok(!err, "Expected No Error When Updating Data Cache ", + err);
+
+        secondRefreshTime = updateResult.validDataSourceUpdates[0].lastRefreshed;
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function checkUpdatedDataTimestamp(createdDataSource, updatedForm, cb){
+      //The form meta should now have the updated again last data update field
+
+      forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, response){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        //There should only be one form
+        assert.equal(response.length, 1);
+
+        var formMeta = response[0];
+
+        assert.equal(new Date(secondRefreshTime).getTime(), new Date(formMeta.lastDataRefresh).getTime());
+        cb(undefined, createdDataSource, updatedForm);
+      });
+    }
+  ], function (err) {
+    assert.ok(!err, "Expected no error " + util.inspect(err));
+    finish();
+  });
+
 };
 
 function checkAllForms(formToCheck, options){
@@ -109,12 +279,10 @@ function checkForm(form, options){
 
 function createTestData(assert, cb){
 
-  var connection = mongoose.createConnection(options.uri);
-
   //Set up the connection
   models.init(connection);
 
-  var Form = models.get(connection, models.MODELNAMES.FORM);
+  Form = models.get(connection, models.MODELNAMES.FORM);
   var AppForm = models.get(connection, models.MODELNAMES.APP_FORMS);
 
   var form1 = new Form({"updatedBy": "test@example.com", "createdBy":"test@example.com", "name": "Test Form 1", "description": "This is a test form 1."});
@@ -151,10 +319,7 @@ function createTestData(assert, cb){
     }], function(err){
       assert.ok(!err);
 
-      connection.close(function(err){
-        if(err) console.log(err);
-        cb();
-      });
+      cb();
     });
   });
 };

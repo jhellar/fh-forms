@@ -53,7 +53,7 @@ module.exports.testGetFormGroupRestrictFail = function(finish){
     assert.ok(!err);
     assert.ok(result);
 
-    var formId = result.forms[0]._id;
+    var formId = result[0]._id;
     forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : formId, restrictToUser: "notexist@example.com"}, function(err, result){
       assert.ok(err, 'should generate error since no access to that form');
 
@@ -114,12 +114,12 @@ module.exports.testGetFormSubmissionStatistics = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
-    assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
-    var form1 = result.forms[0];
+    assert.equal(result.length, 2, 'Should have been 2 forms setup');
+    var form1 = result[0];
     submissionToday1.formId = form1._id;
 
-    var form1Id = result.forms[0]._id;
-    var form2Id = result.forms[1]._id;
+    var form1Id = result[0]._id;
+    var form2Id = result[1]._id;
     var allowedUser1 = 'users1@example.com';
     var allowedUser2 = 'users2@example.com';
     setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, function (err) {
@@ -131,8 +131,8 @@ module.exports.testGetFormSubmissionStatistics = function(finish){
       forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
         assert.ok(!err, util.inspect(err));
         assert.ok(result);
-        assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
-        var form1 = result.forms[0];
+        assert.equal(result.length, 2, 'Should have been 2 forms setup');
+        var form1 = result[0];
         submissionToday2.formId = form1._id;
 
         checkSubmissions(form1, 1, 1, 1);
@@ -143,8 +143,8 @@ module.exports.testGetFormSubmissionStatistics = function(finish){
           forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
             assert.ok(!err, util.inspect(err));
             assert.ok(result);
-            assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
-            var form1 = result.forms[0];
+            assert.equal(result.length, 2, 'Should have been 2 forms setup');
+            var form1 = result[0];
             submissionYesterday1.formId = form1._id;
 
             checkSubmissions(form1, 2, 2, 1);
@@ -154,8 +154,8 @@ module.exports.testGetFormSubmissionStatistics = function(finish){
               forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
                 assert.ok(!err, util.inspect(err));
                 assert.ok(result);
-                assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
-                var form1 = result.forms[0];
+                assert.equal(result.length, 2, 'Should have been 2 forms setup');
+                var form1 = result[0];
 
                 checkSubmissions(form1, 3, 2, 1);
 
@@ -205,9 +205,9 @@ module.exports.testGetFormsGroupRestrict = function(finish){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
 
-    assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
-    var form1Id = result.forms[0]._id;
-    var form2Id = result.forms[1]._id;
+    assert.equal(result.length, 2, 'Should have been 2 forms setup');
+    var form1Id = result[0]._id;
+    var form2Id = result[1]._id;
     var allowedUser1 = 'users1@example.com';
     var allowedUser2 = 'users2@example.com';
     setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, function (err) {
@@ -215,16 +215,16 @@ module.exports.testGetFormsGroupRestrict = function(finish){
 
       forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: "notexist@example.com", "appId": appId}, function(err, result){
         assert.ok(!err, util.inspect(err));
-        assert.equal(result.forms.length, 0, 'should be no forms returned: ' + util.inspect(result));
+        assert.equal(result.length, 0, 'should be no forms returned: ' + util.inspect(result));
 
         forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser2, "appId": appId}, function(err, result){
           assert.ok(!err, util.inspect(err));
-          assert.equal(result.forms.length, 2, 'should be 2 forms returned: ' + util.inspect(result));
+          assert.equal(result.length, 2, 'should be 2 forms returned: ' + util.inspect(result));
 
           // should be 1 form
           forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser1, "appId": appId}, function(err, result){
             assert.ok(!err, util.inspect(err));
-            assert.equal(result.forms.length, 1, 'should be 1 form returned: >>>>>' + util.inspect(result) + "<<<<<<");
+            assert.equal(result.length, 1, 'should be 1 form returned: >>>>>' + util.inspect(result) + "<<<<<<");
 
             finish();
           });
@@ -239,9 +239,9 @@ module.exports.testGetAllFormsGroupRestrict = function(finish){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
 
-    assert.equal(result.forms.length, 2, 'Should have been 2 forms setup');
-    var form1Id = result.forms[0]._id;
-    var form2Id = result.forms[1]._id;
+    assert.equal(result.length, 2, 'Should have been 2 forms setup');
+    var form1Id = result[0]._id;
+    var form2Id = result[1]._id;
     var allowedUser1 = 'users1@example.com';
     var allowedUser2 = 'users2@example.com';
     setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, function (err) {
@@ -249,16 +249,16 @@ module.exports.testGetAllFormsGroupRestrict = function(finish){
 
       forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: "notexist@example.com"}, function(err, result){
         assert.ok(!err, util.inspect(err));
-        assert.equal(result.forms.length, 0, 'should be no forms returned: ' + util.inspect(result));
+        assert.equal(result.length, 0, 'should be no forms returned: ' + util.inspect(result));
 
         forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser2}, function(err, result){
           assert.ok(!err, util.inspect(err));
-          assert.equal(result.forms.length, 2, 'should be 2 forms returned: ' + util.inspect(result));
+          assert.equal(result.length, 2, 'should be 2 forms returned: ' + util.inspect(result));
 
           // should be 1 form
           forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser1}, function(err, result){
             assert.ok(!err, util.inspect(err));
-            assert.equal(result.forms.length, 1, 'should be 1 form returned: >>>>>' + util.inspect(result) + "<<<<<<");
+            assert.equal(result.length, 1, 'should be 1 form returned: >>>>>' + util.inspect(result) + "<<<<<<");
 
             finish();
           });

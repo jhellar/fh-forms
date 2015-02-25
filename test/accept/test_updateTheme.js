@@ -64,7 +64,7 @@ module.exports.testCreateThemeDuplicateName = function(finish){
 
       forms.getThemes(options, function(err, result) {
         assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-        assert.equal(result.themes.length, 1, "Expected one theme to exist " + util.inspect(result));
+        assert.equal(result.length, 1, "Expected one theme to exist " + util.inspect(result));
 
         //Trying to create another theme with a duplicate name
         forms.updateTheme(options, testThemeData, function(err, result){
@@ -93,13 +93,13 @@ module.exports.testCreateThemeDuplicateNameSameTheme = function(finish){
 
       forms.getThemes(options, function(err, result) {
         assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
-        assert.equal(result.themes.length, 1, "Expected one theme to exist " + util.inspect(result));
+        assert.equal(result.length, 1, "Expected one theme to exist " + util.inspect(result));
 
         var themeUpdate = JSON.parse(JSON.stringify(testThemeData));
-        assert.ok(result.themes[0]._id, "Expected a theme _id " + util.inspect(result));
+        assert.ok(result[0]._id, "Expected a theme _id " + util.inspect(result));
 
         //Assigning the same _id so it is updating the theme and not creating a new one.
-        themeUpdate._id = result.themes[0]._id;
+        themeUpdate._id = result[0]._id;
 
         //Trying to create another theme with a duplicate name
         forms.updateTheme(options, themeUpdate, function(err, result){

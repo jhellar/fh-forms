@@ -5,11 +5,18 @@ var util = require('util');
 var models = require('../../lib/common/models.js')();
 var forms = require('../../lib/forms.js');
 var initDatabase = require('./../setup.js').initDatabase;
+var _ = require('underscore');
+var handyFieldData = require('../Fixtures/formSubmissions.js');
+var testDataSourceData = require('../Fixtures/dataSource.js');
+var testDataTargetData = require('../Fixtures/dataTarget.js');
+var simpleForm = require('../Fixtures/simple.js');
+var cleanUp = require('../Fixtures/cleanup.js');
+var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
 
 var assert = require('assert');
 
 function assertEqual(actual, expected, message) {
-  var msg = message || "actual not expected: "
+  var msg = message || "actual not expected: ";
   assert.strictEqual(actual, expected, msg + ", actual: " + util.inspect(actual) + ", expected: " + util.inspect(expected));
 }
 
@@ -18,6 +25,7 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@ex
 var connection;
 var formModel;
 var fieldModel;
+var dataSourceModel, dataTargetModel, pageRuleModel, fieldRuleModel;
 
 var TEST_PAGE_NAME1 = 'page1 with fields to be updated';
 var TEST_PAGE_DESCRIPTION1 = 'this is page 1';
@@ -180,15 +188,18 @@ var TEST_PAGE1_NEW_FIELD = {
   "repeating": true
 };
 
+
 module.exports.setUp = function (finish) {
   initDatabase(assert, function (err) {
     assert.ok(!err);
-    connection = mongoose.createConnection(options.uri);
+    connection = mongoose.createConnection(process.env.FH_DOMAIN_DB_CONN_URL);
     models.init(connection);
     formModel = models.get(connection, models.MODELNAMES.FORM);
     fieldModel = models.get(connection, models.MODELNAMES.FIELD);
     pageRuleModel = models.get(connection, models.MODELNAMES.PAGE_RULE);
     fieldRuleModel = models.get(connection, models.MODELNAMES.FIELD_RULE);
+    dataSourceModel = models.get(connection, models.MODELNAMES.DATA_SOURCE);
+    dataTargetModel = models.get(connection, models.MODELNAMES.DATA_TARGET);
     finish();
   });
 };
@@ -222,6 +233,10 @@ function assertFormNamedFound(assert, name, msg, cb) {
 module.exports.testUpdateFormWithPagesWithFields = function (finish) {
   var saveDeletedFieldId;
   async.waterfall([
+    function (cb) {
+      //Cleaning forms and rules first
+      cleanUp(cb);
+    },
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
     function (cb) {
       forms.updateForm(options, TEST_FORM_2_PAGES_WITH_FIELDS, function (err, doc) {
@@ -237,6 +252,7 @@ module.exports.testUpdateFormWithPagesWithFields = function (finish) {
         //Now populate the fields in each page
         formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, updatedForm) {
           assert.ok(!err, "Error getting fields for form");
+
           return cb(undefined, updatedForm.toJSON());
         });
 
@@ -322,16 +338,7 @@ module.exports.testUpdateFormDeleteField = function (finish) {
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -398,19 +405,18 @@ module.exports.testUpdateFormDeleteField = function (finish) {
         targetField: populatedFormDoc.pages[1].fields[0]._id
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules = [fieldRule, fieldRule2];
+
+      forms.updateForm(options, populatedFormDoc, function(err, updatedForm){
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule, fieldRule2]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -423,6 +429,7 @@ module.exports.testUpdateFormDeleteField = function (finish) {
 
       //Deleting field 0 on page 1 should remove fieldRule2
       var fieldRemoved = updatedFormDefinition.pages[1].fields.splice(0, 1)[0];
+
       assert.ok(fieldRemoved, "Expected field removed to be defined");
       assert.ok(updatedFormDefinition.fieldRules[1].targetField.toString() === fieldRemoved._id.toString(), "Expected the target field of fieldRule2 to be " + util.inspect(fieldRemoved) + " but was " + util.inspect(fieldRule2Id));
 
@@ -452,7 +459,7 @@ module.exports.testUpdateFormDeleteField = function (finish) {
       });
     },
     function (fieldRemoved, fieldRuleId, fieldRule2Id, pageRuleId, cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -511,16 +518,7 @@ module.exports.testUpdateFieldCode = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
     function (cb) {
@@ -581,16 +579,7 @@ module.exports.testUpdateFieldCodeZeroLength = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
     function (cb) {
@@ -642,7 +631,7 @@ module.exports.testUpdateFieldCodeZeroLength = function(finish){
     assert.ok(!err, "received error: " + util.inspect(err));
     finish();
   });
-}
+};
 
 /**
  * Updating a field code "fieldCode" with a duplicate code should return an error
@@ -652,16 +641,7 @@ module.exports.testUpdateFieldCodeDuplicate = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
     function (cb) {
@@ -703,7 +683,7 @@ module.exports.testUpdateFieldCodeDuplicate = function(finish){
       forms.updateForm(options, populatedFormDoc, function(err, updatedDoc){
         assert.ok(err, "Expected an error when updating the form but got nothing.");
         //Checking for a duplicate error message
-        assert.ok(err.message.indexOf("Duplicate") > -1);
+        assert.ok(err.userDetail.indexOf("Duplicate") > -1);
         cb();
       });
     }
@@ -711,7 +691,7 @@ module.exports.testUpdateFieldCodeDuplicate = function(finish){
     assert.ok(!err, "received error: " + util.inspect(err));
     finish();
   });
-}
+};
 
 /**
 * Testing that when update form is used, rules are not deleted
@@ -722,16 +702,7 @@ module.exports.updateFormWithMulitpleRuleTargets = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -798,19 +769,17 @@ module.exports.updateFormWithMulitpleRuleTargets = function(finish){
         targetField: populatedFormDoc.pages[1].fields[0]._id
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules = [fieldRule, fieldRule2];
+
+      forms.updateForm(options, populatedFormDoc, function (err, doc) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule, fieldRule2]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -851,17 +820,7 @@ module.exports.updateFormWithMulitpleRuleTargets = function(finish){
 module.exports.testUpdateFormWithAdminField = function(finish){
   async.waterfall([
     function (cb) {
-      //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -871,7 +830,7 @@ module.exports.testUpdateFormWithAdminField = function(finish){
       });
     },
     function (cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -910,19 +869,18 @@ module.exports.testUpdateFormWithAdminField = function(finish){
         targetField: populatedFormDoc.pages[1].fields[0]._id
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules = [fieldRule];
+
+      forms.updateForm(options, populatedFormDoc, function (err, updatedForm) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -964,7 +922,7 @@ module.exports.testUpdateFormWithAdminField = function(finish){
       });
     },
     function (fieldRemoved, fieldRuleId, pageRuleId, cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -1015,7 +973,7 @@ module.exports.testUpdateFormWithAdminField = function(finish){
     finish();
   });
 };
-
+//
 /**
 * When a field has been deleted and the rule has multiple targets, the target should be removed only.
 */
@@ -1023,16 +981,7 @@ module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -1042,7 +991,7 @@ module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
       });
     },
     function (cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -1081,19 +1030,18 @@ module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
         targetField: [populatedFormDoc.pages[1].fields[1]._id, populatedFormDoc.pages[1].fields[0]._id]
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules =  [fieldRule];
+
+      forms.updateForm(options, populatedFormDoc, function (err, updatedForm) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -1129,7 +1077,7 @@ module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
     finish();
   });
 };
-
+//
 /**
 * When a field has been switched to admin with multiple rule targets, the target should be removed only.
 */
@@ -1137,16 +1085,7 @@ module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -1156,7 +1095,7 @@ module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
       });
     },
     function (cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate("fieldRules pageRules").exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -1195,19 +1134,18 @@ module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
         targetField: [populatedFormDoc.pages[1].fields[0]._id, populatedFormDoc.pages[1].fields[1]._id]
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules =  [fieldRule];
+
+      forms.updateForm(options, populatedFormDoc, function (err, updatedForm) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -1244,7 +1182,7 @@ module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
     finish();
   });
 };
-
+//
 /**
 * When a field has been deleted and condition contains the deleted field - single condition + no flag for deletion from user  - it should delete the field
 */
@@ -1252,16 +1190,7 @@ module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish)
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -1271,7 +1200,7 @@ module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish)
       });
     },
     function (cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -1310,19 +1239,18 @@ module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish)
         targetField: [populatedFormDoc.pages[1].fields[0]._id]
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules = [fieldRule];
+
+      forms.updateForm(options, populatedFormDoc, function (err, updatedForm) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -1358,8 +1286,8 @@ module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish)
     finish();
   });
 };
-
-
+//
+//
 /**
 * When a field has been switched to admin, - multiple conditions + no flag for deletion from user  - it should update the field conditions.
 */
@@ -1367,16 +1295,7 @@ module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -1386,7 +1305,7 @@ module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish
       });
     },
     function (cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate("fieldRules pageRules").exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -1430,19 +1349,18 @@ module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish
         targetField: [populatedFormDoc.pages[1].fields[1]._id]
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.pageRules = [pageRule];
+      populatedFormDoc.fieldRules = [fieldRule];
+
+      forms.updateForm(options, populatedFormDoc, function (err, updatedForm) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -1480,7 +1398,7 @@ module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish
     finish();
   });
 };
-
+//
 /**
 * When a field has been deleted - multiple conditions + flag for deletion from user - it should delete the field
 */
@@ -1488,16 +1406,7 @@ module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
-      formModel.remove({}, function (err) {
-        assert.ok(!err, "Expected no error when removing forms " + util.inspect(err));
-        fieldRuleModel.remove({}, function(err){
-          assert.ok(!err, "Expected no error when removing fieldRules " + util.inspect(err));
-          pageRuleModel.remove({}, function(err){
-            assert.ok(!err, "Expected no error when removing pageRules " + util.inspect(err));
-            cb();
-          });
-        });
-      });
+      cleanUp(cb);
     },
     function (cb) {
       //Form deleted, Now add a new form
@@ -1507,7 +1416,7 @@ module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish
       });
     },
     function (cb) {
-      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').exec(function (err, data) {
+      formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate("fieldRules pageRules").exec(function (err, data) {
         assert.ok(!err, 'should have found form');
         assertEqual(data.description, TEST_FORM_2_PAGES_WITH_FIELDS.description, "description should ahve been added");
         assertEqual(data.updatedBy, options.userEmail, "updatedBy field should have been set to userEmail");
@@ -1551,19 +1460,18 @@ module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish
         targetField: [populatedFormDoc.pages[1].fields[1]._id]
       };
 
-      forms.updatePageRules(options, {formId: populatedFormDoc._id, rules: [pageRule]}, function (err, frs) {
+      populatedFormDoc.fieldRules = [fieldRule];
+      populatedFormDoc.pageRules = [pageRule];
+
+      forms.updateForm(options, populatedFormDoc, function (err, updatedForm) {
         assert.ok(!err, 'testUpdateForm() - error from updatePageRules: ' + util.inspect(err));
 
-        forms.updateFieldRules(options, {formId: populatedFormDoc._id, rules: [fieldRule]}, function (err, frs) {
-          assert.ok(!err, 'testUpdateForm() - error from updateFieldRules: ' + util.inspect(err));
-
-          // read our doc from the database again
-          formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
-            assert.ok(!err, 'should have found form');
-            formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
-              assert.ok(!err, 'should have populated form');
-              return cb(err, data.toJSON());
-            });
+        // read our doc from the database again
+        formModel.findOne({name: TEST_FORM_2_PAGES_WITH_FIELDS.name}).populate('pages').populate('pageRules fieldRules').exec(function (err, data) {
+          assert.ok(!err, 'should have found form');
+          formModel.populate(data, {"path": "pages.fields", "model": fieldModel, "select": "-__v -fieldOptions._id"}, function (err, data) {
+            assert.ok(!err, 'should have populated form');
+            return cb(err, data.toJSON());
           });
         });
       });
@@ -1594,8 +1502,6 @@ module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish
       fieldRuleModel.findOne({"_id": fieldRuleId}, function(err, foundFieldRule){
         assert.ok(!err, "Unexpected error when finding documents: " + util.inspect(err));
 
-        console.log("foundFieldRule ", foundFieldRule);
-
         assert.ok(foundFieldRule === null, "Expected no field rule to be returned");
         cb(undefined, fieldRemoved, fieldRuleId, pageRuleId);
       });
@@ -1605,3 +1511,399 @@ module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish
     finish();
   });
 };
+
+
+function checkEqual(expected, actual){
+  assert.ok(_.isEqual(expected, actual), "Expected Objects To Be Equal. Expected: " + JSON.stringify(expected) + " Actual: " + JSON.stringify(actual));
+}
+
+/**
+ * Test Form Updates For Fields That Use Data Sources
+ * @param finish
+ */
+module.exports.testFormWithDataSources = function(finish){
+  var dropdownField = _.clone(handyFieldData.dropdownFieldData);
+  var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
+  var radioField = _.clone(handyFieldData.radioFieldData);
+
+  var testDataSource = _.clone(testDataSourceData);
+
+  var testDataSource2 = _.clone(testDataSourceData);
+
+  var testDataTarget = _.clone(testDataTargetData.postProcessing);
+
+  var testForm = simpleForm.getBaseForm();
+
+  console.log("***** testForm", JSON.stringify(testForm));
+
+  async.waterfall([
+    cleanUp,
+    //First, create a data source
+    function createDataSource1(cb){
+      forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
+        assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
+
+        assert.ok(createdDataSource, "Expected A Data Source");
+
+        cb(undefined, createdDataSource._id);
+      });
+    },
+    function createDataTarget(createdDataSourceId, cb){
+      forms.dataTargets.create(options, testDataTarget, function(err, createdDataTarget){
+        assert.ok(!err, "Expected No Error When Creating A Data Target " + util.inspect(err));
+
+        assert.ok(createdDataTarget, "Expected A Data Target");
+
+        cb(undefined, createdDataSourceId, createdDataTarget._id);
+      });
+    },
+    //Creating A Form That Contains A Data Source
+    function createCoreFormSingleDataSource(createdDataSourceId, createdDataTargetId, cb){
+
+      //cloning a simple base form
+      var testFirstForm = _.clone(testForm);
+
+      //Cloning a base dropdown field
+      var dropdownFieldDataSource = _.clone(dropdownField);
+
+      //New Field name
+      dropdownFieldDataSource.name = "Data Source Dropdown";
+
+      //It is not necessary to add any static options when creating fields that use data sources -- kind of the point really.
+      dropdownFieldDataSource.fieldOptions.definition.options;
+
+      //First, just a dropdown field
+      testFirstForm.pages[0].fields[0] = dropdownFieldDataSource;
+
+      //Assigning the data source
+      dropdownFieldDataSource.dataSourceType = "dataSource";
+      dropdownFieldDataSource.dataSource = createdDataSourceId;
+
+      var formUpdateOptions = _.clone(options);
+
+      //Expect/Don't expect data source cache to be present. This is useful when deploying forms to environments and saving to core where cache data will not be present.
+      formUpdateOptions.expectDataSourceCache = false;
+
+      //Assign The Data Target
+      testFirstForm.dataTargets = [createdDataTargetId];
+
+      console.log("**** testFirstForm", JSON.stringify(testFirstForm));
+
+      forms.updateForm(formUpdateOptions, testFirstForm, function(err, createdForm){
+        assert.ok(!err, "Expected No Error When Creating A New Form" + util.inspect(err));
+
+        assert.ok(createdForm._id, "Expected A Form ID To Be Present");
+
+        var expectedForm = _.clone(testFirstForm);
+
+        //Should be One data source listed
+        expectedForm.dataSources = {
+          formDataSources: [
+            {
+              _id: createdDataSourceId,
+              name: testDataSource.name
+            }
+          ]
+        };
+
+        //Expect A Single Data Target
+        expectedForm.dataTargets = [
+          {
+            _id: createdDataTargetId,
+            name: testDataTarget.name
+          }
+        ];
+
+        //Checking Data Sources And Targets Are assigned to the form
+        checkEqual(expectedForm.dataSources, createdForm.dataSources);
+        checkEqual(expectedForm.dataTargets, createdForm.dataTargets);
+
+        //Checking the field data source was assigned
+        var expectedField = dropdownFieldDataSource;
+        var actualField = createdForm.pages[0].fields[0];
+
+        //Assigning the id of the field
+        expectedField._id = actualField._id;
+
+        //Other than _id, the fields should be identical.
+        checkEqual(expectedField, actualField);
+
+        return cb(undefined, createdDataSourceId, createdDataTargetId, createdForm);
+      });
+    },
+    function createSecondDataSource(createdDataSource1Id, createdDataTargetId, createdForm, cb){
+      forms.dataSources.create(options, testDataSource2, function(err, createdDataSource2){
+        assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
+
+        assert.ok(createdDataSource2, "Expected A Data Source");
+
+        cb(undefined, {
+          createdDataSource2Id: createdDataSource2._id,
+          createdDataSource1Id: createdDataSource1Id,
+          createdDataTargetId: createdDataTargetId,
+          createdForm: createdForm
+        });
+      });
+    },
+    function updateFormWithSecondField(params, cb){
+      //Now add a checkboxes and radio field
+      var baseCheckboxes  = _.clone(checkboxesField);
+      var baseRadio = _.clone(radioField);
+
+      //Deleting options
+      delete baseCheckboxes.fieldOptions.definition.options;
+      delete baseRadio.fieldOptions.definition.options;
+
+      //Setting To The Same Data Source
+      baseCheckboxes.dataSourceType = "dataSource";
+      baseRadio.dataSourceType = "dataSource";
+
+      //Assigning A New Data Source.
+      baseCheckboxes.dataSource = params.createdDataSource2Id;
+      baseRadio.dataSource = params.createdDataSource2Id;
+
+      //Updating The Form
+      params.createdForm.pages[0].fields.push(baseCheckboxes);
+      params.createdForm.pages[0].fields.push(baseRadio);
+
+      //Updating The Form
+      var formUpdateOptions = _.clone(options);
+
+      //Expect/Don't expect data source cache to be present. This is useful when deploying forms to environments and saving to core where cache data will not be present.
+      formUpdateOptions.expectDataSourceCache = false;
+
+      console.log("**** params.createdForm", JSON.stringify(params.createdForm));
+
+      forms.updateForm(formUpdateOptions, params.createdForm, function(err, updatedForm){
+        assert.ok(!err, "Expected No Error When Updating A Form " + util.inspect(err));
+
+        var expectedForm = _.clone(params.createdForm);
+
+        //Should have 2 data sources
+        expectedForm.dataSources = {
+          formDataSources: [
+            {
+              _id: params.createdDataSource1Id,
+              name: testDataSource.name
+            },
+            {
+              _id: params.createdDataSource2Id,
+              name: testDataSource2.name
+            }
+          ]
+        };
+
+        //Expect A Single Data Target
+        expectedForm.dataTargets = [
+          {
+            _id: params.createdDataTargetId,
+            name: testDataTarget.name
+          }
+        ];
+
+        //Checking Data Sources And Targets Are assigned to the form
+        checkEqual(expectedForm.dataSources, updatedForm.dataSources);
+        checkEqual(expectedForm.dataTargets, updatedForm.dataTargets);
+
+        var expectedCheckboxes = baseCheckboxes;
+        var expectedRadio = baseRadio;
+
+        //The fields should be in order
+        var actualCheckboxes = updatedForm.pages[0].fields[1];
+        var actualRadio = updatedForm.pages[0].fields[2];
+
+        expectedCheckboxes._id = actualCheckboxes._id;
+        expectedRadio._id = actualRadio._id;
+
+        //Other than ID, they should be identical.
+        checkEqual(expectedCheckboxes, actualCheckboxes);
+        checkEqual(expectedRadio, actualRadio);
+
+        cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err, "Expected No Errors " + util.inspect(err));
+    finish();
+  });
+
+};
+
+/**
+ * Testing The Case Where A Data Source/Target Does Not Exist
+ * @param finish
+ */
+module.exports.testFormWithDataSourcesNoDataSourceTarget = function(finish){
+
+  var dropdownFieldNoDataSource = _.clone(handyFieldData.dropdownFieldData);
+
+  var fakeId = "123456789012345678901234";
+
+  dropdownFieldNoDataSource.dataSourceType = "dataSource";
+  //ID of a data source that does not exist
+  dropdownFieldNoDataSource.dataSource = fakeId;
+
+  var testForm = simpleForm.getBaseForm();
+
+  async.series([
+    cleanUp,
+    function(cb){
+      var testNoDataSourceForm = _.clone(testForm);
+      testNoDataSourceForm.pages[0].fields[0] = dropdownFieldNoDataSource;
+      forms.updateForm(options, testNoDataSourceForm, function(err){
+        assert.ok(err, "Expected An Error When Updating A Form With A Data Source That Does Not Exist");
+        assert.ok(err.userDetail.indexOf("Could Not Be Found") > -1, "Invalid Error Message");
+        assert.ok(err.systemDetail.indexOf(fakeId) > -1, "The ID Of The Data Source Should Be In The System Detail");
+        assert.equal(err.code, ERROR_CODES.FH_FORMS_INVALID_PARAMETERS);
+        cb();
+      });
+    },
+    function(cb){
+      var testNoDataTargetForm = _.clone(testForm);
+
+      testNoDataTargetForm.dataTargets = [fakeId];
+
+      forms.updateForm(options, testNoDataTargetForm, function(err){
+        assert.ok(err, "Expected An Error When Updating A Form With A Data Source That Does Not Exist");
+
+        assert.ok(err.userDetail.indexOf("Could Not Be Found") > -1, "Invalid Error Message");
+        assert.ok(err.systemDetail.indexOf(fakeId) > -1, "The ID Of The Data Target Should Be In The System Detail");
+        assert.equal(err.code, ERROR_CODES.FH_FORMS_INVALID_PARAMETERS);
+        cb();
+      });
+    }
+
+  ], function(){
+    finish();
+  });
+};
+
+/**
+ * Testing The Case Where No Cache Exists. This is the case where a form is being deployed to an mbaas and it needs to ensure that data source data exists.
+ * @param finish
+ */
+module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
+  var testDataSourceNoCache = _.clone(testDataSourceData);
+
+  var dropdownField = _.clone(handyFieldData.dropdownFieldData);
+
+  dropdownField.dataSourceType = "dataSource";
+  //ID of a data source that does not exist
+
+  var testForm = simpleForm.getBaseForm();
+
+  testForm.pages[0].fields[0] = dropdownField;
+
+  async.waterfall([
+    cleanUp,
+    function createDataSource(cb){
+      forms.dataSources.create(options, testDataSourceNoCache, function(err, createdDataSource){
+        assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
+
+        cb(undefined, createdDataSource);
+      });
+    },
+    function updateFormExpectingDataCache(createdDataSource, cb) {
+      //Assinging the data source id to the field
+      testForm.pages[0].fields[0].dataSource = createdDataSource._id;
+
+      var formUpdateOptions = _.clone(options);
+
+      //Expecting The Cache To Be Present -- Useful For Form Deploys
+      formUpdateOptions.expectDataSourceCache = true;
+
+      forms.updateForm(formUpdateOptions, testForm, function(err){
+        assert.ok(err, "Expected An Error When Updating A Form With A Data Source That Does Not Exist");
+
+        assert.ok(err.userDetail.indexOf("Cached Data") > -1, "Invalid Error Message");
+        assert.ok(err.systemDetail.indexOf(createdDataSource._id.toString()) > -1, "The ID Of The Data Source Should Be In The System Detail");
+        assert.equal(err.code, ERROR_CODES.FH_FORMS_INVALID_PARAMETERS);
+        cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err);
+    finish();
+  });
+};
+
+/**
+ * Testing The Case Where A Field Is Switched To A Static Field, but there is no field data
+ */
+module.exports.testFormFieldChangeFromDataSourceToStaticNoFields = function(finish){
+  var testDataSource = _.clone(testDataSourceData);
+
+  var dropdownField = _.clone(handyFieldData.dropdownFieldData);
+  dropdownField.fieldOptions = {
+
+  };
+
+  var testForm = simpleForm.getBaseForm();
+  testForm.pages[0].fields[0] = dropdownField;
+
+  async.waterfall([
+    cleanUp,
+    function(cb){
+      forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
+        assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
+
+        dropdownField.dataSourceType = "dataSource";
+        dropdownField.dataSource = createdDataSource._id;
+
+
+        cb(undefined, createdDataSource);
+      });
+    },
+    function(createdDataSource, cb){
+      forms.updateForm(options, testForm, function(err, createdForm){
+        assert.ok(!err, "Expected No Error When Updating A Form " + util.inspect(err));
+
+        cb(undefined, createdDataSource, createdForm);
+      });
+    },
+    function(createdDataSource, createdForm, cb){
+      //Here, the form will be updated to switch the data source to static, but add no options. This should produce an error
+
+      createdForm.pages[0].fields[0].dataSourceType = "static";
+
+      forms.updateForm(options, createdForm, function(err){
+        assert.ok(err, "Expected An Error When Updating A Form With A Field That Is Static But With No Options");
+
+        assert.ok(err.userDetail.indexOf("Must Contain Field Options") > -1, "Invalid Error Message");
+        assert.equal(err.code, ERROR_CODES.FH_FORMS_INVALID_PARAMETERS);
+        cb(undefined, createdDataSource, createdForm);
+      });
+    },
+    function(createdDataSource, createdForm, cb){
+      //Now Update The Field To Static With Actual Options
+      var formToUpdate = _.clone(createdForm);
+      formToUpdate.pages[0].fields[0].dataSourceType = "static";
+      //Assigning some field data
+      formToUpdate.pages[0].fields[0].fieldOptions = {
+        definition : handyFieldData.dropdownFieldData.fieldOptions.definition
+      };
+
+      forms.updateForm(options, formToUpdate, function(err, updatedForm){
+        assert.ok(!err, "Expected No Error When Updating A Form " + util.inspect(err));
+
+        //The field should now be static and have options
+        var expectedField = _.clone(handyFieldData.dropdownFieldData);
+        expectedField.dataSourceType = "static";
+        expectedField.dataSource = createdDataSource._id;
+        var actualField = createdForm.pages[0].fields[0];
+        expectedField._id =  actualField._id;
+
+        checkEqual(expectedField, actualField);
+
+        //The form should have no data sources associated
+        assert.equal(updatedForm.dataSources.formDataSources.length, 0);
+
+        cb();
+      });
+    }
+  ],  function(err){
+    assert.ok(!err);
+    finish();
+  });
+};
+

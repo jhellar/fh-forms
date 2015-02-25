@@ -9,7 +9,7 @@ var initDatabase = require('./../setup.js').initDatabase;
 var assert = require('assert');
 
 function assertEqual(actual, expected, message) {
-  var msg = message || "actual not expected: "
+  var msg = message || "actual not expected: ";
   assert.strictEqual(actual, expected, msg + ", actual: " + util.inspect(actual) + ", expected: " + util.inspect(expected));
 }
 

@@ -4,10 +4,17 @@ var mongoose = require('mongoose');
 var models = require('../../lib/common/models.js')();
 var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
-var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
+var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 var appId = "123456789";
 var assert = require('assert');
 var util = require('util');
+var simpleForm = require('../Fixtures/simple.js');
+var dataSource = require('../Fixtures/dataSource.js');
+var handyFieldData = require('../Fixtures/formSubmissions.js');
+var _ = require('underscore');
+var cleanUp = require('../Fixtures/cleanup.js');
+var DataSource;
+var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
 
 
 module.exports.setUp = function(finish){
@@ -19,12 +26,12 @@ module.exports.setUp = function(finish){
       finish();
     });
   });
-}
+};
 
 module.exports.tearDown = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
-    finish();
+    cleanUp(finish);
   });
 };
 
@@ -33,7 +40,7 @@ module.exports.testGetFormWorksSinglePage = function(finish){
     assert.ok(!err);
     assert.ok(result);
 
-    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id}, function(err, result){
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result[0]._id}, function(err, result){
       if(err) console.log(err);
       assert.ok(!err, util.inspect(err));
       assert.ok(result);
@@ -53,7 +60,7 @@ module.exports.testExportFormWorks = function(finish){
     assert.ok(!err);
     assert.ok(result);
 
-    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result.forms[0]._id,"export":true}, function(err, result){
+    forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : result[0]._id,"export":true}, function(err, result){
       if(err) console.log(err);
       assert.ok(!err, util.inspect(err));
       assert.ok(result);
@@ -69,8 +76,7 @@ module.exports.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
-    assert.ok(result.forms);
-    assert.equal(2, result.forms.length);
+    assert.equal(2, result.length);
     finish();
   });
 };
@@ -79,16 +85,15 @@ module.exports.testGetFormWorksArrayOfFormIds = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     var formIdArray = [];
 
-    formIdArray[0] = result.forms[0]._id;
-    formIdArray[1] = result.forms[1]._id;
+    formIdArray[0] = result[0]._id;
+    formIdArray[1] = result[1]._id;
 
     forms.getPopulatedFormList({"uri": process.env.FH_DOMAIN_DB_CONN_URL, formids: formIdArray}, function(err, result){
       assert.ok(!err, util.inspect(err));
       assert.ok(result);
-      assert.ok(result.forms);
-      assert.equal(2, result.forms.length);
-      checkForm(result.forms[0], {"name": "Test Form 1", "description": "This is a test form 1."});
-      checkForm(result.forms[1], {"name": "Test Form 2", "description": "This is a test form 2."});
+      assert.equal(2, result.length);
+      checkForm(result[0], {"name": "Test Form 1", "description": "This is a test form 1."});
+      checkForm(result[1], {"name": "Test Form 2", "description": "This is a test form 2."});
       finish();
     });
   });
@@ -101,6 +106,275 @@ module.exports.testgetPopulatedFormListFails = function(finish){
       assert.ok(err, util.inspect(err));
       finish();
     });
+  });
+};
+
+/**
+ * Testing the scenario where a form field references a data source. The data for the data source should be merged into the field at getForm time.
+ *
+ * @param finish
+ */
+module.exports.testGetFormIncludingDataSourceData = function(finish){
+  var testForm = simpleForm.getBaseForm()
+  var testDropdownField = _.clone(handyFieldData.dropdownFieldData);
+
+  testForm.pages[0].fields[0] =  testDropdownField;
+
+  var testDataSource = _.clone(dataSource);
+  var testCacheOptions = [
+    {
+      label: 'Option 1',
+      checked: false
+    },
+    {
+      label: 'Option 2',
+      checked: false
+    },
+    {
+      label: 'Option 3',
+      checked: true
+    }
+  ];
+
+  var updatedCacheOptions = [
+    {
+      label: 'Changed Option 1',
+      checked: false
+    },
+    {
+      label: 'Changed Option 2',
+      checked: true
+    }
+  ];
+
+
+  async.waterfall([
+    function createDataSource(cb){
+      forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
+        assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+
+        assert.ok(createdDataSource._id, "Expected A Data Source ID");
+
+        cb(undefined, createdDataSource);
+      });
+    },
+    function createForm(createdDataSource, cb){
+      forms.updateForm(options, testForm, function(err, createdForm){
+        assert.ok(!err, "Expected No Error When Creating A New Form " + util.inspect(err));
+
+        return cb(undefined, createdDataSource, createdForm);
+      });
+    },
+    function getStaticForm(createdDataSource, createdForm, cb){
+      //If a form definition is not sourced from a data source, the static data should be returned
+
+      var getFormOptions = _.clone(options);
+
+
+      //This option will include form data sources in the response. useful for supercore forms CRUD operations.
+      //The $fh.forms cloud API should not have access to the data source IDs that populate the form. -- just the data that it was populated with
+      getFormOptions.includeDataSources = true;
+
+      //Getting a form definition will ignore any fields with data source cache data by default and return an error if data source cache does not exist.
+      //This parameter stops this from happening. Useful for core forms operations that contain data sources with no cache set.
+      getFormOptions.expectDataSourceCache = false;
+
+      getFormOptions._id = createdForm._id;
+
+      forms.getForm(getFormOptions, function(err, returnedForm){
+        assert.ok(!err, "Expected No Error When Getting A Form");
+
+        //The Form Data Sources Field Is Returned
+        assert.ok(_.isEqual(returnedForm.dataSources, {
+            formDataSources: []
+        }), "Expected No Form Data Sources");
+
+        var formDropdownField = returnedForm.pages[0].fields[0];
+
+        assert.equal(formDropdownField.dataSourceType, "static");
+
+        return cb(undefined, createdDataSource, createdForm);
+      });
+    },
+    function assignDataSourceToField( createdDataSource, createdForm, cb){
+
+      //Assigning THe Data Source To THe Field
+      createdForm.pages[0].fields[0].dataSourceType = "dataSource";
+      createdForm.pages[0].fields[0].dataSource = createdDataSource._id;
+
+      //Updating The Form
+      forms.updateForm(options, createdForm, function(err, updatedForm){
+        assert.ok(!err, "Expected no error when updating a form " + util.inspect(err));
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function getDataSourceFormNoCache(createdDataSource, updatedForm, cb){
+      var getFormOptions = _.clone(options);
+
+      getFormOptions.includeDataSources = true;
+
+      //Not expecting Any cache
+      getFormOptions.expectDataSourceCache = false;
+
+      getFormOptions._id = updatedForm._id;
+
+      forms.getForm(getFormOptions, function(err, returnedForm){
+        assert.ok(!err, "Expected No Error When Getting A Form " + util.inspect(err));
+
+        //The Form Data Sources Field Is Returned
+        assert.ok(_.isEqual(returnedForm.dataSources, {
+          formDataSources: [{
+            _id: createdDataSource._id,
+            name: createdDataSource.name
+          }]
+        }), "Expected One Form Data Source");
+
+        var formDropdownField = returnedForm.pages[0].fields[0];
+
+        //The field should have data source information.
+        assert.equal(formDropdownField.dataSourceType, "dataSource");
+        assert.equal(formDropdownField.dataSource.toString(), createdDataSource._id.toString());
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function getDataSourceFormNoDataSourceInfo(createdDataSource, updatedForm, cb){
+      var getFormOptions = _.clone(options);
+
+      getFormOptions.includeDataSources = false;
+
+      //Not expecting Any cache
+      getFormOptions.expectDataSourceCache = false;
+
+      getFormOptions._id = updatedForm._id;
+
+      forms.getForm(getFormOptions, function(err, returnedForm){
+        assert.ok(!err, "Expected No Error When Getting A Form " + util.inspect(err));
+
+        //The Form Data Sources Field Is Returned
+        assert.ok(_.isEqual(returnedForm.dataSources, undefined), "Expected No Data Source Information");
+
+        var formDropdownField = returnedForm.pages[0].fields[0];
+
+        //The field should have no data source information.
+        assert.equal(formDropdownField.dataSourceType, undefined);
+        assert.equal(formDropdownField.dataSource, undefined);
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function getDataSourceFormCacheExpectedNoCache(createdDataSource, updatedForm, cb){
+      var getFormOptions = _.clone(options);
+
+      getFormOptions.includeDataSources = false;
+
+      //Not expecting Any cache
+      getFormOptions.expectDataSourceCache = true;
+
+      getFormOptions._id = updatedForm._id;
+
+      //If the data source has no cache, then the form should not return as at least one of the fields will not contain data.
+      forms.getForm(getFormOptions, function(err){
+        assert.ok(err, "Expected An Error When Getting A Form With Data Source Data That Does Not Exist");
+        assert.ok(err.userDetail.indexOf("No Field Data Available") > -1);
+        assert.equal(err.code, ERROR_CODES.FH_FORMS_UNEXPECTED_ERROR);
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function updateDataSourceCache(createdDataSource, updatedForm, cb){
+      var testCacheData = {
+        _id: createdDataSource._id,
+        data: {
+          fieldType: "singleChoice",
+          options: testCacheOptions
+        }
+      };
+
+      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+        assert.ok(!err, "Expected No Error When Updating Data Cache " + util.inspect(err), util.inspect(updateResult));
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function getDataSourceFormCacheExpected(createdDataSource, updatedForm, cb){
+      var getFormOptions = _.clone(options);
+
+      getFormOptions.includeDataSources = false;
+
+      //Not expecting Any cache
+      getFormOptions.expectDataSourceCache = true;
+
+      getFormOptions._id = updatedForm._id;
+
+      forms.getForm(getFormOptions, function(err, returnedForm){
+        assert.ok(!err, "Expected No Error When Getting Form " + util.inspect(err));
+
+        //The Form Data Sources Field Is Returned
+        assert.ok(_.isEqual(returnedForm.dataSources, undefined), "Expected No Data Source Information");
+
+        var formDropdownField = returnedForm.pages[0].fields[0];
+
+        //The field should have no data source information.
+        assert.equal(formDropdownField.dataSourceType, undefined);
+        assert.equal(formDropdownField.dataSource, undefined);
+
+        //The field should have data associated with the data source
+        _.each(testCacheOptions, function(cacheOption, index){
+          assert.ok(_.isEqual(JSON.stringify(cacheOption), JSON.stringify(formDropdownField.fieldOptions.definition.options[index])));
+        });
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function updateCacheAgain(createdDataSource, updatedForm, cb){
+      var testCacheData = {
+        _id: createdDataSource._id,
+        data: {
+          fieldType: "singleChoice",
+          options: updatedCacheOptions
+        }
+      };
+
+      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+        assert.ok(!err, "Expected No Error When Updating Data Cache ", + err);
+
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    },
+    function getDataSourceFormUpdatedCacheExpected(createdDataSource, updatedForm, cb){
+      var getFormOptions = _.clone(options);
+
+      getFormOptions.includeDataSources = false;
+
+      //Not expecting Any cache
+      getFormOptions.expectDataSourceCache = true;
+
+      getFormOptions._id = updatedForm._id;
+
+      forms.getForm(getFormOptions, function(err, returnedForm){
+        assert.ok(!err, "Expected No Error When Getting Form " + err);
+
+        //The Form Data Sources Field Is Returned
+        assert.ok(_.isEqual(returnedForm.dataSources, undefined), "Expected No Data Source Information");
+
+        var formDropdownField = returnedForm.pages[0].fields[0];
+
+        //The field should have no data source information.
+        assert.equal(formDropdownField.dataSourceType, undefined);
+        assert.equal(formDropdownField.dataSource, undefined);
+
+        //The field should have data associated with the data source
+        _.each(updatedCacheOptions, function(cacheOption, index){
+          assert.ok(_.isEqual(JSON.stringify(cacheOption), JSON.stringify(formDropdownField.fieldOptions.definition.options[index])));
+        });
+        return cb(undefined, createdDataSource, updatedForm);
+      });
+    }
+  ], function (err){
+    assert.ok(!err, "Expected No Error");
+    finish();
   });
 };
 
@@ -126,6 +400,7 @@ function createTestData(assert, cb){
   var Page = models.get(connection, models.MODELNAMES.PAGE);
   var FieldRule = models.get(connection, models.MODELNAMES.FIELD_RULE);
   var PageRule = models.get(connection, models.MODELNAMES.PAGE_RULE);
+
 
   var appForm1;
 
@@ -212,7 +487,6 @@ function createTestData(assert, cb){
       });
     }], function(err){
       assert.ok(!err);
-      console.log("Fields Saved");
       cb(err);
     });
   }
@@ -233,7 +507,6 @@ function createTestData(assert, cb){
       page2.save(function(err){
         assert.ok(!err);
 
-        console.log("Pages Saved");
         cb(err);
       });
     });
@@ -257,7 +530,6 @@ function createTestData(assert, cb){
 
     fieldRule1.save(function(err){
       assert.ok(!err);
-      console.log("FieldRule Saved");
       cb(err);
     });
   }
@@ -279,7 +551,6 @@ function createTestData(assert, cb){
 
     pageRule1.save(function(err){
       assert.ok(!err);
-      console.log("PageRule Saved");
       cb(err);
     });
   }
@@ -306,7 +577,6 @@ function createTestData(assert, cb){
       });
     }], function(err){
       assert.ok(!err);
-      console.log("Forms Saved");
       cb(err);
     });
   }
@@ -324,7 +594,6 @@ function createTestData(assert, cb){
       });
     }], function(err){
       assert.ok(!err);
-      console.log("Appform Saved");
       cb(err);
     });
   }
