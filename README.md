@@ -1,4 +1,4 @@
 fh-forms
 ========
 
-Cloud API for form submissions.
+FeedHenry Cloud API for form submissions.

@@ -62,6 +62,7 @@ dist: npm_deps client_rules_engine
 	mkdir -p $(DIST_DIR) $(OUTPUT_DIR)/$(RELEASE_DIR)
 	cp -r ./lib $(OUTPUT_DIR)/$(RELEASE_DIR)
 	cp ./package.json $(OUTPUT_DIR)/$(RELEASE_DIR)
+	cp ./README.md $(OUTPUT_DIR)/$(RELEASE_DIR)
 	echo "$(MAJOR).$(RELEASE).$(HOTFIX)-$(BUILD_NUMBER)" > $(OUTPUT_DIR)/$(RELEASE_DIR)/VERSION.txt
 	sed -i -e s/BUILD-NUMBER/$(BUILD_NUMBER)/ $(OUTPUT_DIR)/$(RELEASE_DIR)/package.json
 	tar -czf $(DIST_DIR)/$(RELEASE_FILE) -C $(OUTPUT_DIR) $(RELEASE_DIR)
