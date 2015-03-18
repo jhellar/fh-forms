@@ -4,7 +4,7 @@ FeedHenry Cloud API for form submissions.
 
 ## Test execution
 
-There are two types of test: unit tests that don't have any additional dependencies and acceptance tests that require configured MongoDB. [Turbo](https://www.npmjs.com/package/turbo-test-runner) is used as a test runner. It stops test execution if a test fails.
+There are two types of tests: unit tests that don't have any additional dependencies and acceptance tests that require configured MongoDB. [Turbo](https://www.npmjs.com/package/turbo-test-runner) is used as a test runner. It stops test execution if a test fails.
 
 We use `make` to run the tests. Specification is stored in the *makefile*.
 
