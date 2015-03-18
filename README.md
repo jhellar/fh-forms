@@ -18,6 +18,25 @@ make test_unit // run all unit tests
 make test_accept // run all acceptance tests
 ```
 
+### Requirements to run acceptance tests
+
+We need to install and configure [MongoDb](https://www.mongodb.org/). Installation instructions can be found in [MongoDb Docs](http://docs.mongodb.org). On Linux systems it is desirable to install *mongodb-org* meta package.
+
+Make sure to have *mongod* up and running: `sudo /etc/init.d/mongod start`.
+
+MongoDb can be controlled from mongo shell by typing `mongo`.
+
+The last thing that we have to do is to add admin user via mongo shell:
+
+```
+use admin
+db.createUser({
+        user: "admin",
+        pwd: "admin",
+        roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+})
+```
+
 ## Code coverage
 
 Code coverage reports are generated using [istanbul](http://gotwarlost.github.io/istanbul/) and stored in *coverage*, *cov-unit* and *cov-accept* folders.
