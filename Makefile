@@ -25,6 +25,7 @@ all: clean npm_deps jshint test plato
 test: jshint test_unit_cov test_accept_cov
 
 test_accept: npm_deps
+	mongo ./test/setup_mongo.js
 	env NODE_PATH=./lib ./node_modules/.bin/turbo --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/ --series=true
 
 test_unit: npm_deps
