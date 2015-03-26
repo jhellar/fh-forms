@@ -35,6 +35,7 @@ test_unit_cov: npm_deps
 	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- ./test/unit
 
 test_accept_cov: npm_deps
+	mongo ./test/setup_mongo.js
 	env NODE_PATH=./lib ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept --series=true
 
 coverage: test_unit_cov test_accept_cov
