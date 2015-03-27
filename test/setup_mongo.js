@@ -4,7 +4,6 @@
 // The check is very basic and can be misleading 
 // if other admin users exist 
 
-db = connect("localhost:27020");
 db = db.getSiblingDB('admin');
 
 var adminUsers = db.system.users.find({user: 'admin'});
@@ -18,6 +17,6 @@ if (adminUsers.length() > 0) {
     db.addUser({
         user: "admin",
         pwd: "admin",
-        roles: ["userAdminAnyDatabase"]
+        roles: ["userAdminAnyDatabase", "dbAdminAnyDatabase"]
     });
 }
