@@ -121,14 +121,16 @@ module.exports = {
       body: {
         hashName: "somefilehashname"
       },
-      submitFileParams:{
-        submission: {
-          fileStream: "path/to/file/on/local/filesystem",
-          fileName: "somefile.pdf"
-        },
-        fileDetails: {
-          fileName: "somefile.pdf",
-          fileType: "application/pdf"
+      appformsResultPayload: {
+        data: {
+          submission: {
+            fileStream: "path/to/file/on/local/filesystem",
+            fileName: "somefile.pdf"
+          },
+          fileDetails: {
+            fileName: "somefile.pdf",
+            fileType: "application/pdf"
+          }
         }
       }
     };

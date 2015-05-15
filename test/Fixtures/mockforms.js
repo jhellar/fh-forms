@@ -382,8 +382,6 @@ module.exports = {
     assert.ok(options.uri, "Expected A Mongo URI");
     assert.ok(options._id, "Expected A Theme Id");
 
-
-
     return cb();
   },
   cloneTheme: function(options, cb){
@@ -405,8 +403,35 @@ module.exports = {
   exportSubmissions: function(options, params, cb){
     assert.ok(options.uri, "Expected A Mongo URI");
 
-    return cb(undefined, {
+    return cb(undefined, {});
+  },
+  submitFormData: function(options, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
 
+    assert.ok(options.submission.appId, "Expected A Project Id");
+
+    return cb(undefined, {
+      submissionId: "testsubmissionid",
+      submissionStartedTimestamp: new Date(),
+      formSubmission: options.submission
     });
+  },
+  getSubmissionStatus: function(options, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+    assert.ok(options.submission.submissionId, "Epxected A Submission ID");
+
+    return cb(undefined, {
+      status: "complete"
+    });
+  },
+  findForms: function (options, formsList, cb) {
+    assert.ok(options.uri, "Epxected A Mongo URI");
+    assert.ok(_.isArray(formsList), "Expected A Forms List Array");
+    assert.equal(formsList[0], "someformid", "Expected A Form ID String");
+
+    return cb(undefined, [{
+      _id: "someformid",
+      name: "Some Test Form"
+    }]);
   }
 };

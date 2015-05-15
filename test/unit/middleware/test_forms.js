@@ -208,5 +208,54 @@ module.exports = {
       assert.ok(_.isArray(req.appformsResultPayload.data), "Expected A Forms Projects Result Array");
       done();
     });
+  },
+  "It Should Submit Form Data For A Form": function(done){
+    var req = {
+      params: {
+        projectid: "someprojectguid",
+        id: "someformid"
+      },
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      body: {
+        formId: "someformid",
+        formFields: [
+          {
+            fieldId: "somefieldid",
+            values: ["sometestvalue"]
+          }
+        ]
+      }
+    };
+
+    formsHandler.submitFormData(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+
+      //Verifying the submitFormData Response
+      assert.equal(req.appformsResultPayload.data.submissionId, "testsubmissionid");
+      done();
+    });
+  },
+  "It Should List Forms For A Project": function(done){
+    var req = {
+      params: {
+        projectid: "somelistprojectid"
+      },
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      appformsResultPayload: {
+        data: ["someformid"],
+        type: "formsResult"
+      }
+    };
+
+    formsHandler.listDeployedForms(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+
+      done();
+    });
   }
+
 };
