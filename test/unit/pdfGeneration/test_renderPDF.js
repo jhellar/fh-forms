@@ -50,7 +50,7 @@ module.exports = {
     var _loadPdfTemplate = proxyquire('../../../lib/impl/pdfGeneration/renderPDF.js', mocks).loadPdfTemplate;
 
     _loadPdfTemplate({
-      location: "somehost.com",
+      location: "http://somehost.com",
       pdfTemplateLoc: "/some/static/uri/for/the/template"
     }, function(err, formTemplate){
       assert.ok(!err, "Expected No Error " + err);
@@ -123,7 +123,7 @@ module.exports = {
             cb("ok");
           },
           render: function(filePath, cb){
-            assert.equal(filePath, "file://some/place/to/export/pdf/and/files/to/someformid_somesubmissionid.pdf");
+            assert.equal(filePath, "/some/place/to/export/pdf/and/files/to/someformid_somesubmissionid.pdf");
             return cb();
           },
           close: function(){}
@@ -147,7 +147,7 @@ module.exports = {
       pdfExportDir: "/some/place/to/export/pdf/and/files/to"
     }, function(err, renderedPDFFilePath){
       assert.ok(!err, "Expectd No Error " + err);
-      assert.equal(renderedPDFFilePath, "file://some/place/to/export/pdf/and/files/to/someformid_somesubmissionid.pdf");
+      assert.equal(renderedPDFFilePath, "/some/place/to/export/pdf/and/files/to/someformid_somesubmissionid.pdf");
 
       done();
     });

@@ -88,7 +88,8 @@ module.exports = {
     var populatedSubmission = _populateSubmissionFileData({
       form: testFormSubmittedAgainst,
       submissionFiles: submissionFiles,
-      downloadUrl: "https://some.location.com/api/v2/mbaas/env/appforms/submissions/:id/files/:fileId",
+      downloadUrl: "https://some.location.com",
+      fileUriPath: "/api/v2/mbaas/env/appforms/submissions/:id/files/:fileId",
       submission: testSubmission
     });
 
@@ -213,17 +214,18 @@ module.exports = {
       connections: {},
       options: {
         pdfExportDir: "/some/pdf/dir/to/export/to",
-        downloadUrlHost: "https://some.host.com/api/v2/mbaas/appforms/submissions/:id/files/:fileId"
+        downloadUrl: "https://some.location.com",
+        fileUriPath: "/api/v2/mbaas/env/appforms/submissions/:id/files/:fileId"
       },
       fileId: "somefileidtocache"
     }, function(err, mergedSubmission){
       assert.ok(!err, "Expected No Error When Writing The Stream");
 
       //The File Field Should Have A Download Url
-      assert.equal(mergedSubmission.formSubmittedAgainst.pages[0].fields[0].values[0].url, "https://some.host.com/api/v2/mbaas/appforms/submissions/somesubmissionid/files/fileGroupId");
+      assert.equal(mergedSubmission.formSubmittedAgainst.pages[0].fields[0].values[0].url, "https://some.location.com/api/v2/mbaas/env/appforms/submissions/somesubmissionid/files/fileGroupId");
 
       //The Photo Field Should Have a local file url
-      assert.equal(mergedSubmission.formSubmittedAgainst.pages[0].fields[1].values[0].url, "file://some/pdf/dir/to/export/to/image_binary_photoFileGroupId");
+      assert.equal(mergedSubmission.formSubmittedAgainst.pages[0].fields[1].values[0].url, "file:///some/pdf/dir/to/export/to/image_binary_photoFileGroupId");
       done();
     });
   }

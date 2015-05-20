@@ -46,7 +46,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -91,7 +91,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -134,7 +134,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -225,7 +225,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -332,7 +332,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -429,7 +429,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -513,7 +513,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -606,7 +606,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -696,7 +696,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "fieldCode",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -739,7 +739,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -864,7 +864,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
@@ -940,7 +940,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var keys = Object.keys(csvs);
@@ -1040,7 +1040,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var keys = Object.keys(csvs);
@@ -1056,7 +1056,7 @@ module.exports = {
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
       submissions: sub,
-      downloadUrl: 'dummyurl'
+      downloadUrl: 'dummyurl:fileId'
     }, function(err, csvs){
       assert.ok(!err);
       var csvKeys = Object.keys(csvs);
