@@ -7,6 +7,7 @@ var initDatabase = require('./../setup.js').initDatabase;
 var lodash = require('lodash');
 var assert = require('assert');
 var util = require('util');
+var _ = require('underscore');
 
 var testFilePath = "./test/Fixtures/test.pdf";
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
@@ -934,7 +935,7 @@ module.exports.testSubmitUpdate = function(finish){
       updatedTimestamp = res.formSubmission.updatedTimestamp.getTime();
 
       // verify updated test values
-      assert.equal(res.formSubmission._id, submission._id);
+      assert.equal(res.formSubmission._id.toString(), submission._id.toString());
       assert.equal(res.formSubmission.formFields[0].fieldValues[0], "test1updated");
       assert.equal(res.formSubmission.formFields[0].fieldValues[1], "test2updated");
 
@@ -965,8 +966,9 @@ module.exports.testSubmitUpdate = function(finish){
 };
 
 module.exports.testSubmitUpdateFileField = function(finish){
-  var submission = testSubmitFormBaseInfo;
+  var submission = _.omit(testSubmitFormBaseInfo, "_id");
   submission.formId = testBigFormId;
+
 
   var file1Details = {
     "fileName" : "test.pdf",
