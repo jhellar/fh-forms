@@ -72,5 +72,48 @@ module.exports = {
     assert.notEqual(misc.generateHash(arrayObj1), misc.generateHash(arrayObj2), "Expected Array Hashes To Not Be Equal");
 
     done();
+  },
+  "Test Submission File Storage Builder": function(done){
+
+    var testSubmissions = [{
+      _id: "somesubmissionid",
+      formId: "someformid1",
+      formFields: [{
+        fieldId: "sometextfieldid",
+        fieldValues: ["sometextval"]
+      }, {
+        fieldId: "somefilefieldid",
+        fieldValues: [{
+          fileSize: 22,
+          fileName: "somefilename.pdf"
+        },{
+          fileSize: 33,
+          fileName: "somefilename2.pdf"
+        }]
+      }]
+    }, {
+      _id: "someothersubmissionid",
+      formId: "someformid2",
+      formFields: [{
+        fieldId: "sometextfieldid",
+        fieldValues: ["sometextval"]
+      }, {
+        fieldId: "somefilefieldid",
+        fieldValues: [{
+          fileSize: 10,
+          fileName: "somefilename.pdf"
+        },{
+          fileSize: 20,
+          fileName: "somefilename2.pdf"
+        }]
+      }]
+    }];
+
+    var result = misc.buildFormFileSizes(testSubmissions);
+
+    assert.equal(result["someformid1"], 55);
+    assert.equal(result["someformid2"], 30);
+
+    done();
   }
 };

@@ -48,7 +48,6 @@
     "nock": "0.22.1",
     "plato": "^1.0.1",
     "proxyquire": "0.4.1",
-    "turbo-test-runner": "0.3.3",
-    "underscore": "1.6.0"
+    "turbo-test-runner": "0.3.3"
   }
 }
