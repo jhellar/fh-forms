@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var models = require('../../lib/common/models.js')();
 var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
-var async = require("async");
 var assert = require('assert');
 var util = require('util');
 var events = require('events');
@@ -46,96 +45,7 @@ module.exports.setUp = function(finish){
       finish();
     });
   });
-}
-
-module.exports.testCompleteSubmissionWorks = function(finish){
-  //First need to register an event emitter with fh-forms
-  var someRandomObject = {};
-  var startedEventCalled = false;
-  var secondStartedEventCalled = false;
-  var completedEventCalled = false;
-
-  var actualEventEmitter = new events.EventEmitter();
-  var secondEventEmitter = new events.EventEmitter();
-
-  //Emitter has now been registered.
-  //Submission started event.
-  actualEventEmitter.on('submissionStarted', function(submissionData){
-    assert.ok(!startedEventCalled, "submissionStarted Should Only have been called once");
-
-    assert.ok(submissionData, "Expected submission data to have been passed to the submissionStarted Event.");
-    assert.ok(submissionData.submissionId, "Expected A submission parameter to have been passed");
-    assert.ok(submissionData.submissionId.toString().length === 24, "Expected the submission Id to be 24 characters");
-    assert.ok(submissionData.submissionStartedTimestamp, "Expected a submission started timestamp");
-
-    startedEventCalled = true;
-  });
-
-  //Second Event Emitter Should Be Able To be called
-  secondEventEmitter.on("submissionStarted", function(submissionData){
-    assert.ok(!secondStartedEventCalled, "submissionStarted Should Only have been called once");
-
-    assert.ok(submissionData, "Expected submission data to have been passed to the submissionStarted Event.");
-    assert.ok(submissionData.submissionId, "Expected A submission parameter to have been passed");
-    assert.ok(submissionData.submissionId.toString().length === 24, "Expected the submission Id to be 24 characters");
-    assert.ok(submissionData.submissionStartedTimestamp, "Expected a submission started timestamp");
-
-    secondStartedEventCalled = true;
-  });
-
-  //Submission Complete Event
-  actualEventEmitter.on('submissionComplete', function(submissionData){
-    assert.ok(!completedEventCalled, "submissionComplete Only have been called once");
-
-    assert.ok(submissionData, "Expected submission data to have been passed to the submissionStarted Event.");
-    assert.ok(submissionData.submissionId, "Expected A submission parameter to have been passed");
-    assert.ok(submissionData.submissionId.toString().length === 24, "Expected the submission Id to be 24 characters");
-    assert.ok(submissionData.submissionCompletedTimestamp, "Expected a submission Completed timestamp for the submissionComplete Event.");
-
-    completedEventCalled = true;
-  });
-
-  //Setting up a submissionComplete on the second event emitter. This
-  secondEventEmitter.on('submissionComplete', function(submissionData){
-    assert.ok(false, "secondEventEmitter submissionComplete Should Not Have Been Called");
-  });
-
-  forms.registerListener(someRandomObject, function(err){
-    assert.ok(err, "Expected an error when trying to register non Event Emitter Objects");
-
-    forms.registerListener(actualEventEmitter, function(err){
-      assert.ok(!err, "Expected no error when trying to register a real EventEmitter object");
-
-      forms.registerListener(secondEventEmitter, function(err){
-        assert.ok(!err, "Expected no error when trying to register a second real EventEmitter object");
-
-        submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
-
-          //Deregistering the second Event Emitter. This stops the submissionComplete event from being called on the second Event Emitter.
-          forms.deregisterListener(secondEventEmitter);
-
-          //Form data submitted with all files, now complete the
-          forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submissionId}}, function(err, result){
-            if(err) console.log(err);
-            assert.ok(!err);
-            assert.ok(result);
-            assert.ok(result.status === "complete");
-
-            checkSubmissionComplete(assert, submissionId, function(){
-              //Checking that the submission events have been called;
-              assert.ok(startedEventCalled, "Expected the submissionStarted event to have been called.");
-              assert.ok(completedEventCalled, "Expected the submissionCompleted event to have been called");
-              assert.ok(secondStartedEventCalled, "Expected the second submissionStarted event to have been called");
-              forms.deregisterListener(actualEventEmitter);
-
-              finish();
-            });
-          });
-        });
-      });
-    });
-  });
-}
+};
 
 module.exports.testCompleteSubmissionNoSubmissionId = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
