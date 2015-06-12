@@ -1907,3 +1907,126 @@ module.exports.testFormFieldChangeFromDataSourceToStaticNoFields = function(fini
   });
 };
 
+
+/**
+ * Testing the scenario where the form is updated with a field and a field / page rule with temorary ids.
+ * This happens in a live-editing scenario where a field is added to a form and associated with a rule before saving.
+ * The updateForm function must manage the mapping of these temporray ids to new mongo ids.
+ * @param finish
+ */
+module.exports.testFormFieldRuleChangeWithTempIds = function(finish){
+
+  var testForm = {
+    "name": "Simple Form with 1 pages with 1 field",
+    "description": "This is my form. it will have fields updated",
+    "pages": [
+      {
+        _id: "temppageid",
+        name: "New Page With Temp Id",
+        isNewModel: true,
+        description: "Some Page",
+        cid: "temppageid",
+        fields: [
+          {
+            "_id": "tempfieldid",
+            "cid": "tempfieldid",
+            "isNewModel": true,
+            "name": "Some Text Field",
+            "helpText": "This is a text field",
+            "type": "text",
+            "required": false,
+            "fieldOptions": {
+              validation: {
+                "min": 20,
+                "max": 100
+              },
+              definition: {
+                "maxRepeat": 5,
+                "minRepeat": 2
+              }
+            },
+            "repeating": true
+          },
+          {
+            "_id": "tempfieldid2",
+            "cid": "tempfieldid2",
+            "isNewModel": true,
+            "name": "Another Text Field",
+            "helpText": "This is a text field",
+            "type": "text",
+            "required": false,
+            "fieldOptions": {
+              validation: {
+                "min": 20,
+                "max": 100
+              },
+              definition: {
+                "maxRepeat": 5,
+                "minRepeat": 2
+              }
+            },
+            "repeating": true
+          }
+        ]
+      },
+      {
+        _id: "temppageid2",
+        name: "Another Page With Temp Id",
+        isNewModel: true,
+        description: "Another Page",
+        cid: "temppageid2",
+        fields: [
+          {
+            "name": "Another Text Field",
+            "helpText": "This is a text field",
+            "type": "text",
+            "required": false,
+            "fieldOptions": {
+              validation: {
+                "min": 20,
+                "max": 100
+              },
+              definition: {
+                "maxRepeat": 5,
+                "minRepeat": 2
+              }
+            },
+            "repeating": true
+          }
+        ]
+      }
+    ]
+    ,
+    "fieldRules": [{
+      ruleConditionalOperator: "and",
+      ruleConditionalStatements: [{
+        restriction: "is",
+        sourceField: "tempfieldid",
+        sourceValue: "someval"
+      }],
+      targetField: ["tempfieldid2"],
+      type: "hide"
+    }],
+    "pageRules": [{
+      ruleConditionalOperator: "and",
+      ruleConditionalStatements: [{
+        restriction: "is",
+        sourceField: "tempfieldid2",
+        sourceValue: "someotherval"
+      }],
+      targetPage: ["temppageid2"],
+      type: "skip"
+    }]
+  };
+
+  forms.updateForm(options, testForm, function (err, doc) {
+    assert.ok(!err, 'testFormFieldRuleChangeWithTempIds() - error fom updateForm: ' + util.inspect(err));
+
+    assert.equal(doc.pageRules.length, 1, "Expected A Page Rule To Be Set");
+    assert.equal(doc.fieldRules.length, 1, "Expected A Field Rule To Be Set");
+
+    finish();
+  });
+
+};
+
