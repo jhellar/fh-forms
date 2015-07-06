@@ -1,5 +1,8 @@
 #fh-forms
 
+## 0.13.1 - 2015-07-06 - Gerard Ryan
+* FH-426 - Replace make with Grunt
+
 ##0.13.0 - 2015-02-16- IR247 - Wei Li
 * 8757 - Update fh-amqp-js module
 
@@ -13,7 +16,7 @@
 ##0.11.0 - 2014-10-31 - IR244 - cbrookes
 
 * 8450 forms and themes createdBy fields
- 
+
 ##0.10.0 - 2014-10-31 - IR239 - Niall Donnelly
 * 7890 Added barcode and slider fields to forms.
 

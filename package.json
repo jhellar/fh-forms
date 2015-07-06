@@ -1,10 +1,10 @@
 {
   "name": "fh-forms",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Cloud Forms API for form submission",
   "main": "lib/forms.js",
   "scripts": {
-    "test": "make test;"
+    "test": "grunt fh:test"
   },
   "repository": {
     "type": "git",
@@ -25,25 +25,25 @@
     "mongodb": "1.3.19",
     "lodash": "2.2.1",
     "mime": "1.2.11",
-    "fh-amqp-js":"0.4.1",
+    "fh-amqp-js": "0.4.1",
     "mongoose": "~3.8.2"
   },
   "devDependencies": {
-    "proxyquire": "0.4.1",
     "cli-color": "0.2.2",
-    "nock": "0.22.1",
-    "mongodb": "1.3.19",
-    "turbo-test-runner": "0.3.3",
-    "istanbul": "0.1.42",
-    "plato" : "^1.0.1",
-    "jshint" : "^2.5.2",
     "grunt": "~0.4.2",
-    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-cli": "~0.1.11",
+    "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.2",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-cli": "~0.1.11",
-    "underscore": "1.6.0",
-    "moment": "2.6.0"
+    "grunt-fh-build": "^0.0.14",
+    "istanbul": "0.1.42",
+    "jshint": "^2.5.2",
+    "moment": "2.6.0",
+    "mongodb": "1.3.19",
+    "nock": "0.22.1",
+    "plato": "^1.0.1",
+    "proxyquire": "0.4.1",
+    "turbo-test-runner": "0.3.3",
+    "underscore": "1.6.0"
   }
 }

@@ -1,5 +1,3 @@
-var path = require('path');
-
 module.exports = function(grunt) {
   grunt.initConfig({
     asyncpkg: grunt.file.readJSON('node_modules/async/package.json'),
@@ -9,13 +7,6 @@ module.exports = function(grunt) {
       files: ['lib/common/forms-rules-engine.js']
     },
     jshint: {
-      options: {
-        curly: true,
-        eqeqeq: true,
-        eqnull: true,
-        sub: true,
-        loopfunc: true
-      },
       globals: {
         browser: true
       }
@@ -45,9 +36,23 @@ module.exports = function(grunt) {
             '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         }
       }
-    }
+    },
+    fhignore: ['client/**'],
+
+    _unit_runner: '_mocha',
+    _unit_args: '-A -u exports --recursive -t 10000 ./test/unit/',
+    unit: '<%= _unit_runner %> <%= _unit_args %>',
+    unit_cover: 'istanbul cover --dir cov-unit <%= _unit_runner %> -- <%= _unit_args %>',
+
+    _accept_runner: 'turbo',
+    _accept_args: '--setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept/ --series=true',
+    accept: ['mongo ./test/setup_mongo.js', '<%= _accept_runner %> <%= _accept_args %>'],
+    accept_cover: ['mongo ./test/setup_mongo.js', 'istanbul cover --dir cov-accept <%= _accept_runner %> -- <%= _accept_args %>']
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.registerTask('default', 'concat');
+  grunt.loadNpmTasks('grunt-fh-build');
+
+  grunt.registerTask('dist', ['concat', 'fh:dist']);
+  grunt.registerTask('default', [/*jshint, */'fh:coverage', 'fh:analysis', 'dist']);
 };
