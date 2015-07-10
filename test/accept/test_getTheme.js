@@ -128,7 +128,7 @@ module.exports.testGetThemeWorksGroupRestrictions = function(finish){
         forms.getThemes({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
           assert.ok(!err, util.inspect(err));
           assert.ok(result,'should have results from getTheme');   // theme should be returned);   // theme should be returned
-          assert.ok(result.themes.length > 0, 'should have themes in results from getTheme: ' + util.inspect(result));   // theme should be returned);   // theme should be returned
+          assert.ok(result.length > 0, 'should have themes in results from getTheme: ' + util.inspect(result));   // theme should be returned);   // theme should be returned
           return cb();
         });
       },
@@ -136,7 +136,7 @@ module.exports.testGetThemeWorksGroupRestrictions = function(finish){
         forms.getThemes({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: "notexist@example.com"}, function(err, result){
           assert.ok(!err, util.inspect(err));
           assert.ok(result, 'should have results from getTheme');   // theme should be returned);   // theme should be returned
-          assert.ok(result.themes.length === 0, 'should have 0 themes in results from getTheme: ' + util.inspect(result));   // theme should be returned);   // theme should be returned
+          assert.ok(result.length === 0, 'should have 0 themes in results from getTheme: ' + util.inspect(result));   // theme should be returned);   // theme should be returned
           return cb();
         });
       },
@@ -144,7 +144,7 @@ module.exports.testGetThemeWorksGroupRestrictions = function(finish){
         forms.getThemes({"uri": process.env.FH_DOMAIN_DB_CONN_URL, restrictToUser: allowedUser1}, function(err, result){
           assert.ok(!err, util.inspect(err));
           assert.ok(result,'should have results from getTheme');   // theme should be returned);   // theme should be returned
-          assert.ok(result.themes.length > 0, 'should have themes in results from getTheme: ' + util.inspect(result));   // theme should be returned);   // theme should be returned
+          assert.ok(result.length > 0, 'should have themes in results from getTheme: ' + util.inspect(result));   // theme should be returned);   // theme should be returned
           return cb();
         });
       }

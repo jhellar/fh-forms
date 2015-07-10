@@ -57,7 +57,7 @@ module.exports.it_should_delete_form = function(finish) {
     function(cb) {
       forms.updateForm(options, TEST_FORM, function(err, form){
         assert.ok(!err, 'Error in updateForm: ' + util.inspect(err));
-        cb(null, form.toJSON());
+        cb(null, form);
       });
     },
     function getForm(form, cb) {

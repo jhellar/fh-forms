@@ -29,16 +29,14 @@ module.exports.tearDown = function(finish){
 }
 
 module.exports.testGetThemesWorks = function(finish){
-
   forms.getThemes({"uri" : process.env.FH_DOMAIN_DB_CONN_URL}, function(err, themes){
     if(err) console.log(err);
     assert.ok(!err);
-    assert.ok(themes);
-    assert.ok(Array.isArray(themes.themes));
+    assert.ok(Array.isArray(themes));
 
-    assert.ok(themes.themes.length === 1);
+    assert.ok(themes.length === 1);
 
-    var themeRes = themes.themes[0];
+    var themeRes = themes[0];
 
     assert.ok(themeRes.appsUsingTheme === 1);
     assert.ok(themeRes.apps);
@@ -72,7 +70,7 @@ function createTestData(assert, cb){
     }, function(err){
       assert.ok(!err);
 
-      testThemeData = require("../Fixtures/theme.json");
+      var testThemeData = require("../Fixtures/theme.json");
 
       var testTheme = new Theme(testThemeData);
 

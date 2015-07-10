@@ -202,7 +202,7 @@ module.exports.testAddFormDuplicateName = function(finish){
       //Form already exists, should not save again.
       forms.updateForm(options, TEST_FORM_SIMPLE, function(err, doc){
         assert.ok(err, 'testAddFormDuplicateName() - expected an error but got nothing ');
-        assert.ok(err.message.toLowerCase().indexOf("already exists") > -1, "Expected duplicate error but got " + util.inspect(err.message));
+        assert.ok(err.userDetail.toLowerCase().indexOf("already exists") > -1, "Expected duplicate error but got " + util.inspect(err.userDetail));
         cb();
       });
     }

@@ -226,7 +226,6 @@ module.exports.testGetAllSubmissions = function(finish){
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
     assert.strictEqual(submissions[0].formName, TEST_FORM_NAME);
-    assert.strictEqual(submissions[0].appName, TEST_APP_NAME_UNKNOWN, 'app name should be unknown, since no appname map passed in');
     finish();
   });
 };
@@ -244,7 +243,6 @@ module.exports.testGetAllSubmissionsWithAppMap = function(finish){
     assert.strictEqual(submissions[0].appId, TEST_SUBMISSION_APPID);
     assert.strictEqual(submissions[0].formId, TEST_SUBMISSION_FORMID);
     assert.strictEqual(submissions[0].formName, TEST_FORM_NAME);
-    assert.strictEqual(submissions[0].appName, TEST_APP_NAME, 'app name should be known, since appname map passed in');
     finish();
   });
 };

@@ -7,6 +7,7 @@ var initDatabase = require('./../setup.js').initDatabase;
 var fs = require('fs');
 var assert = require('assert');
 var util = require('util');
+var _ = require('underscore');
 
 var testFilePath = "./test/Fixtures/test.pdf";
 var testPhotoPath = "./test/Fixtures/test.jpg";
@@ -122,11 +123,24 @@ module.exports.testUpdateSubmissionFile = function(finish){
           //Submission complete
           //Now update a single file with another file
           var fileUpdateDetails = {
+            "fileStream" : testSignaturePath,
             "fileName" : "test2.pdf",
             "fileType" : "application/pdf",
-            "hashName" : "filePlaceHolder124124"
+            "hashName" : "filePlaceHolder124124",
+            "fileSize": 1234,
+            "groupId": testFileSubmissionGroupId
           };
-          forms.updateSubmissionFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"keepFile" : true, "submissionId": dataSaveResult.submissionId, "fieldId" : globalFieldIds["fileField"] ,"fileGroupId" : testFileSubmissionGroupId, "fileStream" : testSignaturePath, "fileDetails" : fileUpdateDetails}}, function(err, result){
+
+          var fileUpdateParams = {
+            "keepFile" : true,
+            "submission": {
+              "submissionId": dataSaveResult.submissionId,
+              "fieldId" : globalFieldIds["fileField"]
+            },
+            "fileDetails": fileUpdateDetails
+          };
+
+          forms.updateSubmissionFile(_.extend({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, fileUpdateParams), function(err, result){
             if(err) console.log(err);
             assert.ok(!err);
             assert.ok(result);
@@ -143,7 +157,7 @@ module.exports.testUpdateSubmissionFile = function(finish){
       });
     });
   });
-}
+};
 
 function verifyUpdatedFile(fileName, fileType, fileGroupId, placeholderId, submissionId, cb){
 

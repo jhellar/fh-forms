@@ -59,7 +59,6 @@ var testSubmitFormBaseInfo = {
 
 module.exports.testSubmissionSearch = function(finish){
   forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[]}}, function (err, ok){
-    console.log("Submission search ", err, ok);
     assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
     finish();
   });
@@ -72,9 +71,7 @@ function assertValueExists(subs, fieldId, value){
 
     for(var j=0; j < formFields.length; j++){
       var fField = formFields[j];
-      console.log("checking form field ",fField );
       if(fField.fieldId._id === fieldId){
-        console.log("asserting 100");
         assert.ok(fField.fieldValues.indexOf(value) != -1, value + "should be a field value");
       }
 
@@ -87,7 +84,6 @@ module.exports.testSubmissionSearchNumber = function (finish){
   async.series([
     function testGreaterThan (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalNumberField,"restriction":"is greater than","value":99}]}}, function (err, ok){
-        console.log("Submission search ", err, ok.submissions[1].formFields);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalNumberField, 100);
@@ -97,7 +93,6 @@ module.exports.testSubmissionSearchNumber = function (finish){
     function testLessThan (callback){
       async.series([function (callback){
         forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalNumberField,"restriction":"is less than","value":101}]}}, function (err, ok){
-          console.log("Submission search ", err, ok.submissions[1].formFields);
           assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
           assert.ok(ok.submissions.length === 2, "should have found two submissions");
           assertValueExists(ok.submissions, globalNumberField, 100);
@@ -116,7 +111,6 @@ module.exports.testSubmissionSearchNumber = function (finish){
       async.series([
       function (callback){
         forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalNumberField,"restriction":"is equal to","value":100}]}}, function (err, ok){
-          console.log("Submission search ", err, ok);
           assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
           assert.ok(ok.submissions.length === 2, "should have found two submissions");
           assertValueExists(ok.submissions, globalNumberField, 100);
@@ -125,7 +119,6 @@ module.exports.testSubmissionSearchNumber = function (finish){
       },
       function (callback){
         forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalNumberField,"restriction":"is equal to","value":99}]}}, function (err, ok){
-          console.log("Submission search ", err, ok);
           assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
           assert.ok(ok.submissions.length === 0, "should have found zero submissions");
           callback();
@@ -198,7 +191,6 @@ module.exports.testSubmissionSearchText = function (finish){
    [
     function testEqualTo (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is equal to","value":"some value"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalTextField, "some value");
@@ -207,7 +199,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testNotEqualTo (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is not","value":"some value"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search ");
         assert.ok(ok.submissions.length === 0, "should have found no submissions");
         callback();
@@ -215,7 +206,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testContains (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"contains","value":"some"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalTextField, "some value");
@@ -224,7 +214,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testIs (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is","value":"some"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 0, "should have found no submissions");
         callback();
@@ -232,7 +221,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testIs (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"is","value":"some value"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalTextField, "some value");
@@ -241,7 +229,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testDoesNotContain (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"does not contain","value":"some"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 0, "should have found no submissions");
         callback();
@@ -249,7 +236,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testBeginsWith (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"begins with","value":"some"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalTextField, "some value");
@@ -258,7 +244,6 @@ module.exports.testSubmissionSearchText = function (finish){
     },
     function testEndsWith (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalTextField,"restriction":"ends with","value":"value"}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalTextField, "some value");
@@ -274,7 +259,6 @@ module.exports.testSubmissionSearchDate = function (finish){
   async.series([
     function testIsAt (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is at","value":dateValue}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalDateField, dateValue);
@@ -283,7 +267,6 @@ module.exports.testSubmissionSearchDate = function (finish){
     },
     function testIsBefore (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is before","value":dateValue}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 0, "should have found no submissions");
 
@@ -292,8 +275,6 @@ module.exports.testSubmissionSearchDate = function (finish){
     },
     function testIsBefore (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is before","value":greaterValue}]}}, function (err, ok){
-        console.log("LEss date value ", greaterValue,  dateValue);
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalDateField, dateValue);
@@ -301,9 +282,7 @@ module.exports.testSubmissionSearchDate = function (finish){
       });
     },
     function testIsAfter (callback){
-      console.log("LEss date value ", lessDateValue,  dateValue);
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is after","value":lessDateValue}]}}, function (err, ok){
-        console.log("Submission search ", err, ok);
         assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
         assert.ok(ok.submissions.length === 2, "should have found two submissions");
         assertValueExists(ok.submissions, globalDateField, dateValue);
@@ -349,7 +328,7 @@ module.exports.setUp = function(finish){
 //
       async.series([
         async.apply(doSubmission,submission),
-        async.apply(completeSubmission, assert),
+        async.apply(completeSubmission, assert)
       ], function(err){
         assert.ok(!err, 'error in setUp - err: ' + util.inspect(err));
         finish();
@@ -369,10 +348,8 @@ module.exports.tearDown = function(finish){
 function doSubmission (submission,cb){
   async.series([function (callback){
     forms.submitFormData({"uri" : process.env.FH_DOMAIN_DB_CONN_URL, "submission": submission}, function(err, dataSaveResult){
-      console.log('DONE SUBMISSION ***** ', dataSaveResult,err, " **** ");
       if(err) console.log(err);
       assert.ok(!err, "problem submitting test form data - err: " + util.inspect(err));
-      console.log('DONE SUBMISSION ***** ', dataSaveResult, " **** ");
       submissionId = dataSaveResult.submissionId;
       subids.push(submissionId);
       callback();
