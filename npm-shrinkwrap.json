@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "archiver": {
       "version": "0.14.3",
@@ -36,7 +36,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@~2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -193,7 +193,7 @@
           "dependencies": {
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@~1.0.26",
+              "from": "readable-stream@~1.0.2",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -301,7 +301,7 @@
         "bunyan": {
           "version": "0.22.0",
           "from": "bunyan@0.22.0",
-          "resolved": "http://bob.feedhenry.net:4873/bunyan/-/bunyan-0.22.0.tgz",
+          "resolved": "https://registry.npmjs.org/bunyan/-/bunyan-0.22.0.tgz",
           "dependencies": {
             "mv": {
               "version": "0.0.5",
@@ -311,7 +311,7 @@
             "dtrace-provider": {
               "version": "0.2.8",
               "from": "dtrace-provider@0.2.8",
-              "resolved": "http://bob.feedhenry.net:4873/dtrace-provider/-/dtrace-provider-0.2.8.tgz"
+              "resolved": "https://registry.npmjs.org/dtrace-provider/-/dtrace-provider-0.2.8.tgz"
             }
           }
         }
@@ -345,9 +345,9 @@
               "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
               "dependencies": {
                 "amdefine": {
-                  "version": "0.1.1",
+                  "version": "1.0.0",
                   "from": "amdefine@>=0.0.4",
-                  "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.1.tgz"
+                  "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-1.0.0.tgz"
                 }
               }
             }
@@ -388,14 +388,14 @@
       }
     },
     "mongoose": {
-      "version": "3.8.31",
+      "version": "3.8.33",
       "from": "mongoose@~3.8.2",
-      "resolved": "https://registry.npmjs.org/mongoose/-/mongoose-3.8.31.tgz",
+      "resolved": "https://registry.npmjs.org/mongoose/-/mongoose-3.8.33.tgz",
       "dependencies": {
         "mongodb": {
-          "version": "1.4.33",
-          "from": "mongodb@1.4.33",
-          "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-1.4.33.tgz",
+          "version": "1.4.38",
+          "from": "mongodb@1.4.38",
+          "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-1.4.38.tgz",
           "dependencies": {
             "bson": {
               "version": "0.2.21",
@@ -410,14 +410,14 @@
               }
             },
             "kerberos": {
-              "version": "0.0.9",
-              "from": "kerberos@0.0.9",
-              "resolved": "https://registry.npmjs.org/kerberos/-/kerberos-0.0.9.tgz",
+              "version": "0.0.11",
+              "from": "kerberos@0.0.11",
+              "resolved": "https://registry.npmjs.org/kerberos/-/kerberos-0.0.11.tgz",
               "dependencies": {
                 "nan": {
-                  "version": "1.6.2",
-                  "from": "nan@1.6.2",
-                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.6.2.tgz"
+                  "version": "1.8.4",
+                  "from": "nan@~1.8",
+                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.8.4.tgz"
                 }
               }
             },
@@ -896,7 +896,7 @@
     "underscore": {
       "version": "1.8.0",
       "from": "underscore@1.8.0",
-      "resolved": "http://bob.feedhenry.net:4873/underscore/-/underscore-1.8.0.tgz"
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.0.tgz"
     }
   }
 }
