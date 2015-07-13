@@ -1,5 +1,9 @@
 #fh-forms
 
+##1.0.1 - 2015-07-13 - Niall Donnelly
+
+* Removed bob entries from shrinkwrap
+
 ##1.0.0 - 2015-02-27- IR248 - Niall Donnelly
 
 * FHMAP-42 Add Lifecycle Management Functionality To Forms
