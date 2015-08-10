@@ -3,7 +3,7 @@ var assert = require('assert');
 var _ = require('underscore');
 var fakeForms = require('../../Fixtures/mockforms.js');
 
-var fakeMongoString = "mongo://127.0.0.1:27017";
+var fakeMongoString = "mongodb://user:pass@127.0.0.1:27017/somedb";
 var mocks = {
   '../forms.js': fakeForms
 };
@@ -43,7 +43,7 @@ module.exports = {
     };
 
     themesHandler.create(req, {}, function(err){
-      assert.ok(!err, "Expected Not Error");
+      assert.ok(!err, "Expected Not Error " + err);
 
       assert.ok(!_.isArray(req.appformsResultPayload.data), "Expected The Themes Result To Not Be An Array");
       assert.equal(req.appformsResultPayload.data._id, "somethemeid", "Expected A Theme Id");

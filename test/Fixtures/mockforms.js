@@ -358,6 +358,17 @@ module.exports = {
       }
     ]);
   },
+  createTheme: function(options, params, cb){
+    assert.ok(options.uri, "Expected A Mongo URI");
+
+    if(params._id){
+      params.name = "Updated Theme Name";
+    } else {
+      params._id = "somethemeid";
+    }
+
+    return cb(undefined, params);
+  },
   updateTheme: function(options, params, cb){
     assert.ok(options.uri, "Expected A Mongo URI");
 
