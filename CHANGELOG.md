@@ -1,5 +1,9 @@
 #fh-forms
 
+##1.0.2 - 2015-08-07 - Niall Donnelly
+
+* FH-418 - Added Deploy Middleware for themes and projects
+
 ##1.0.1 - 2015-07-13 - Niall Donnelly
 
 * Removed bob entries from shrinkwrap
