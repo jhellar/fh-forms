@@ -444,5 +444,60 @@ module.exports = {
       _id: "someformid",
       name: "Some Test Form"
     }]);
+  },
+  exportThemes: function(options, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+
+    return cb(undefined, [
+      {
+        _id: "somethemeid"
+      }
+    ]);
+  },
+  importThemes: function(options, themesToImport, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+    assert.ok(_.isArray(themesToImport));
+
+    return cb();
+  },
+  exportAppForms: function(options, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+
+    return cb(undefined, [
+      {
+        _id: "someappformid",
+        appId: "someAppId",
+        forms: ["someformid"],
+        theme: "somethemeid"
+      }
+    ]);
+  },
+  importAppForms: function(options, appFormsToImport, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+    assert.ok(_.isArray(appFormsToImport), "Expeced An Array Of Appforms To Import.");
+
+    return cb();
+  },
+  exportAppConfig: function(options, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+
+    return cb(undefined, [
+      {
+        _id: "someformconfigid",
+        appId: "someAppId",
+        client: {
+
+        },
+        cloud: {
+
+        }
+      }
+    ]);
+  },
+  importAppConfig: function(options, configToImport, cb){
+    assert.ok(options.uri, "Epxected A Mongo URI");
+    assert.ok(_.isArray(configToImport), "Expeced An Array Of Appforms Config To Import.");
+
+    return cb();
   }
 };
