@@ -111,5 +111,35 @@ module.exports = {
 
       done();
     });
+  },
+  "It Should Export All Themes": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      }
+    };
+
+    themesHandler.exportThemes(req, {}, function(err){
+      assert.ok(!err, "Expected No Error");
+
+      assert.ok(_.isArray(req.appformsResultPayload.data), "Expected The Themes Result To Be An Array");
+      assert.equal(req.appformsResultPayload.data[0]._id, "somethemeid", "Expected A Themes Result Id");
+
+      done();
+    });
+  },
+  "It Should Import All Themes": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      body: [{_id: "somethemeid"}]
+    };
+
+    themesHandler.importThemes(req, {}, function(err){
+      assert.ok(!err, "Expected No Error");
+
+      done();
+    });
   }
 };

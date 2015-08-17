@@ -125,5 +125,67 @@ module.exports = {
       assert.ok(req.appformsResultPayload.data.cloud, "Expected A Cloud Config");
       done();
     });
+  },
+  "Test Export Forms Project Config": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      }
+    };
+
+    formsProjectHandler.exportProjectConfig(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+      assert.ok(req.appformsResultPayload.data[0].appId);
+      assert.ok(req.appformsResultPayload.data[0].client, "Expected A Client Config");
+      assert.ok(req.appformsResultPayload.data[0].cloud, "Expected A Cloud Config");
+      done();
+    });
+  },
+  "Test Import Forms Project Config": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      body: [{
+        appId: "someappid",
+        client: {
+
+        },
+        cloud: {
+
+        }
+      }]
+    };
+
+    formsProjectHandler.importProjectConfig(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+      done();
+    });
+  },
+  "Test Export Appforms": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      }
+    };
+
+    formsProjectHandler.exportProjects(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+      assert.ok(req.appformsResultPayload.data[0].appId);
+      done();
+    });
+  },
+  "Test Import Appforms": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      body: [{appId: "someappid"}]
+    };
+
+    formsProjectHandler.importProjects(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+      done();
+    });
   }
 };

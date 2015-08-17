@@ -1,5 +1,9 @@
 #fh-forms
 
+##1.1.0 - 2015-08-14 - Niall Donnelly
+
+* FH-1653 - Added Import And Export Functionality For Form Projects And Themes.
+
 ##1.0.2 - 2015-08-07 - Niall Donnelly
 
 * FH-418 - Added Deploy Middleware for themes and projects
