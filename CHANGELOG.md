@@ -1,5 +1,9 @@
 #fh-forms
 
+##1.1.2 - 2015-08-24 - Niall Donnelly
+
+* FH-1466 - Added Form Submission Name To PDF Generation
+
 ##1.1.1 - 2015-08-24 - Niall Donnelly
 
 * FH-1464 - Creating A New App Config If None Already Exists

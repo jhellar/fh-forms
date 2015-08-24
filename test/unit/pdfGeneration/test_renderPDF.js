@@ -40,23 +40,14 @@ module.exports = {
   },
   "Test Load PDF Template": function(done){
 
-    var mocks = {
-      'request': function(requestPath, cb){
-        assert.equal(requestPath,"http://somehost.com/some/static/uri/for/the/template");
-        cb(undefined, {statusCode: 200}, "some html from remote");
-      }
-    };
-
-    var _loadPdfTemplate = proxyquire('../../../lib/impl/pdfGeneration/renderPDF.js', mocks).loadPdfTemplate;
+    var _loadPdfTemplate = require('../../../lib/impl/pdfGeneration/renderPDF.js').loadPdfTemplate;
 
     _loadPdfTemplate({
-      location: "http://somehost.com",
-      pdfTemplateLoc: "/some/static/uri/for/the/template"
+      location: "http://somehost.com"
     }, function(err, formTemplate){
       assert.ok(!err, "Expected No Error " + err);
 
       assert.ok(_.isFunction(formTemplate), "Expected A Compiled Form Template");
-      assert.ok(formTemplate().indexOf("some html from remote") > -1, "Expected To Find Template Content");
       done();
     });
   },
