@@ -1,5 +1,9 @@
 #fh-forms
 
+##1.1.1 - 2015-08-24 - Niall Donnelly
+
+* FH-1464 - Creating A New App Config If None Already Exists
+
 ##1.1.0 - 2015-08-14 - Niall Donnelly
 
 * FH-1653 - Added Import And Export Functionality For Form Projects And Themes.
