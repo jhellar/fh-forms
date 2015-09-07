@@ -1,8 +1,10 @@
 #fh-forms
 
-##1.1.3 - 2015-09-03 - Niall Donnelly
+##1.1.4 - 2015-09-03 - Luigi Zuccarelli
+* FH-1946 - Fix-security-vulnerabilities in handlebars > uglify.js
 
-* FH-1924 - Removed Submission Data From Logging.
+-##1.1.3 - 2015-09-03 - Niall Donnelly
+-* FH-1924 - Removed Submission Data From Logging.
 
 ##1.1.2 - 2015-08-24 - Niall Donnelly
 
