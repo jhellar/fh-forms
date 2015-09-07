@@ -1,5 +1,8 @@
 #fh-forms
 
+##1.1.5 - 2015-09-07 - Luigi Zuccarelli
+* updated versioning to match npm publish version
+
 ##1.1.4 - 2015-09-03 - Luigi Zuccarelli
 * FH-1946 - Fix-security-vulnerabilities in handlebars > uglify.js
 
