@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Cloud Forms API for form submission",
   "main": "fhforms.js",
   "scripts": {
@@ -40,7 +40,7 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.2",
-    "grunt-fh-build": "^0.0.14",
+    "grunt-fh-build": "^0.3.0",
     "istanbul": "0.1.42",
     "jshint": "^2.5.2",
     "mocha": "^2.2.5",

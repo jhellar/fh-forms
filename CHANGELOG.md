@@ -1,5 +1,8 @@
 #fh-forms
 
+## 1.1.6 - 2015-09-11 - Gerard Ryan
+* Bump version of grunt-fh-build, so that archive with dependencies will get built
+
 ##1.1.5 - 2015-09-07 - Luigi Zuccarelli
 * updated versioning to match npm publish version
 
