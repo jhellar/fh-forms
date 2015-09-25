@@ -91,6 +91,29 @@ module.exports = {
       done();
     });
   },
+  "Test Deploy Data Source": function(done){
+
+    var testDataSource = {
+      _id: "deployDataSourceId",
+      name: "Data Source"
+    };
+
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      params: {
+        id: "deployDataSourceId"
+      },
+      body: testDataSource
+    };
+
+    dataSourceHandler.deploy(req, {}, function(err){
+      assert.ok(!err, "Expected No Error " + err);
+      assert.equal(req.appformsResultPayload.data.name, "Deployed Data Source",  "Expected Data Source To Be Returned");
+      done();
+    });
+  },
   "Test Delete Data Source": function(done){
 
     var req = {

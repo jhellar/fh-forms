@@ -26,6 +26,12 @@ module.exports = {
         }
       ]);
     },
+    deploy: function (options, dataSource, cb) {
+      assert.ok(options.uri, "Expected A Mongo URI");
+      assert.equal(dataSource._id, "deployDataSourceId");
+      dataSource.name = "Deployed Data Source";
+      return cb(undefined, dataSource);
+    },
     create: function (options, dataSource, cb) {
       assert.ok(options.uri, "Expected A Mongo URI");
       dataSource._id = "createdDataSourceID";
