@@ -1,8 +1,11 @@
 #fh-forms
 
+## 1.2.0 - 2015-09-28 - Niall Donnelly
+* FH-2097 - Add Data Source Mbaas APIs
+
 ## 1.1.8 - 2015-10-15 - Niall Donnelly
 
-* RHMAP-1809 - Fixed Submissions Helper To Allow Submission To Render Checkboxes With No Options 
+* RHMAP-1809 - Fixed Submissions Helper To Allow Submission To Render Checkboxes With No Options
 
 ## 1.1.7 - 2015-09-29 - Gerard Ryan
 * FH-2205 - Use custom version of phantom to allow shrinkwrapping with npm@2
