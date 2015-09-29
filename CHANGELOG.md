@@ -1,5 +1,8 @@
 #fh-forms
 
+## 1.1.7 - 2015-09-29 - Gerard Ryan
+* FH-2205 - Use custom version of phantom to allow shrinkwrapping with npm@2
+
 ## 1.1.6 - 2015-09-11 - Gerard Ryan
 * Bump version of grunt-fh-build, so that archive with dependencies will get built
 
