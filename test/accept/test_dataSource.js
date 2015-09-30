@@ -23,7 +23,7 @@ function verifyDataSourceJSON(expected, actual){
   assert.ok(expected, "verifyDataSourceJSON: expected object required");
   assert.ok(actual, "verifyDataSourceJSON: actual object required");
 
-  assert.ok(_.isEqual(expected, actual), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(actual));
+  assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
 
 function verifyDataSourceResponse(expectedDataSource, expectedDataSourceData, expectedHash, expectedError, actualResponse){
@@ -87,6 +87,12 @@ module.exports = {
       //Data Source Was Created, verify responses
       assert.ok(createdDataSource, "Expected The Data Source To Be Returned");
       assert.ok(createdDataSource._id, "Expected The Data Source ID To Be Returned");
+      assert.ok(createdDataSource.lastUpdated, "Expected A Last Updated Field");
+      assert.ok(createdDataSource.dateCreated, "Expected A Date Created Field");
+      assert.ok(createdDataSource.createdBy, "Expected A Created By Field");
+      assert.equal(createdDataSource.createdBy, testDataSource.createdBy);
+      assert.ok(createdDataSource.updatedBy, "Expected A Updated By Field");
+      assert.equal(createdDataSource.updatedBy, testDataSource.updatedBy);
 
       testDataSource._id = createdDataSource._id;
 
@@ -422,12 +428,9 @@ module.exports = {
   "Test Validate Data Source Data": function(done){
     //Forms Should Have A Separate Function To Validate A Data Set.
 
-    var dataSourceDataSingleChoice = {
-      name: "Test Service Validation",
-      description: "Test Data Source",
-      endpoint: "/path/to/data",
-      refreshInterval: 3000,
-      serviceGuid: "service1234",
+    var baseDataSourceData = _.clone(dataSourceData);
+
+    var dataSourceDataSingleChoice = _.extend({
       data: {
         fieldType: "singleChoice",
         options: [
@@ -441,27 +444,17 @@ module.exports = {
           }
         ]
       }
-    };
+    }, baseDataSourceData);
 
-    var dataSourceDataNoChoice = {
-      name: "Test Service Validation",
-      description: "Test Data Source",
-      endpoint: "/path/to/data",
-      refreshInterval: 3000,
-      serviceGuid: "service1234",
+    var dataSourceDataNoChoice = _.extend({
       data: {
         fieldType: "singleChoice",
         options: [
         ]
       }
-    };
+    }, baseDataSourceData);
 
-    var dataSourceDataSingleChoiceWrongChoice = {
-      name: "Test Service Validation",
-      description: "Test Data Source",
-      endpoint: "/path/to/data",
-      refreshInterval: 3000,
-      serviceGuid: "service1234",
+    var dataSourceDataSingleChoiceWrongChoice = _.extend({
       data: {
         fieldType: "wrongChoice",
         options: [
@@ -475,7 +468,7 @@ module.exports = {
           }
         ]
       }
-    };
+    }, baseDataSourceData);
 
     async.series([
       function(cb){

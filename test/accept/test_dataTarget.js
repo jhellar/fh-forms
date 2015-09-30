@@ -20,7 +20,7 @@ function verifyDataTargetJSON(expected, actual){
   assert.ok(expected, "verifyDataSourceJSON: expected object required");
   assert.ok(actual, "verifyDataSourceJSON: actual object required");
 
-  assert.ok(_.isEqual(expected, actual), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(actual));
+  assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
 
 module.exports = {
@@ -56,6 +56,12 @@ module.exports = {
       //Data Target Was Created
       assert.ok(createdDataTarget, "Expected The Data Source To Be Returned");
       assert.ok(createdDataTarget._id, "Expected The Data Source ID To Be Returned");
+      assert.ok(createdDataTarget.lastUpdated, "Expected A Last Updated Field");
+      assert.ok(createdDataTarget.dateCreated, "Expected A Date Created Field");
+      assert.ok(createdDataTarget.createdBy, "Expected A Created By Field");
+      assert.equal(createdDataTarget.createdBy, testDataTarget.createdBy);
+      assert.ok(createdDataTarget.updatedBy, "Expected A Updated By Field");
+      assert.equal(createdDataTarget.updatedBy, testDataTarget.updatedBy);
 
       testDataTarget._id = createdDataTarget._id;
 
