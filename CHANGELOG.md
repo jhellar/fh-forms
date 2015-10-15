@@ -1,5 +1,9 @@
 #fh-forms
 
+## 1.1.8 - 2015-10-15 - Niall Donnelly
+
+* RHMAP-1809 - Fixed Submissions Helper To Allow Submission To Render Checkboxes With No Options 
+
 ## 1.1.7 - 2015-09-29 - Gerard Ryan
 * FH-2205 - Use custom version of phantom to allow shrinkwrapping with npm@2
 
