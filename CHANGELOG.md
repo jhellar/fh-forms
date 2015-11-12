@@ -3,6 +3,7 @@
 ## 1.2.0 - 2015-09-28 - Niall Donnelly
 * FH-2097 - Add Data Source Mbaas APIs
 * FH-1908 - Add Data Source Target Permissions Fields
+* RHMAP-2438 - Fixed Data Source Deploy
 
 ## 1.1.8 - 2015-10-15 - Niall Donnelly
 
