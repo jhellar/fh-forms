@@ -1,5 +1,9 @@
 #fh-forms
 
+## 1.1.9 - 2015-11-20 - Niall Donnelly
+
+* RHMAP-2844 - Fixed Incorrect Function Spelling
+
 ## 1.1.8 - 2015-10-15 - Niall Donnelly
 
 * RHMAP-1809 - Fixed Submissions Helper To Allow Submission To Render Checkboxes With No Options 
