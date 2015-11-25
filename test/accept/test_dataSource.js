@@ -6,12 +6,11 @@ var models = require('../../lib/common/models.js')();
 var forms = require('../../lib/forms.js');
 var initDatabase = require('./../setup.js').initDatabase;
 var misc = require('../../lib/common/misc.js');
-var fs = require('fs');
 var _ = require('underscore');
 var dataSourceData = require('../Fixtures/dataSource.js');
+var logger = require('../../lib/common/logger').getLogger();
 
 var DataSource;
-var DataSourceCache;
 var connection;
 
 var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
@@ -19,9 +18,35 @@ var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
 var assert = require('assert');
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
+var dataOptions = {
+  option1: function(selected){
+    return  {
+      key: "op1",
+      value: "Option 1",
+      selected: selected
+    };
+  },
+  option2: function(selected){
+    return  {
+      key: "op2",
+      value: "Option 2",
+      selected: selected
+    };
+  },
+  option3: function(selected){
+    return  {
+      key: "op3",
+      value: "Option 3",
+      selected: selected
+    };
+  }
+};
+
 function verifyDataSourceJSON(expected, actual){
   assert.ok(expected, "verifyDataSourceJSON: expected object required");
   assert.ok(actual, "verifyDataSourceJSON: actual object required");
+
+  logger.debug("verifyDataSourceJSON ", expected, actual);
 
   assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
@@ -249,49 +274,30 @@ module.exports = {
       function updateDataSources(cb){
         //Updating A Single Data Source Data Set
         var dataSourceDataSingleChoice = {
-          data: {
-            fieldType: "singleChoice",
-            options: [
-              {
-                label: "Option 1",
-                checked: false
-              },
-              {
-                label: "Option 2",
-                checked: true
-              }
-            ]
-          }
+          data: [
+            dataOptions.option1(false),
+            dataOptions.option2(true)
+          ]
         };
         dataSourceDataSingleChoice._id = testDataSource1._id;
         var expectedHashSingle = misc.generateHash(dataSourceDataSingleChoice.data);
 
 
         var dataSourceDataMultiChoice = {
-          data: {
-            fieldType: "multiChoice",
-            options: [
-              {
-                label: "Option 1",
-                checked: false
-              },
-              {
-                label: "Option 2",
-                checked: true
-              },
-              {
-                label: "Option 3",
-                checked: true
-              }
-            ]
-          }
+          data: [
+            dataOptions.option1(false),
+            dataOptions.option2(true),
+            dataOptions.option3(true)
+          ]
         };
         var expectedHashMulti = misc.generateHash(dataSourceDataMultiChoice.data);
 
         dataSourceDataMultiChoice._id = testDataSource2._id;
 
         //Now Updating A Single Data Source
-        forms.dataSources.updateCache(options, [dataSourceDataSingleChoice, dataSourceDataMultiChoice], function(err, updateResult){
+        forms.dataSources.updateCache(options, [dataSourceDataSingleChoice, dataSourceDataMultiChoice], {
+          currentTime: new Date()
+        }, function(err, updateResult){
           assert.ok(!err, "Unexpected Error When Updating Data Source Data " + util.inspect(err));
 
           //Should Only Be 2 Successfully Updated Data Sources
@@ -314,24 +320,17 @@ module.exports = {
       function(cb){
         //Updating A Single Data Source With Different Data should change the response.
         var updatedSingleChoiceData = {
-          data: {
-            fieldType: "singleChoice",
-            options: [
-              {
-                label: "Option 2",
-                checked: true
-              },
-              {
-                label: "Option 1",
-                checked: false
-              }
-            ]
-          }
+          data: [
+            dataOptions.option2(true),
+            dataOptions.option1(false)
+          ]
         };
         updatedSingleChoiceData._id = testDataSource1._id;
         var expectedHashUpdated = misc.generateHash(updatedSingleChoiceData.data);
 
-        forms.dataSources.updateCache(options, [updatedSingleChoiceData], function(err, updateResult){
+        forms.dataSources.updateCache(options, [updatedSingleChoiceData], {
+          currentTime: new Date()
+        }, function(err, updateResult){
           assert.ok(!err, "Unexpected Error When Updating Data Source Data");
 
           //Should Only Be 1 Successfully Updated Data Sources
@@ -357,19 +356,10 @@ module.exports = {
     var testDataSource = _.clone(dataSourceData);
 
     var dataSourceDataSingleChoice = {
-      data: {
-        fieldType: "singleChoice",
-        options: [
-          {
-            label: "Option 1",
-            checked: false
-          },
-          {
-            label: "Option 2",
-            checked: true
-          }
-        ]
-      }
+      data: [
+        dataOptions.option1(false),
+        dataOptions.option2(true)
+      ]
     };
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
@@ -377,7 +367,9 @@ module.exports = {
 
       dataSourceDataSingleChoice._id = createdDataSource._id;
 
-      forms.dataSources.updateCache(options, [dataSourceDataSingleChoice], function(err, updateResult){
+      forms.dataSources.updateCache(options, [dataSourceDataSingleChoice], {
+        currentTime: new Date()
+      }, function(err, updateResult){
         assert.ok(!err, "Unexpected Error When Updating Data Source Data: " + util.inspect(err) );
 
         var validUpdates = updateResult.validDataSourceUpdates;
@@ -389,16 +381,15 @@ module.exports = {
         assert.ok(validUpdates[0]._id, "Expected An Updated Data Source");
 
         //Updating A Data Source With Junk Data Should Maintain The Latest Correct Data Set
-        dataSourceDataSingleChoice.data = {
-          fieldType: "wrongFieldType",
-          options: [
-            {
-              wronglabel: "wrong label 1"
-            }
-          ]
-        };
+        dataSourceDataSingleChoice.data = [
+          {
+            wrongvalue: "wrong label 1"
+          }
+        ];
 
-        forms.dataSources.updateCache(options, [dataSourceDataSingleChoice], function(err, badUpdateResult){
+        forms.dataSources.updateCache(options, [dataSourceDataSingleChoice], {
+          currentTime: new Date()
+        }, function(err, badUpdateResult){
           assert.ok(err, "Expected An Error When Updating Data Sources With Bad Data");
           assert.equal(ERROR_CODES.FH_FORMS_UNEXPECTED_ERROR, err.code, "Expected A FH_FORMS_UNEXPECTED_ERROR");
 
@@ -425,50 +416,62 @@ module.exports = {
       });
     });
   },
+  "Test Update Data Source With Data Error": function(done){
+    //Should Test An Error Expected To Be Stored With The Data Source
+
+    var testErrorDataSource = _.clone(dataSourceData);
+    var testDate = new Date();
+
+    async.series([
+      function createDataSource(cb){
+        forms.dataSources.create(options, testErrorDataSource, function(err, createdDataSource) {
+          assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+
+          testErrorDataSource._id = createdDataSource._id;
+          cb();
+        });
+      },
+      function(cb){
+        testErrorDataSource.dataError = {
+          userDetail: "Error Getting Data From Service",
+          systemDetail: "Invalid Response Code 500",
+          code: "SERVICE_NOT_AVAILABLE"
+        };
+
+        forms.dataSources.updateCache(options, [testErrorDataSource], {
+          currentTime: testDate
+        }, function(err, errUpdateResult){
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+
+          //It Should Be A Valid Data Source Update With An Error
+          assert.ok(errUpdateResult.validDataSourceUpdates[0]);
+          assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.status, "error");
+          assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.userDetail, "Error Getting Data From Service");
+          assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.systemDetail, "Invalid Response Code 500");
+          assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.code, "SERVICE_NOT_AVAILABLE");
+          cb();
+        });
+      }
+    ], done);
+  },
   "Test Validate Data Source Data": function(done){
     //Forms Should Have A Separate Function To Validate A Data Set.
 
     var baseDataSourceData = _.clone(dataSourceData);
 
     var dataSourceDataSingleChoice = _.extend({
-      data: {
-        fieldType: "singleChoice",
-        options: [
-          {
-            label: "Option 1",
-            checked: false
-          },
-          {
-            label: "Option 2",
-            checked: true
-          }
-        ]
-      }
+      data: [
+        dataOptions.option1(false),
+        dataOptions.option2(true)
+      ]
     }, baseDataSourceData);
 
     var dataSourceDataNoChoice = _.extend({
-      data: {
-        fieldType: "singleChoice",
-        options: [
-        ]
-      }
+      data: [
+      ]
     }, baseDataSourceData);
 
-    var dataSourceDataSingleChoiceWrongChoice = _.extend({
-      data: {
-        fieldType: "wrongChoice",
-        options: [
-          {
-            label: "Option 1",
-            checked: false
-          },
-          {
-            label: "Option 2",
-            checked: true
-          }
-        ]
-      }
-    }, baseDataSourceData);
 
     async.series([
       function(cb){
@@ -482,23 +485,6 @@ module.exports = {
           expectedResult.validationResult = {
             valid: true,
             message: "Data Source Is Valid"
-          };
-
-          verifyDataSourceJSON(expectedResult, validationResult);
-
-          cb();
-        });
-      },
-      function(cb){
-        forms.dataSources.validate(options, dataSourceDataSingleChoiceWrongChoice, function(err, validationResult){
-          assert.ok(!err, "Expected No Error");
-
-          var expectedResult = _.clone(dataSourceDataSingleChoiceWrongChoice);
-
-          expectedResult.dataHash = misc.generateHash(dataSourceDataSingleChoiceWrongChoice.data);
-          expectedResult.validationResult = {
-            valid: false,
-            message: "Invalid Data Source"
           };
 
           verifyDataSourceJSON(expectedResult, validationResult);
@@ -526,4 +512,4 @@ module.exports = {
     ], done);
   }
 
-}
+};
