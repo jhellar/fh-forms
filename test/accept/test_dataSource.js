@@ -9,6 +9,8 @@ var misc = require('../../lib/common/misc.js');
 var _ = require('underscore');
 var dataSourceData = require('../Fixtures/dataSource.js');
 var logger = require('../../lib/common/logger').getLogger();
+var simpleForm = require('../Fixtures/simple.js');
+var handyFieldData = require('../Fixtures/formSubmissions.js');
 
 var DataSource;
 var connection;
@@ -170,6 +172,82 @@ module.exports = {
         });
       });
     });
+  },
+  "Test Remove Data Source Associated With Form ": function(done){
+    //Removing A Data Source Associated With A Form Should Not Be Possible
+    var dsId;
+    var testForm = simpleForm.getBaseForm();
+    var dsCreatedForm;
+
+    async.series([
+      function createDataSource(cb){
+        var testDataSource = _.clone(dataSourceData);
+
+        forms.dataSources.create(options, testDataSource, function(err, createdDataSource) {
+          assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+          assert.ok(createdDataSource._id, "Expected A Data Source Id");
+
+          dsId = createdDataSource._id;
+
+          cb();
+        });
+      },
+      function createForm(cb){
+
+        //Add A Dropdown Field
+        var dropdownField = _.clone(handyFieldData.dropdownFieldData);
+
+        dropdownField.dataSource = dsId;
+        dropdownField.dataSourceType = "dataSource";
+
+        var page = {
+          fields: [dropdownField]
+        };
+
+        testForm.pages = [page];
+
+        forms.updateForm(options, testForm, function(err, createdForm){
+          assert.ok(!err, "Expected No Error When Creating A New Form " + util.inspect(err));
+          assert.equal(1, createdForm.pages[0].fields.length);
+          assert.equal("dataSource", createdForm.pages[0].fields[0].dataSourceType);
+
+          assert.equal(dsId.toString(), createdForm.pages[0].fields[0].dataSource.toString());
+
+          dsCreatedForm = createdForm;
+
+          return cb();
+        });
+      },
+      function removeDataSource(cb){
+        forms.dataSources.remove(options, {
+          _id: dsId
+        }, function(err) {
+          assert.ok(err, "Expected An Error");
+
+          assert.ok(err.userDetail.indexOf("Forms Are Associated With This Data Source") > -1, "Expected A Data Source Form Error Message");
+          cb();
+        });
+      },
+      function updateFormToRemoveAssociation(cb){
+        dsCreatedForm.pages[0].fields[0].dataSourceType = "static";
+
+        forms.updateForm(options, dsCreatedForm, function(err, updatedForm) {
+          assert.ok(!err, "Expected No Error When Creating A New Form " + util.inspect(err));
+          assert.equal(1, updatedForm.pages[0].fields.length);
+          assert.equal("static", updatedForm.pages[0].fields[0].dataSourceType);
+          cb();
+        });
+      },
+      function removeDataSourceAgain(cb){
+        forms.dataSources.remove(options, {
+          _id: dsId
+        }, function(err) {
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+          cb();
+        });
+      }
+    ], done);
   },
   "Test Create New Service Data Source Already Exists": function(done){
     var testDataSource = _.clone(dataSourceData);

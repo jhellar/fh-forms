@@ -140,6 +140,24 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
     }
   ];
 
+  var expectedTestCacheOptions = [
+    {
+      key: "op1",
+      label: 'Option 1',
+      checked: false
+    },
+    {
+      key: "op2",
+      label: 'Option 2',
+      checked: false
+    },
+    {
+      key: "op3",
+      label: 'Option 3',
+      checked: true
+    }
+  ];
+
   var updatedCacheOptions = [
     {
       key: "op1",
@@ -150,6 +168,19 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
       key: "op2",
       value: 'Changed Option 2',
       selected: true
+    }
+  ];
+
+  var expectedUpdatedCacheOptions = [
+    {
+      key: "op1",
+      label: 'Changed Option 1',
+      checked: false
+    },
+    {
+      key: "op2",
+      label: 'Changed Option 2',
+      checked: true
     }
   ];
 
@@ -328,7 +359,7 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
         assert.equal(formDropdownField.dataSource, undefined);
 
         //The field should have data associated with the data source
-        _.each(testCacheOptions, function(cacheOption, index){
+        _.each(expectedTestCacheOptions, function(cacheOption, index){
           logger.debug("testCacheOptions ", cacheOption, formDropdownField);
           assert.ok(_.isEqual(JSON.stringify(cacheOption), JSON.stringify(formDropdownField.fieldOptions.definition.options[index])));
         });
@@ -375,7 +406,7 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
         assert.equal(formDropdownField.dataSource, undefined);
 
         //The field should have data associated with the data source
-        _.each(updatedCacheOptions, function(cacheOption, index){
+        _.each(expectedUpdatedCacheOptions, function(cacheOption, index){
           assert.ok(_.isEqual(JSON.stringify(cacheOption), JSON.stringify(formDropdownField.fieldOptions.definition.options[index])));
         });
         return cb(undefined, createdDataSource, updatedForm);
