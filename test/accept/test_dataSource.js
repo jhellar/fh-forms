@@ -80,6 +80,7 @@ function verifyDataSourceResponse(expectedDataSource, expectedDataSourceData, ex
 
 module.exports = {
   "setUp": function(done){
+    logger.debug("setUp");
     initDatabase(assert, function(err) {
       assert.ok(!err, "Unexpected Error " + util.inspect(err));
       connection = mongoose.createConnection(options.uri);
@@ -91,6 +92,8 @@ module.exports = {
   },
   "tearDown": function(done){
     //Remove Any Existing Data Sources
+
+    logger.debug("tearDown");
 
     DataSource.remove({}, function(err){
       assert.ok(!err, "Unexpected Error " + util.inspect(err));
@@ -127,12 +130,9 @@ module.exports = {
     });
   },
   "Test Create New Service Data Source No Service Guid": function(done){
-    var testDataSource = {
-      name: "Test Service Data Source",
-      description: "Test Service Data Source",
-      endpoint: "/path/to/data",
-      refreshInterval: 3000
-    };
+    var testDataSource = _.clone(dataSourceData);
+
+    delete testDataSource.serviceGuid;
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
       assert.ok(err, "Expected An Error When Creating A Service Data Source With No Service Guid");
@@ -347,6 +347,108 @@ module.exports = {
           //The lastRefreshed Field Should Have Been Updated
           assert.ok(afterRefreshedTimestamp > beforeRefreshedTimestamp, "Expected The Timestamp After Updating A Data Source To Have Changed");
 
+          cb();
+        });
+      }
+    ], done);
+  },
+  "Test List Data Sources Requiring Update": function(done){
+    var testDataSource = _.clone(dataSourceData);
+    var dataSourceDataSet = {
+      data: [
+        dataOptions.option1(false),
+        dataOptions.option2(true)
+      ]
+    };
+
+    var dsId;
+
+    async.series([
+      function(cb){
+        DataSource.remove({}, function(err) {
+          assert.ok(!err, "Unexpected Error " + util.inspect(err));
+          cb();
+        });
+      },
+      function createDataSource(cb){
+        forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
+          assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+
+          //Data Source Was Created, verify responses
+          assert.ok(createdDataSource, "Expected The Data Source To Be Returned");
+          assert.ok(createdDataSource._id, "Expected The Data Source ID To Be Returned");
+
+          dsId = createdDataSource._id;
+          dataSourceDataSet._id = dsId;
+          cb();
+        });
+      },
+      function(cb){
+        //Should Be A Single Data Source Requiring An Update
+        forms.dataSources.list(options, {
+          listDataSourcesNeedingUpdate: true,
+          currentTime: new Date()
+        }, function(err, dataSources){
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+          assert.equal(1, dataSources.length);
+          cb();
+        });
+      },
+      function(cb){
+        //Update The Cache
+        forms.dataSources.updateCache(options, [dataSourceDataSet], {
+            currentTime: new Date()
+          }, function(err){
+          assert.ok(!err, "Expected No Error");
+          cb();
+        });
+      },
+      function(cb){
+        //Should Be No Data Sources Needing An Update Now.
+        forms.dataSources.list(options, {
+          listDataSourcesNeedingUpdate: true,
+          currentTime: new Date()
+        }, function(err, dataSources){
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+          assert.equal(0, dataSources.length);
+          cb();
+        });
+      },
+      function(cb){
+        //After the refresh interval, the data source should be returned
+        setTimeout(function(){
+          forms.dataSources.list(options, {
+            listDataSourcesNeedingUpdate: true,
+            currentTime: new Date()
+          }, function(err, dataSources){
+            assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+            assert.equal(1, dataSources.length);
+            assert.equal(dsId.toString(), dataSources[0]._id.toString());
+            cb();
+          });
+        }, testDataSource.refreshInterval);
+      },
+      function(cb){
+        //Update The Cache Again
+        forms.dataSources.updateCache(options, [dataSourceDataSet], {
+          currentTime: new Date()
+        }, function(err){
+          assert.ok(!err, "Expected No Error");
+          cb();
+        });
+      },
+      function(cb){
+        //Should Be No Data Sources Needing An Update Again.
+        forms.dataSources.list(options, {
+          listDataSourcesNeedingUpdate: true,
+          currentTime: new Date()
+        }, function(err, dataSources){
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+          assert.equal(0, dataSources.length);
           cb();
         });
       }
