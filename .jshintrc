@@ -2,7 +2,7 @@
     "asi"           : true,
     "camelcase"     : false,
     "bitwise"       : false,  
-    "unused"        : false,
+    "unused"        : true,
     "laxbreak"      : true,
     "laxcomma"      : true,
     "curly"         : false,   

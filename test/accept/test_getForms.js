@@ -116,27 +116,32 @@ module.exports.testGetFormsDataSourceUpdated = function (finish) {
   var testDataSource = _.clone(dataSource);
   var testCacheOptions = [
     {
-      label: "Option 1",
-      checked: false
+      key: "op1",
+      value: 'Option 1',
+      selected: false
     },
     {
-      label: "Option 2",
-      checked: false
+      key: "op2",
+      value: 'Option 2',
+      selected: false
     },
     {
-      label: "Option 3",
-      checked: true
+      key: "op3",
+      value: 'Option 3',
+      selected: true
     }
   ];
 
   var updatedCacheOptions = [
     {
-      label: "Changed Option 1",
-      checked: false
+      key: "op1",
+      value: 'Changed Option 1',
+      selected: false
     },
     {
-      label: "Changed Option 2",
-      checked: true
+      key: "op2",
+      value: 'Changed Option 2',
+      selected: true
     }
   ];
 
@@ -179,13 +184,12 @@ module.exports.testGetFormsDataSourceUpdated = function (finish) {
     function updateDataSourceCache(createdDataSource, createdForm, cb){
       var testCacheData = {
         _id: createdDataSource._id,
-        data: {
-          fieldType: "singleChoice",
-          options: testCacheOptions
-        }
+        data: testCacheOptions
       };
 
-      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+      forms.dataSources.updateCache(options, [testCacheData], {
+        currentTime: new Date()
+      }, function(err, updateResult){
         assert.ok(!err, "Expected No Error When Updating Data Cache ", + err);
 
         firstRefreshTime = updateResult.validDataSourceUpdates[0].lastRefreshed;
@@ -224,13 +228,12 @@ module.exports.testGetFormsDataSourceUpdated = function (finish) {
     function updateCacheAgain(createdDataSource, updatedForm, cb){
       var testCacheData = {
         _id: createdDataSource._id,
-        data: {
-          fieldType: "singleChoice",
-          options: updatedCacheOptions
-        }
+        data: updatedCacheOptions
       };
 
-      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+      forms.dataSources.updateCache(options, [testCacheData], {
+        currentTime: new Date()
+      }, function(err, updateResult){
         assert.ok(!err, "Expected No Error When Updating Data Cache ", + err);
 
         secondRefreshTime = updateResult.validDataSourceUpdates[0].lastRefreshed;

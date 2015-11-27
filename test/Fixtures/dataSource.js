@@ -4,6 +4,6 @@ module.exports = {
   createdBy: "someuser@example.com",
   updatedBy: "someotheruser@example.com",
   endpoint: "/another/path/to/data",
-  refreshInterval: 40,
+  refreshInterval: 2000,
   serviceGuid: "service1234"
 };

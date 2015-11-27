@@ -1,5 +1,9 @@
 #fh-forms
 
+## 1.3.0 - 2015-11-26 - Niall Donnelly
+
+* RHMAP-2394 - Changed fh-forms to include Data Source cache update.
+
 ## 1.2.0 - 2015-09-28 - Niall Donnelly
 * FH-2097 - Add Data Source Mbaas APIs
 * FH-1908 - Add Data Source Target Permissions Fields
