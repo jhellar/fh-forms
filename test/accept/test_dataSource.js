@@ -496,18 +496,16 @@ module.exports = {
       },
       function(cb){
         //After the refresh interval, the data source should be returned
-        setTimeout(function(){
-          forms.dataSources.list(options, {
-            listDataSourcesNeedingUpdate: true,
-            currentTime: new Date()
-          }, function(err, dataSources){
-            assert.ok(!err, "Expected No Error " + util.inspect(err));
+        forms.dataSources.list(options, {
+          listDataSourcesNeedingUpdate: true,
+          currentTime: new Date(new Date().valueOf() + new Date(testDataSource.refreshInterval * 60 * 1000).valueOf())
+        }, function(err, dataSources){
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
 
-            assert.equal(1, dataSources.length);
-            assert.equal(dsId.toString(), dataSources[0]._id.toString());
-            cb();
-          });
-        }, testDataSource.refreshInterval);
+          assert.equal(1, dataSources.length);
+          assert.equal(dsId.toString(), dataSources[0]._id.toString());
+          cb();
+        });
       },
       function(cb){
         //Update The Cache Again
