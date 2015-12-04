@@ -3,6 +3,7 @@
 ## 1.3.0 - 2015-11-26 - Niall Donnelly
 
 * RHMAP-2394 - Changed fh-forms to include Data Source cache update.
+* RHMAP-3242 - Fixed Deploying A Form Containing A Data Source Not Associating Correctly. 
 
 ## 1.2.0 - 2015-09-28 - Niall Donnelly
 * FH-2097 - Add Data Source Mbaas APIs
