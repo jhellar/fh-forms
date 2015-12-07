@@ -1730,6 +1730,120 @@ module.exports.testFormWithDataSources = function(finish){
 };
 
 /**
+ * Testing The Scenario Where A Form Is Deployed Containing Data Sources
+ * @param finish
+ */
+module.exports.testDeployFormWithDataSources = function(finish){
+  var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
+
+  var testDataSource = _.clone(testDataSourceData);
+
+  var testForm = simpleForm.getBaseForm();
+
+  async.waterfall([
+    cleanUp,
+    //First, create a data source
+    function createDataSource(cb){
+      forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
+        assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
+
+        assert.ok(createdDataSource, "Expected A Data Source");
+
+        cb(undefined, createdDataSource._id);
+      });
+    },
+    //Creating A Form That Contains A Data Source
+    function createCoreFormSingleDataSource(createdDataSourceId, cb){
+
+      //cloning a simple base form
+      var testFirstForm = _.clone(testForm);
+
+      //Cloning a base dropdown field
+      var checkBoxFieldDataSource = _.clone(checkboxesField);
+
+      //New Field name
+      checkBoxFieldDataSource.name = "Data Source Dropdown";
+
+      //It is not necessary to add any static options when creating fields that use data sources -- kind of the point really.
+      delete checkBoxFieldDataSource.fieldOptions.definition.options;
+
+      //First, just a checkbox field
+      testFirstForm.pages[0].fields[0] = checkBoxFieldDataSource;
+
+      //Assigning the data source
+      checkBoxFieldDataSource.dataSourceType = "dataSource";
+      checkBoxFieldDataSource.dataSource = createdDataSourceId;
+
+      var formUpdateOptions = _.clone(options);
+
+      //Expect/Don't expect data source cache to be present. This is useful when deploying forms to environments and saving to core where cache data will not be present.
+      formUpdateOptions.expectDataSourceCache = false;
+
+      forms.updateForm(formUpdateOptions, testFirstForm, function(err, createdForm){
+        assert.ok(!err, "Expected No Error When Creating A New Form" + util.inspect(err));
+
+        assert.ok(createdForm._id, "Expected A Form ID To Be Present");
+
+        var expectedForm = _.clone(testFirstForm);
+
+        //Should be One data source listed
+        expectedForm.dataSources = {
+          formDataSources: [
+            {
+              _id: createdDataSourceId,
+              name: testDataSource.name
+            }
+          ]
+        };
+
+        //Checking Data Sources And Targets Are assigned to the form
+        checkEqual(expectedForm.dataSources, createdForm.dataSources);
+
+        //Checking the field data source was assigned
+        var expectedField = checkBoxFieldDataSource;
+        var actualField = createdForm.pages[0].fields[0];
+
+        //Assigning the id of the field
+        expectedField._id = actualField._id;
+
+        //Other than _id, the fields should be identical.
+        checkEqual(expectedField, actualField);
+
+        return cb(undefined, createdDataSourceId, createdForm);
+      });
+    },
+    function removeForm(createdDataSourceId, createdForm, cb){
+      forms.deleteForm(_.extend({_id: createdForm._id}, options), function(err){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        cb(err, createdDataSourceId, createdForm);
+      });
+    },
+    function deployForm(createdDataSourceId, createdForm, cb){
+      var formDeployOptions = _.clone(options);
+
+      formDeployOptions.createIfNotFound = true;
+
+      forms.updateForm(formDeployOptions, createdForm, function(err, deployedForm){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+
+        //The Deployed Form Should Have The Data Sources
+        console.log("Deployed Form ", deployedForm);
+        assert.equal(deployedForm.pages[0].fields[0].dataSource.toString(), createdDataSourceId.toString());
+        assert.equal(deployedForm.pages[0].fields[0].dataSourceType, "dataSource");
+        assert.ok(deployedForm.dataSources.formDataSources[0]._id, "Expected A Data Source Entry");
+        cb(err);
+      });
+    }
+  ], function(err){
+    assert.ok(!err, "Expected No Errors " + util.inspect(err));
+    finish();
+  });
+
+};
+
+/**
  * Testing The Case Where A Data Source/Target Does Not Exist
  * @param finish
  */
