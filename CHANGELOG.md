@@ -1,12 +1,15 @@
 #fh-forms
 
+## 1.2.1 - 2015-12-11 - Gerard Ryan
+* RHMAP-3459 - Bump fh-gridfs version for its build-related changes
+
 ## 1.1.9 - 2015-11-20 - Niall Donnelly
 
 * RHMAP-2844 - Fixed Incorrect Function Spelling
 
 ## 1.1.8 - 2015-10-15 - Niall Donnelly
 
-* RHMAP-1809 - Fixed Submissions Helper To Allow Submission To Render Checkboxes With No Options 
+* RHMAP-1809 - Fixed Submissions Helper To Allow Submission To Render Checkboxes With No Options
 
 ## 1.1.7 - 2015-09-29 - Gerard Ryan
 * FH-2205 - Use custom version of phantom to allow shrinkwrapping with npm@2
@@ -20,8 +23,8 @@
 ##1.1.4 - 2015-09-03 - Luigi Zuccarelli
 * FH-1946 - Fix-security-vulnerabilities in handlebars > uglify.js
 
--##1.1.3 - 2015-09-03 - Niall Donnelly
--* FH-1924 - Removed Submission Data From Logging.
+##1.1.3 - 2015-09-03 - Niall Donnelly
+* FH-1924 - Removed Submission Data From Logging.
 
 ##1.1.2 - 2015-08-24 - Niall Donnelly
 
