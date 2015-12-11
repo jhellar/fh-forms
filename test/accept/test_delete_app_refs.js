@@ -137,7 +137,7 @@ module.exports.it_should_delete_app_refs = function(finish) {
       });
     },
     function doOperation(cb) {
-      forms.deleteAppRefrences(options, params, function (err) {
+      forms.deleteAppReferences(options, params, function (err) {
         assert.ok(!err, "unexpected error: " + util.inspect(err));
         return cb();
       });
