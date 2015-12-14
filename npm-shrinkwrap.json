@@ -183,7 +183,7 @@
     },
     "fh-gridfs": {
       "version": "0.2.7",
-      "from": "fh-gridfs@0.2.7",
+      "from": "https://registry.npmjs.org/fh-gridfs/-/fh-gridfs-0.2.7.tgz",
       "resolved": "https://registry.npmjs.org/fh-gridfs/-/fh-gridfs-0.2.7.tgz",
       "dependencies": {
         "archiver": {
@@ -294,9 +294,9 @@
       }
     },
     "fh-mbaas-client": {
-      "version": "0.3.8",
-      "from": "https://registry.npmjs.org/fh-mbaas-client/-/fh-mbaas-client-0.3.8.tgz",
-      "resolved": "https://registry.npmjs.org/fh-mbaas-client/-/fh-mbaas-client-0.3.8.tgz",
+      "version": "0.5.2",
+      "from": "fh-mbaas-client@0.5.2",
+      "resolved": "https://registry.npmjs.org/fh-mbaas-client/-/fh-mbaas-client-0.5.2.tgz",
       "dependencies": {
         "bunyan": {
           "version": "0.22.0",

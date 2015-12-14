@@ -2,6 +2,7 @@
 
 ## 1.2.1 - 2015-12-11 - Gerard Ryan
 * RHMAP-3459 - Bump fh-gridfs version for its build-related changes
+* RHMAP-3469 - Bump fh-mbaas-client version for its build-related changes
 
 ## 1.1.9 - 2015-11-20 - Niall Donnelly
 

@@ -22,7 +22,7 @@
     "archiver": "0.14.3",
     "async": "0.2.9",
     "fh-gridfs": "0.2.7",
-    "fh-mbaas-client": "0.3.8",
+    "fh-mbaas-client": "0.5.2",
     "handlebars": "4.0.1",
     "lodash": "2.2.1",
     "mime": "1.2.11",
