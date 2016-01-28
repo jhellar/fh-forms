@@ -53,7 +53,15 @@ function verifyDataSourceJSON(expected, actual){
   assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
 
-function verifyDataSourceResponse(expectedDataSource, expectedDataSourceData, expectedHash, expectedError, actualResponse){
+function verifyDataSourceAuditLogEntry(dsAuditLogEntry, expectedServiceGuid, expectedEndpoint){
+  assert.ok(dsAuditLogEntry.updateTimestamp, "Expected an updateTimestamp Property");
+  assert.ok(dsAuditLogEntry.lastRefreshed, "Expected a lastRefreshed Property");
+  assert.ok(dsAuditLogEntry.dataHash, "Expected a dataHash Property");
+  assert.equal(expectedServiceGuid, dsAuditLogEntry.serviceGuid);
+  assert.equal(expectedEndpoint, dsAuditLogEntry.endpoint);
+}
+
+function verifyDataSourceResponse(expectedDataSource, expectedDataSourceData, expectedHash, expectedError, actualResponse, updateTimestamp){
   //The response should return the contents of the cache.
   var testResponse = _.clone(actualResponse);
   assert.ok(testResponse.lastRefreshed, "Expected A Last Refreshed Field To Be Set");
@@ -72,6 +80,7 @@ function verifyDataSourceResponse(expectedDataSource, expectedDataSourceData, ex
 
   _.extend(expectedResponse, {
     dataHash: expectedHash,
+    updateTimestamp: updateTimestamp,
     currentStatus: status,
     data: expectedDataSourceData
   });
@@ -372,9 +381,11 @@ module.exports = {
 
         dataSourceDataMultiChoice._id = testDataSource2._id;
 
+        var currentTime = new Date();
+
         //Now Updating A Single Data Source
         forms.dataSources.updateCache(options, [dataSourceDataSingleChoice, dataSourceDataMultiChoice], {
-          currentTime: new Date()
+          currentTime: currentTime
         }, function(err, updateResult){
           assert.ok(!err, "Unexpected Error When Updating Data Source Data " + util.inspect(err));
 
@@ -385,14 +396,35 @@ module.exports = {
           var dataSourceUpdateResponseSingle = updateResult.validDataSourceUpdates[0];
           var dataSourceUpdateResponseMulti = updateResult.validDataSourceUpdates[1];
 
-          verifyDataSourceResponse(testDataSource1, dataSourceDataSingleChoice.data, expectedHashSingle, undefined, dataSourceUpdateResponseSingle);
+          verifyDataSourceResponse(testDataSource1, dataSourceDataSingleChoice.data, expectedHashSingle, undefined, dataSourceUpdateResponseSingle, currentTime);
 
-          verifyDataSourceResponse(testDataSource2, dataSourceDataMultiChoice.data, expectedHashMulti, undefined, dataSourceUpdateResponseMulti);
+          verifyDataSourceResponse(testDataSource2, dataSourceDataMultiChoice.data, expectedHashMulti, undefined, dataSourceUpdateResponseMulti, currentTime);
 
           //Noting The Last Refreshed Timestamp
           dataSourceSingleChoiceRefreshTimestamp = dataSourceUpdateResponseSingle.lastRefreshed;
 
           cb();
+        });
+      },
+      function checkDSCacheAuditLog(cb){
+        forms.dataSources.get(options, {
+          _id: testDataSource1._id,
+          includeAuditLog: true
+        }, function(err, dsIncludingAuditLog){
+          assert.ok(!err);
+
+          logger.debug("dataSourceUpdateResponseSingle ", dsIncludingAuditLog);
+
+          var dsUpdateSingleAuditLog = dsIncludingAuditLog.auditLogs;
+          assert.equal(1, dsUpdateSingleAuditLog.length);
+          var dsUpdateSingleAuditLogEntry = dsUpdateSingleAuditLog[0];
+
+          verifyDataSourceAuditLogEntry(dsUpdateSingleAuditLogEntry, testDataSource1.serviceGuid, testDataSource1.endpoint);
+
+          //The first update audit log should contain the data set saved.
+          assert.equal(dataOptions.option1().key, dsUpdateSingleAuditLogEntry.data[0].key);
+          assert.equal("ok", dsUpdateSingleAuditLogEntry.currentStatus.status, "Expected A status to be set");
+          return cb();
         });
       },
       function(cb){
@@ -406,8 +438,9 @@ module.exports = {
         updatedSingleChoiceData._id = testDataSource1._id;
         var expectedHashUpdated = misc.generateHash(updatedSingleChoiceData.data);
 
+        var currentTime = new Date();
         forms.dataSources.updateCache(options, [updatedSingleChoiceData], {
-          currentTime: new Date()
+          currentTime: currentTime
         }, function(err, updateResult){
           assert.ok(!err, "Unexpected Error When Updating Data Source Data");
 
@@ -416,7 +449,7 @@ module.exports = {
           assert(updateResult.invalidDataSourceUpdates.length === 0, "Expected No Failed Data Source Updates");
 
           var dataSourceUpdateResponseSingle = updateResult.validDataSourceUpdates[0];
-          verifyDataSourceResponse(testDataSource1, updatedSingleChoiceData.data, expectedHashUpdated, undefined, dataSourceUpdateResponseSingle);
+          verifyDataSourceResponse(testDataSource1, updatedSingleChoiceData.data, expectedHashUpdated, undefined, dataSourceUpdateResponseSingle, currentTime);
 
 
           var beforeRefreshedTimestamp = new Date(dataSourceSingleChoiceRefreshTimestamp).getTime();
@@ -426,6 +459,28 @@ module.exports = {
           assert.ok(afterRefreshedTimestamp > beforeRefreshedTimestamp, "Expected The Timestamp After Updating A Data Source To Have Changed");
 
           cb();
+        });
+      },
+      function checkDSCacheAuditLog(cb){
+        forms.dataSources.get(options, {
+          _id: testDataSource1._id,
+          includeAuditLog: true
+        }, function(err, dsIncludingAuditLog){
+          assert.ok(!err);
+
+          logger.debug("dataSourceUpdateResponseSingle ", dsIncludingAuditLog);
+
+          var dsUpdateSingleAuditLog = dsIncludingAuditLog.auditLogs;
+          //Should now be 2 audit log entries
+          assert.equal(2, dsUpdateSingleAuditLog.length);
+          var dsUpdateSingleAuditLogEntry = dsUpdateSingleAuditLog[1];
+
+          verifyDataSourceAuditLogEntry(dsUpdateSingleAuditLogEntry, testDataSource1.serviceGuid, testDataSource1.endpoint);
+
+          //The first update audit log should contain the data set saved.
+          assert.equal(dataOptions.option2().key, dsUpdateSingleAuditLogEntry.data[0].key);
+          assert.equal("ok", dsUpdateSingleAuditLogEntry.currentStatus.status, "Expected A status to be set");
+          return cb();
         });
       }
     ], done);

@@ -5,5 +5,6 @@ module.exports = {
   updatedBy: "someotheruser@example.com",
   endpoint: "/another/path/to/data",
   refreshInterval: 1,
-  serviceGuid: "service1234"
+  serviceGuid: "service1234",
+  numAuditLogEntries: 1000
 };
