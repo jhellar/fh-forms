@@ -808,7 +808,7 @@ module.exports = {
       var csvKeys = Object.keys(csvs);
       var lines = csvs[csvKeys[0]].split('\r\n');
       assert.equal(lines[0], 'formName,formId,submissionCompletedTimestamp,appCloudName,deviceId,deviceIPAddress,updatedTimestamp,single text field', "Expected header to be 'formName,formId,submissionCompletedTimestamp,appCloudName,deviceId,deviceIPAddress,updatedTimestamp,single text field', not: " + util.inspect(lines[0]));
-      assert.equal(lines[1], 'testForm,simple1withnull,Wed Jan 27 2016 14:20:32 GMT+0000 (UTC),sampleCloudAppName,985FD579305D4D8EB4168641813806A5,127.0.0.1,Wed Jan 27 2016 14:22:41 GMT+0000 (UTC),', "Expected first line to be '' (empty string), not: " + lines[1]);
+      assert.equal(lines[1], 'testForm,simple1withnull,Wed Jan 27 2016 14:20:32 GMT+0000 (UTC),sampleCloudAppName,985FD579305D4D8EB4168641813806A5,127.0.0.1,Wed Jan 27 2016 14:22:41 GMT+0000 (UTC),', "Expected single value to be '' (empty string), not: " + lines[1]);
       finish();
     });
   },
