@@ -263,7 +263,10 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
         assert.ok(_.isEqual(returnedForm.dataSources, {
           formDataSources: [{
             _id: createdDataSource._id,
-            name: createdDataSource.name
+            name: createdDataSource.name,
+            lastUpdated: createdDataSource.lastUpdated,
+            createdBy: createdDataSource.createdBy,
+            updatedBy: createdDataSource.updatedBy
           }]
         }), "Expected One Form Data Source");
 
