@@ -12,6 +12,7 @@ var testDataTargetData = require('../Fixtures/dataTarget.js');
 var simpleForm = require('../Fixtures/simple.js');
 var cleanUp = require('../Fixtures/cleanup.js');
 var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
+var logger = require('../../lib/common/logger').getLogger();
 
 var assert = require('assert');
 
@@ -1544,6 +1545,7 @@ module.exports.testFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
 
         assert.ok(createdDataSource, "Expected A Data Source");
+        testDataSource = createdDataSource;
 
         cb(undefined, createdDataSource._id);
       });
@@ -1553,6 +1555,7 @@ module.exports.testFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Target " + util.inspect(err));
 
         assert.ok(createdDataTarget, "Expected A Data Target");
+        testDataTarget = createdDataTarget;
 
         cb(undefined, createdDataSourceId, createdDataTarget._id);
       });
@@ -1601,7 +1604,10 @@ module.exports.testFormWithDataSources = function(finish){
           formDataSources: [
             {
               _id: createdDataSourceId,
-              name: testDataSource.name
+              name: testDataSource.name,
+              lastUpdated: testDataSource.lastUpdated,
+              updatedBy: testDataSource.updatedBy,
+              createdBy: testDataSource.createdBy
             }
           ]
         };
@@ -1610,7 +1616,10 @@ module.exports.testFormWithDataSources = function(finish){
         expectedForm.dataTargets = [
           {
             _id: createdDataTargetId,
-            name: testDataTarget.name
+            name: testDataTarget.name,
+            lastUpdated: testDataTarget.lastUpdated,
+            updatedBy: testDataTarget.updatedBy,
+            createdBy: testDataTarget.createdBy
           }
         ];
 
@@ -1636,6 +1645,7 @@ module.exports.testFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
 
         assert.ok(createdDataSource2, "Expected A Data Source");
+        testDataSource2 = createdDataSource2;
 
         cb(undefined, {
           createdDataSource2Id: createdDataSource2._id,
@@ -1684,11 +1694,17 @@ module.exports.testFormWithDataSources = function(finish){
           formDataSources: [
             {
               _id: params.createdDataSource1Id,
-              name: testDataSource.name
+              name: testDataSource.name,
+              lastUpdated: testDataSource.lastUpdated,
+              updatedBy: testDataSource.updatedBy,
+              createdBy: testDataSource.createdBy
             },
             {
               _id: params.createdDataSource2Id,
-              name: testDataSource2.name
+              name: testDataSource2.name,
+              lastUpdated: testDataSource2.lastUpdated,
+              updatedBy: testDataSource2.updatedBy,
+              createdBy: testDataSource2.createdBy
             }
           ]
         };
@@ -1697,7 +1713,10 @@ module.exports.testFormWithDataSources = function(finish){
         expectedForm.dataTargets = [
           {
             _id: params.createdDataTargetId,
-            name: testDataTarget.name
+            name: testDataTarget.name,
+            lastUpdated: testDataTarget.lastUpdated,
+            updatedBy: testDataTarget.updatedBy,
+            createdBy: testDataTarget.createdBy
           }
         ];
 
@@ -1748,6 +1767,7 @@ module.exports.testDeployFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
 
         assert.ok(createdDataSource, "Expected A Data Source");
+        testDataSource = createdDataSource;
 
         cb(undefined, createdDataSource._id);
       });
@@ -1791,10 +1811,16 @@ module.exports.testDeployFormWithDataSources = function(finish){
           formDataSources: [
             {
               _id: createdDataSourceId,
-              name: testDataSource.name
+              name: testDataSource.name,
+              lastUpdated: testDataSource.lastUpdated,
+              updatedBy: testDataSource.updatedBy,
+              createdBy: testDataSource.createdBy
             }
           ]
         };
+
+        logger.debug("expectedForm", expectedForm.dataSources);
+        logger.debug("createdForm", createdForm.dataSources);
 
         //Checking Data Sources And Targets Are assigned to the form
         checkEqual(expectedForm.dataSources, createdForm.dataSources);
@@ -2143,4 +2169,3 @@ module.exports.testFormFieldRuleChangeWithTempIds = function(finish){
   });
 
 };
-
