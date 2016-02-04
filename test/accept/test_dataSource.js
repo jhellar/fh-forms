@@ -438,7 +438,8 @@ module.exports = {
       function checkDSCacheAuditLog(cb){
         forms.dataSources.get(options, {
           _id: testDataSource1._id,
-          includeAuditLog: true
+          includeAuditLog: true,
+          includeAuditLogData: true
         }, function(err, dsIncludingAuditLog){
           assert.ok(!err);
 
@@ -452,6 +453,25 @@ module.exports = {
 
           //The first update audit log should contain the data set saved.
           assert.equal(dataOptions.option1().key, dsUpdateSingleAuditLogEntry.data[0].key);
+          assert.equal("ok", dsUpdateSingleAuditLogEntry.currentStatus.status, "Expected A status to be set");
+          return cb();
+        });
+      },
+      function checkDSCacheAuditLogNoData(cb){
+        forms.dataSources.get(options, {
+          _id: testDataSource1._id,
+          includeAuditLog: true
+        }, function(err, dsNoAuditLog){
+          assert.ok(!err);
+
+          var dsUpdateSingleAuditLog = dsNoAuditLog.auditLogs;
+          assert.equal(1, dsUpdateSingleAuditLog.length);
+          var dsUpdateSingleAuditLogEntry = dsUpdateSingleAuditLog[0];
+
+          verifyDataSourceAuditLogEntry(dsUpdateSingleAuditLogEntry, testDataSource1.serviceGuid, testDataSource1.endpoint);
+
+          //The audit log entry should have no data.
+          assert.equal(undefined, dsUpdateSingleAuditLogEntry.data);
           assert.equal("ok", dsUpdateSingleAuditLogEntry.currentStatus.status, "Expected A status to be set");
           return cb();
         });
@@ -493,7 +513,8 @@ module.exports = {
       function checkDSCacheAuditLog(cb){
         forms.dataSources.get(options, {
           _id: testDataSource1._id,
-          includeAuditLog: true
+          includeAuditLog: true,
+          includeAuditLogData: true
         }, function(err, dsIncludingAuditLog){
           assert.ok(!err);
 
@@ -669,7 +690,7 @@ module.exports = {
 
           expectedResult.error = {
             code: ERROR_CODES.FH_FORMS_INVALID_PARAMETERS,
-            userDetail: "Invalid Data Cache Update",
+            userDetail: "Invalid Data For Cache Update.",
             systemDetail: "Validation failed"
           };
 
@@ -766,7 +787,7 @@ module.exports = {
           expectedResult.dataHash = misc.generateHash(dataSourceDataNoChoice.data);
           expectedResult.validationResult = {
             valid: false,
-            message: "Invalid Data Source"
+            message: "Invalid Data Source Update Data."
           };
 
           verifyDataSourceJSON(expectedResult, validationResult);
