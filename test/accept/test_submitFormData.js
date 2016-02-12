@@ -4,21 +4,21 @@ var mongoose = require('mongoose');
 var models = require('../../lib/common/models.js')();
 var async = require('async');
 var initDatabase = require('./../setup.js').initDatabase;
-var lodash = require('lodash');
 var assert = require('assert');
 var util = require('util');
 var _ = require('underscore');
+var logger = require('../../lib/common/logger').getLogger();
 
 var testFilePath = "./test/Fixtures/test.pdf";
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
-var testBigFormId = undefined;
+var testBigFormId;
 var bigFieldIds = {};
 
-var requiredFormId = undefined;
+var requiredFormId;
 var requiredFieldIds = {};
 
 var required2FieldIds = {};
-var requiredForm2Id = undefined;
+var requiredForm2Id;
 
 var testSubmitFormBaseInfo = {
   "appId": "thisisnowaprojectId123456",
@@ -860,19 +860,16 @@ function addNewField(assert, formId, fieldRequired, cb){
       });
     });
   });
-};
+}
 
 module.exports.testSubmitDropdown = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
-  var testValues = [{
+  submission.formFields = [{
     "fieldId" : bigFieldIds["dropdownField"],
     "fieldValues": ["dropdownVal1", "dropdownVal2"]
   }];
-
-  submission.formFields = testValues;
-
 
   submitAndCheckForm(assert, submission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL,  "expectedSubmissionJSON" : submission, "errExpected": false}, function(){
     finish();
@@ -1045,18 +1042,27 @@ module.exports.testSubmitUpdateFileField = function(finish){
           var updatedSubmission = JSON.parse(JSON.stringify(submission));
           updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
           updatedSubmission.formFields[0].fieldValues[1] = wrongFileDetails;
-          submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
+          submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err){
             assert.ok(err);
-            assert.equal(err.toString(), "Invalid file placeholder texta_new_id");
+            assert.equal(false, err.valid);
+            //Repeating field error messages are in the same index as the value entered.
+            assert.equal(err[bigFieldIds["fileField"]].errorMessages[0], null);
+            assert.equal(err[bigFieldIds["fileField"]].errorMessages[1], "Invalid file placeholder texta_new_id");
 
             // update file field, adding an id
             // verify update failed, not allow to add new ids, only placeholders
             var updatedSubmission = JSON.parse(JSON.stringify(submission));
             updatedSubmission.formFields[0].fieldId = bigFieldIds["fileField"]; // reset fieldId to just the id, not the full field definition, as returned when reading a field
             updatedSubmission.formFields[0].fieldValues.push(wrongFileDetails);
-            submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err, res){
+            submitAndCheckForm(assert, updatedSubmission, {"uri": process.env.FH_DOMAIN_DB_CONN_URL, "errExpected": true}, function(err){
               assert.ok(err);
-              assert.equal(err.toString(), "Invalid file placeholder texta_new_id");
+
+              logger.debug("err", err, bigFieldIds["fileField"]);
+              assert.equal(false, err.valid);
+              //Repeating field error messages are in the same index as the value entered.
+              assert.equal(err[bigFieldIds["fileField"]].errorMessages[0], null);
+              assert.equal(err[bigFieldIds["fileField"]].errorMessages[1], null);
+              assert.equal(err[bigFieldIds["fileField"]].errorMessages[2], "Invalid file placeholder texta_new_id");
 
               // update file field, adding a placeholder
               // verify update ok, and placeholder added, status pending as we've a placeholder waiting
@@ -1229,10 +1235,6 @@ function createTestData(assert, cb){
   var Form = models.get(connection, models.MODELNAMES.FORM);
   var Field = models.get(connection, models.MODELNAMES.FIELD);
   var Page = models.get(connection, models.MODELNAMES.PAGE);
-  var PageRule = models.get(connection, models.MODELNAMES.PAGE_RULE);
-  var FieldRule = models.get(connection, models.MODELNAMES.FIELD_RULE);
-
-
 
   async.series([saveBigForm, saveRequiredForm, saveNotRequiredForm], function(err){
     assert.ok(!err);
@@ -1410,7 +1412,7 @@ function createTestData(assert, cb){
   }
 
   function saveSingleForm(fields, testPage, testFieldsForm, cb){
-    var globalFormId = undefined;
+    var globalFormId;
     var fieldIds = {};
     async.series([saveFields, savePage, saveForm], function(err){
       if(err) console.log(err);
