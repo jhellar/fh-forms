@@ -5,7 +5,7 @@ var util = require('util');
 var models = require('../../lib/common/models.js')();
 var forms = require('../../lib/forms.js');
 var initDatabase = require('./../setup.js').initDatabase;
-var fs = require('fs');
+var _ = require('underscore');
 
 var assert = require('assert');
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
@@ -86,7 +86,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
     function getAppconfigNoGroupAccess(cb) {
       var opts = {uri: options.uri, userEmail: options.userEmail, restrictToUser: TEST_GROUP_USER_NOACCESS};
       var params = {appId: TEST_GROUP_APP1};
-      forms.getAppConfig(opts, params, function(err, result) {
+      forms.getAppConfig(opts, params, function(err) {
         assert.ok(err, 'should have been denied access to app: ' + util.inspect(err));
         return cb();
       });
@@ -195,7 +195,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
       var opts = {uri: options.uri, userEmail: options.userEmail};
       var params = JSON.parse(JSON.stringify(TEST_APP_CONFIG));
       params.appId = '12345';
-      forms.deleteAppConfig(opts, params, function(err, result) {
+      forms.deleteAppConfig(opts, params, function(err) {
         assert.ok(!err, 'should have deleted appConfig: ' + util.inspect(err));
         return cb();
       });
@@ -214,5 +214,34 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
   ], function(err){
     assert.ok(!err, "received error: " + util.inspect(err));
     finish();
+  });
+};
+
+module.exports.test_import_app_config = function(finish){
+
+  var testConfig = _.clone(TEST_APP_CONFIG);
+
+  var importAppConfig = {
+    _id: new mongoose.Types.ObjectId(),
+    appId: 'testappid',
+    client: testConfig.client,
+    cloud: testConfig.cloud
+  };
+
+  forms.importAppConfig(options, [importAppConfig], function(err, updatedAppConfig){
+    assert.ok(!err, "Expected No Error");
+
+    assert.equal(importAppConfig.appId, updatedAppConfig[0].appId);
+
+    importAppConfig.client.sent_save_min = 12;
+
+    //Should be able to do it again
+    forms.importAppConfig(options, [importAppConfig], function(err, updatedAppConfig){
+      assert.ok(!err, "Expected No Error");
+
+      assert.equal(importAppConfig.appId, updatedAppConfig[0].appId);
+      assert.equal(12, updatedAppConfig[0].client.sent_save_min);
+      finish();
+    });
   });
 };
