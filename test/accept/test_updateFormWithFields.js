@@ -1528,14 +1528,14 @@ module.exports.testFormWithDataSources = function(finish){
   var radioField = _.clone(handyFieldData.radioFieldData);
 
   var testDataSource = _.clone(testDataSourceData);
+  testDataSource.name = "testDs1FormUpdate";
 
   var testDataSource2 = _.clone(testDataSourceData);
+  testDataSource2.name = "testDs2FormUpdate";
 
   var testDataTarget = _.clone(testDataTargetData.postProcessing);
 
   var testForm = simpleForm.getBaseForm();
-
-  console.log("***** testForm", JSON.stringify(testForm));
 
   async.waterfall([
     cleanUp,
@@ -1756,6 +1756,7 @@ module.exports.testDeployFormWithDataSources = function(finish){
   var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
 
   var testDataSource = _.clone(testDataSourceData);
+  testDataSource.name = "testDSDeploy";
 
   var testForm = simpleForm.getBaseForm();
 
@@ -1924,6 +1925,7 @@ module.exports.testFormWithDataSourcesNoDataSourceTarget = function(finish){
  */
 module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
   var testDataSourceNoCache = _.clone(testDataSourceData);
+  testDataSourceNoCache.name = "testDataSourceNoCache";
 
   var dropdownField = _.clone(handyFieldData.dropdownFieldData);
 
@@ -1972,6 +1974,7 @@ module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
  */
 module.exports.testFormFieldChangeFromDataSourceToStaticNoFields = function(finish){
   var testDataSource = _.clone(testDataSourceData);
+  testDataSource.name = "testDataSourceToStatic";
 
   var dropdownField = _.clone(handyFieldData.dropdownFieldData);
   dropdownField.fieldOptions = {

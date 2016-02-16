@@ -119,6 +119,7 @@ module.exports = {
   },
   "Test Create New Data Source": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSCreate";
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
       assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
@@ -140,8 +141,28 @@ module.exports = {
       done();
     });
   },
+  "Test Create New Data Source Duplicate Name": function(done){
+    var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSCreateDuplicate";
+
+    forms.dataSources.create(options, testDataSource, function(err){
+      assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+
+      //Trying to create it again with the same name should return an error
+      forms.dataSources.create(options, testDataSource, function(err){
+        assert.ok(err, "Expected An Error");
+
+        assert.ok(err.systemDetail.indexOf(testDataSource.name) > -1);
+        assert.ok(err.systemDetail.indexOf("Alread Exists") > -1);
+        assert.ok(err.code, ERROR_CODES.FH_FORMS_INVALID_PARAMETERS);
+
+        done();
+      });
+    });
+  },
   "Test Create New Service Data Source No Service Guid": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSCreateNoServiceGuid";
 
     delete testDataSource.serviceGuid;
 
@@ -156,6 +177,7 @@ module.exports = {
   },
   "Test Remove Data Source": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSRemove";
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
       assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
@@ -191,6 +213,7 @@ module.exports = {
     async.series([
       function createDataSource(cb){
         var testDataSource = _.clone(dataSourceData);
+        testDataSource.name = "testDSRemoveWithForm";
 
         forms.dataSources.create(options, testDataSource, function(err, createdDataSource) {
           assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
@@ -260,6 +283,7 @@ module.exports = {
   },
   "Test Create New Service Data Source Already Exists": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSIncludingID";
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
       assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
@@ -275,6 +299,7 @@ module.exports = {
   },
   "Test Update Existing Service Data Source": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSUodate";
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
       assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
@@ -299,6 +324,7 @@ module.exports = {
   },
   "Test Update Existing Service Data Source No Service GUID": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSUodateNoService";
 
     forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
       assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
@@ -331,7 +357,10 @@ module.exports = {
     //First, create a data source
     var testDataSource1 = _.clone(dataSourceData);
 
+    testDataSource1.name = "testDS1UodateData";
+
     var testDataSource2 = _.clone(dataSourceData);
+    testDataSource2.name = "testDS2UodateData";
 
     var dataSourceSingleChoiceRefreshTimestamp;
 
@@ -487,6 +516,7 @@ module.exports = {
   },
   "Test List Data Sources Requiring Update": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSListForUpdate";
     var dataSourceDataSet = {
       data: [
         dataOptions.option1(false),
@@ -587,6 +617,7 @@ module.exports = {
   },
   "Test Update Data Source Data Set Wrong Format": function(done){
     var testDataSource = _.clone(dataSourceData);
+    testDataSource.name = "testDSWrongDataFormat";
 
     var dataSourceDataSingleChoice = {
       data: [
@@ -653,6 +684,7 @@ module.exports = {
     //Should Test An Error Expected To Be Stored With The Data Source
 
     var testErrorDataSource = _.clone(dataSourceData);
+    testErrorDataSource.name = "testDSDataError";
     var testDate = new Date();
 
     async.series([
