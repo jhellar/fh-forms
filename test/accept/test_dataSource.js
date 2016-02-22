@@ -153,7 +153,7 @@ module.exports = {
         assert.ok(err, "Expected An Error");
 
         assert.ok(err.systemDetail.indexOf(testDataSource.name) > -1);
-        assert.ok(err.systemDetail.indexOf("Alread Exists") > -1);
+        assert.ok(err.systemDetail.indexOf("Already Exists") > -1);
         assert.ok(err.code, ERROR_CODES.FH_FORMS_INVALID_PARAMETERS);
 
         done();
