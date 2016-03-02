@@ -1,6 +1,19 @@
 var proxyquire =  require('proxyquire').noCallThru(),
   application, ditchMock, authMock;
 
+var bunyan = require('bunyan');
+var bunyanLogger = bunyan.createLogger({
+  name: 'fh-forms',
+  streams:[ {
+    level: 'trace',
+    stream: process.stdout,
+    src: true
+  } ]
+});
+
+var logger = require('../lib/common/logger');
+logger.setLogger(bunyanLogger);
+
 var testAppFormsDb = "testAppFormsDb";
 var DB = require('mongodb').Db;
 var Server = require('mongodb').Server;

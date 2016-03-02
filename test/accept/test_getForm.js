@@ -15,6 +15,7 @@ var _ = require('underscore');
 var cleanUp = require('../Fixtures/cleanup.js');
 var DataSource;
 var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
+var logger = require('../../lib/common/logger').getLogger();
 
 
 module.exports.setUp = function(finish){
@@ -115,7 +116,7 @@ module.exports.testgetPopulatedFormListFails = function(finish){
  * @param finish
  */
 module.exports.testGetFormIncludingDataSourceData = function(finish){
-  var testForm = simpleForm.getBaseForm()
+  var testForm = simpleForm.getBaseForm();
   var testDropdownField = _.clone(handyFieldData.dropdownFieldData);
 
   testForm.pages[0].fields[0] =  testDropdownField;
@@ -123,14 +124,35 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
   var testDataSource = _.clone(dataSource);
   var testCacheOptions = [
     {
+      key: "op1",
+      value: 'Option 1',
+      selected: false
+    },
+    {
+      key: "op2",
+      value: 'Option 2',
+      selected: false
+    },
+    {
+      key: "op3",
+      value: 'Option 3',
+      selected: true
+    }
+  ];
+
+  var expectedTestCacheOptions = [
+    {
+      key: "op1",
       label: 'Option 1',
       checked: false
     },
     {
+      key: "op2",
       label: 'Option 2',
       checked: false
     },
     {
+      key: "op3",
       label: 'Option 3',
       checked: true
     }
@@ -138,10 +160,25 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
 
   var updatedCacheOptions = [
     {
+      key: "op1",
+      value: 'Changed Option 1',
+      selected: false
+    },
+    {
+      key: "op2",
+      value: 'Changed Option 2',
+      selected: true
+    }
+  ];
+
+  var expectedUpdatedCacheOptions = [
+    {
+      key: "op1",
       label: 'Changed Option 1',
       checked: false
     },
     {
+      key: "op2",
       label: 'Changed Option 2',
       checked: true
     }
@@ -226,7 +263,10 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
         assert.ok(_.isEqual(returnedForm.dataSources, {
           formDataSources: [{
             _id: createdDataSource._id,
-            name: createdDataSource.name
+            name: createdDataSource.name,
+            lastUpdated: createdDataSource.lastUpdated,
+            createdBy: createdDataSource.createdBy,
+            updatedBy: createdDataSource.updatedBy
           }]
         }), "Expected One Form Data Source");
 
@@ -286,13 +326,12 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
     function updateDataSourceCache(createdDataSource, updatedForm, cb){
       var testCacheData = {
         _id: createdDataSource._id,
-        data: {
-          fieldType: "singleChoice",
-          options: testCacheOptions
-        }
+        data: testCacheOptions
       };
 
-      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+      forms.dataSources.updateCache(options, [testCacheData], {
+        currentTime: new Date()
+      }, function(err, updateResult){
         assert.ok(!err, "Expected No Error When Updating Data Cache " + util.inspect(err), util.inspect(updateResult));
 
         return cb(undefined, createdDataSource, updatedForm);
@@ -311,6 +350,8 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
       forms.getForm(getFormOptions, function(err, returnedForm){
         assert.ok(!err, "Expected No Error When Getting Form " + util.inspect(err));
 
+        logger.debug("gotForm ", returnedForm);
+
         //The Form Data Sources Field Is Returned
         assert.ok(_.isEqual(returnedForm.dataSources, undefined), "Expected No Data Source Information");
 
@@ -321,7 +362,8 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
         assert.equal(formDropdownField.dataSource, undefined);
 
         //The field should have data associated with the data source
-        _.each(testCacheOptions, function(cacheOption, index){
+        _.each(expectedTestCacheOptions, function(cacheOption, index){
+          logger.debug("testCacheOptions ", cacheOption, formDropdownField);
           assert.ok(_.isEqual(JSON.stringify(cacheOption), JSON.stringify(formDropdownField.fieldOptions.definition.options[index])));
         });
 
@@ -331,14 +373,15 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
     function updateCacheAgain(createdDataSource, updatedForm, cb){
       var testCacheData = {
         _id: createdDataSource._id,
-        data: {
-          fieldType: "singleChoice",
-          options: updatedCacheOptions
-        }
+        data: updatedCacheOptions
       };
 
-      forms.dataSources.updateCache(options, [testCacheData], function(err, updateResult){
+      forms.dataSources.updateCache(options, [testCacheData], {
+        currentTime: new Date()
+      }, function(err, updateResult){
         assert.ok(!err, "Expected No Error When Updating Data Cache ", + err);
+
+        logger.debug("updateResult ", updateResult);
 
         return cb(undefined, createdDataSource, updatedForm);
       });
@@ -366,7 +409,7 @@ module.exports.testGetFormIncludingDataSourceData = function(finish){
         assert.equal(formDropdownField.dataSource, undefined);
 
         //The field should have data associated with the data source
-        _.each(updatedCacheOptions, function(cacheOption, index){
+        _.each(expectedUpdatedCacheOptions, function(cacheOption, index){
           assert.ok(_.isEqual(JSON.stringify(cacheOption), JSON.stringify(formDropdownField.fieldOptions.definition.options[index])));
         });
         return cb(undefined, createdDataSource, updatedForm);

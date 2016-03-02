@@ -484,6 +484,41 @@ module.exports = (function(){
           "max":100
         }
       }
+    },
+    "readOnlyData": {
+      "name":"readOnlyField",
+      "helpText":"This is a Read Only field. It can be populated by Data Sources.",
+      "type":"readOnly",
+      "adminOnly": false,
+      "repeating":false,
+      "required":false,
+      "fieldOptions": {
+        "definition": {
+          "options":[
+            {
+              "label": "red",
+              "checked":true
+            },
+            {
+              "label": "blue",
+              "checked":false
+            },
+            {
+              "label": "green",
+              "checked":false
+            },
+            {
+              "label": "purple",
+              "checked":false
+            },
+            {
+              "label": "black",
+              "checked":false
+            }
+          ]
+        }
+      }
     }
+
   }
 })();

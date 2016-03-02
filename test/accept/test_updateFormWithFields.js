@@ -12,6 +12,7 @@ var testDataTargetData = require('../Fixtures/dataTarget.js');
 var simpleForm = require('../Fixtures/simple.js');
 var cleanUp = require('../Fixtures/cleanup.js');
 var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
+var logger = require('../../lib/common/logger').getLogger();
 
 var assert = require('assert');
 
@@ -1514,6 +1515,7 @@ module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish
 
 
 function checkEqual(expected, actual){
+  logger.debug("checkEqual ", expected, actual);
   assert.ok(_.isEqual(expected, actual), "Expected Objects To Be Equal. Expected: " + JSON.stringify(expected) + " Actual: " + JSON.stringify(actual));
 }
 
@@ -1525,16 +1527,17 @@ module.exports.testFormWithDataSources = function(finish){
   var dropdownField = _.clone(handyFieldData.dropdownFieldData);
   var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
   var radioField = _.clone(handyFieldData.radioFieldData);
+  var readOnlyField = _.clone(handyFieldData.readOnlyData);
 
   var testDataSource = _.clone(testDataSourceData);
+  testDataSource.name = "testDs1FormUpdate";
 
   var testDataSource2 = _.clone(testDataSourceData);
+  testDataSource2.name = "testDs2FormUpdate";
 
   var testDataTarget = _.clone(testDataTargetData.postProcessing);
 
   var testForm = simpleForm.getBaseForm();
-
-  console.log("***** testForm", JSON.stringify(testForm));
 
   async.waterfall([
     cleanUp,
@@ -1544,6 +1547,7 @@ module.exports.testFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
 
         assert.ok(createdDataSource, "Expected A Data Source");
+        testDataSource = createdDataSource;
 
         cb(undefined, createdDataSource._id);
       });
@@ -1553,6 +1557,7 @@ module.exports.testFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Target " + util.inspect(err));
 
         assert.ok(createdDataTarget, "Expected A Data Target");
+        testDataTarget = createdDataTarget;
 
         cb(undefined, createdDataSourceId, createdDataTarget._id);
       });
@@ -1587,8 +1592,6 @@ module.exports.testFormWithDataSources = function(finish){
       //Assign The Data Target
       testFirstForm.dataTargets = [createdDataTargetId];
 
-      console.log("**** testFirstForm", JSON.stringify(testFirstForm));
-
       forms.updateForm(formUpdateOptions, testFirstForm, function(err, createdForm){
         assert.ok(!err, "Expected No Error When Creating A New Form" + util.inspect(err));
 
@@ -1601,7 +1604,10 @@ module.exports.testFormWithDataSources = function(finish){
           formDataSources: [
             {
               _id: createdDataSourceId,
-              name: testDataSource.name
+              name: testDataSource.name,
+              lastUpdated: testDataSource.lastUpdated,
+              updatedBy: testDataSource.updatedBy,
+              createdBy: testDataSource.createdBy
             }
           ]
         };
@@ -1610,7 +1616,10 @@ module.exports.testFormWithDataSources = function(finish){
         expectedForm.dataTargets = [
           {
             _id: createdDataTargetId,
-            name: testDataTarget.name
+            name: testDataTarget.name,
+            lastUpdated: testDataTarget.lastUpdated,
+            updatedBy: testDataTarget.updatedBy,
+            createdBy: testDataTarget.createdBy
           }
         ];
 
@@ -1636,6 +1645,7 @@ module.exports.testFormWithDataSources = function(finish){
         assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
 
         assert.ok(createdDataSource2, "Expected A Data Source");
+        testDataSource2 = createdDataSource2;
 
         cb(undefined, {
           createdDataSource2Id: createdDataSource2._id,
@@ -1649,6 +1659,7 @@ module.exports.testFormWithDataSources = function(finish){
       //Now add a checkboxes and radio field
       var baseCheckboxes  = _.clone(checkboxesField);
       var baseRadio = _.clone(radioField);
+      var baseReadOnly = _.clone(readOnlyField);
 
       //Deleting options
       delete baseCheckboxes.fieldOptions.definition.options;
@@ -1657,14 +1668,17 @@ module.exports.testFormWithDataSources = function(finish){
       //Setting To The Same Data Source
       baseCheckboxes.dataSourceType = "dataSource";
       baseRadio.dataSourceType = "dataSource";
+      baseReadOnly.dataSourceType = "dataSource";
 
       //Assigning A New Data Source.
       baseCheckboxes.dataSource = params.createdDataSource2Id;
       baseRadio.dataSource = params.createdDataSource2Id;
+      baseReadOnly.dataSource = params.createdDataSource2Id;
 
       //Updating The Form
       params.createdForm.pages[0].fields.push(baseCheckboxes);
       params.createdForm.pages[0].fields.push(baseRadio);
+      params.createdForm.pages[0].fields.push(baseReadOnly);
 
       //Updating The Form
       var formUpdateOptions = _.clone(options);
@@ -1672,10 +1686,10 @@ module.exports.testFormWithDataSources = function(finish){
       //Expect/Don't expect data source cache to be present. This is useful when deploying forms to environments and saving to core where cache data will not be present.
       formUpdateOptions.expectDataSourceCache = false;
 
-      console.log("**** params.createdForm", JSON.stringify(params.createdForm));
-
       forms.updateForm(formUpdateOptions, params.createdForm, function(err, updatedForm){
         assert.ok(!err, "Expected No Error When Updating A Form " + util.inspect(err));
+
+        logger.debug("updatedForm", updatedForm.pages[0].fields);
 
         var expectedForm = _.clone(params.createdForm);
 
@@ -1684,11 +1698,17 @@ module.exports.testFormWithDataSources = function(finish){
           formDataSources: [
             {
               _id: params.createdDataSource1Id,
-              name: testDataSource.name
+              name: testDataSource.name,
+              lastUpdated: testDataSource.lastUpdated,
+              updatedBy: testDataSource.updatedBy,
+              createdBy: testDataSource.createdBy
             },
             {
               _id: params.createdDataSource2Id,
-              name: testDataSource2.name
+              name: testDataSource2.name,
+              lastUpdated: testDataSource2.lastUpdated,
+              updatedBy: testDataSource2.updatedBy,
+              createdBy: testDataSource2.createdBy
             }
           ]
         };
@@ -1697,7 +1717,10 @@ module.exports.testFormWithDataSources = function(finish){
         expectedForm.dataTargets = [
           {
             _id: params.createdDataTargetId,
-            name: testDataTarget.name
+            name: testDataTarget.name,
+            lastUpdated: testDataTarget.lastUpdated,
+            updatedBy: testDataTarget.updatedBy,
+            createdBy: testDataTarget.createdBy
           }
         ];
 
@@ -1707,19 +1730,145 @@ module.exports.testFormWithDataSources = function(finish){
 
         var expectedCheckboxes = baseCheckboxes;
         var expectedRadio = baseRadio;
+        var expectedReadOnly = baseReadOnly;
 
         //The fields should be in order
         var actualCheckboxes = updatedForm.pages[0].fields[1];
         var actualRadio = updatedForm.pages[0].fields[2];
+        var actualReadOnly = updatedForm.pages[0].fields[3];
 
         expectedCheckboxes._id = actualCheckboxes._id;
         expectedRadio._id = actualRadio._id;
+        expectedReadOnly._id = actualReadOnly._id;
 
         //Other than ID, they should be identical.
         checkEqual(expectedCheckboxes, actualCheckboxes);
         checkEqual(expectedRadio, actualRadio);
+        checkEqual(expectedReadOnly, actualReadOnly);
 
         cb();
+      });
+    }
+  ], function(err){
+    assert.ok(!err, "Expected No Errors " + util.inspect(err));
+    finish();
+  });
+
+};
+
+/**
+ * Testing The Scenario Where A Form Is Deployed Containing Data Sources
+ * @param finish
+ */
+module.exports.testDeployFormWithDataSources = function(finish){
+  var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
+
+  var testDataSource = _.clone(testDataSourceData);
+  testDataSource.name = "testDSDeploy";
+
+  var testForm = simpleForm.getBaseForm();
+
+  async.waterfall([
+    cleanUp,
+    //First, create a data source
+    function createDataSource(cb){
+      forms.dataSources.create(options, testDataSource, function(err, createdDataSource){
+        assert.ok(!err, "Expected No Error When Creating A Data Source " + util.inspect(err));
+
+        assert.ok(createdDataSource, "Expected A Data Source");
+        testDataSource = createdDataSource;
+
+        cb(undefined, createdDataSource._id);
+      });
+    },
+    //Creating A Form That Contains A Data Source
+    function createCoreFormSingleDataSource(createdDataSourceId, cb){
+
+      //cloning a simple base form
+      var testFirstForm = _.clone(testForm);
+
+      //Cloning a base dropdown field
+      var checkBoxFieldDataSource = _.clone(checkboxesField);
+
+      //New Field name
+      checkBoxFieldDataSource.name = "Data Source Dropdown";
+
+      //It is not necessary to add any static options when creating fields that use data sources -- kind of the point really.
+      delete checkBoxFieldDataSource.fieldOptions.definition.options;
+
+      //First, just a checkbox field
+      testFirstForm.pages[0].fields[0] = checkBoxFieldDataSource;
+
+      //Assigning the data source
+      checkBoxFieldDataSource.dataSourceType = "dataSource";
+      checkBoxFieldDataSource.dataSource = createdDataSourceId;
+
+      var formUpdateOptions = _.clone(options);
+
+      //Expect/Don't expect data source cache to be present. This is useful when deploying forms to environments and saving to core where cache data will not be present.
+      formUpdateOptions.expectDataSourceCache = false;
+
+      forms.updateForm(formUpdateOptions, testFirstForm, function(err, createdForm){
+        assert.ok(!err, "Expected No Error When Creating A New Form" + util.inspect(err));
+
+        assert.ok(createdForm._id, "Expected A Form ID To Be Present");
+
+        var expectedForm = _.clone(testFirstForm);
+
+        //Should be One data source listed
+        expectedForm.dataSources = {
+          formDataSources: [
+            {
+              _id: createdDataSourceId,
+              name: testDataSource.name,
+              lastUpdated: testDataSource.lastUpdated,
+              updatedBy: testDataSource.updatedBy,
+              createdBy: testDataSource.createdBy
+            }
+          ]
+        };
+
+        logger.debug("expectedForm", expectedForm.dataSources);
+        logger.debug("createdForm", createdForm.dataSources);
+
+        //Checking Data Sources And Targets Are assigned to the form
+        checkEqual(expectedForm.dataSources, createdForm.dataSources);
+
+        //Checking the field data source was assigned
+        var expectedField = checkBoxFieldDataSource;
+        var actualField = createdForm.pages[0].fields[0];
+
+        //Assigning the id of the field
+        expectedField._id = actualField._id;
+
+        //Other than _id, the fields should be identical.
+        checkEqual(expectedField, actualField);
+
+        return cb(undefined, createdDataSourceId, createdForm);
+      });
+    },
+    function removeForm(createdDataSourceId, createdForm, cb){
+      forms.deleteForm(_.extend({_id: createdForm._id}, options), function(err){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        cb(err, createdDataSourceId, createdForm);
+      });
+    },
+    function deployForm(createdDataSourceId, createdForm, cb){
+      var formDeployOptions = _.clone(options);
+
+      formDeployOptions.createIfNotFound = true;
+
+      forms.updateForm(formDeployOptions, createdForm, function(err, deployedForm){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+
+        //The Deployed Form Should Have The Data Sources
+        console.log("Deployed Form ", deployedForm);
+        assert.equal(deployedForm.pages[0].fields[0].dataSource.toString(), createdDataSourceId.toString());
+        assert.equal(deployedForm.pages[0].fields[0].dataSourceType, "dataSource");
+        assert.ok(deployedForm.dataSources.formDataSources[0]._id, "Expected A Data Source Entry");
+        cb(err);
       });
     }
   ], function(err){
@@ -1784,6 +1933,7 @@ module.exports.testFormWithDataSourcesNoDataSourceTarget = function(finish){
  */
 module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
   var testDataSourceNoCache = _.clone(testDataSourceData);
+  testDataSourceNoCache.name = "testDataSourceNoCache";
 
   var dropdownField = _.clone(handyFieldData.dropdownFieldData);
 
@@ -1832,6 +1982,7 @@ module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
  */
 module.exports.testFormFieldChangeFromDataSourceToStaticNoFields = function(finish){
   var testDataSource = _.clone(testDataSourceData);
+  testDataSource.name = "testDataSourceToStatic";
 
   var dropdownField = _.clone(handyFieldData.dropdownFieldData);
   dropdownField.fieldOptions = {
@@ -2029,4 +2180,3 @@ module.exports.testFormFieldRuleChangeWithTempIds = function(finish){
   });
 
 };
-
