@@ -3,7 +3,7 @@ var sinon = require('sinon');
 var assert = require('assert');
 var importFormsPath = "../../../lib/impl/importForms";
 var path = require('path');
-
+var fs = require('fs');
 
 describe("Importing Forms", function(){
 
@@ -33,17 +33,28 @@ describe("Importing Forms", function(){
     });
 
     describe("Validate Actual Zip File", function(){
+      var pdfPath = path.resolve(__dirname, '../../Fixtures/import.pdf');
+      var samplePath = path.resolve(__dirname, '../../Fixtures/sample.pdf');
+
       it("Not ZIP File", function(done){
-        var formsImport = proxyquire(importFormsPath, {});
+        // The file will be cleaned up after the import fails
+        // so we have to create a fresh copy for every test
+        var stream = fs.createWriteStream(pdfPath);
+        fs.createReadStream(samplePath).pipe(stream);
+        stream.on('finish', function (err) {
+          assert.ok(!err, "Error copying the sample pdf file");
 
-        formsImport.importForms({}, {
-          workingDir: "/tmp",
-          zipFilePath: path.resolve(__dirname, '../../Fixtures/test.pdf')
-        }, function(err){
-          assert.ok(err.indexOf("application/zip") > -1);
-          assert.ok(err.indexOf("application/pdf") > -1);
+          var formsImport = proxyquire(importFormsPath, {});
 
-          done();
+          formsImport.importForms({}, {
+            workingDir: "/tmp",
+            zipFilePath: pdfPath
+          }, function(err){
+            assert.ok(err.indexOf("application/zip") > -1);
+            assert.ok(err.indexOf("application/pdf") > -1);
+
+            done();
+          });
         });
       });
 
