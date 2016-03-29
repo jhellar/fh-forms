@@ -7,6 +7,7 @@ var initDatabase = require('./../setup.js').initDatabase;
 var async = require("async");
 var assert = require('assert');
 var util = require('util');
+var _ = require('underscore');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
@@ -91,7 +92,7 @@ function setupTestGroups(user1id, user2id, user3id, formid, appid, cb) {
         return cb();
       });
     });
-  });    
+  });
 }
 
 function restrictToUser(user) {
@@ -407,6 +408,41 @@ module.exports.testGetSubmissionsArraySubids = function(finish){
     var submissions = results.submissions;
     assert.ok(submissions);  // should have returned submissions in results
     assert.strictEqual(submissions.length, 1); // should be empty list returned
+    finish();
+  });
+};
+
+//Testing that when a getSubmissions call is made, that the reduced payload is returned from the database.
+module.exports.testGetSubmissionsSmallPayload = function(finish){
+  forms.getSubmissions(options, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
+    assert.ok(!err, "Expected No Error"); //, "should not have returned error: " + util.inspect(err));
+    assert.ok(results, "Expected a result");  // should have returned results
+    var submissions = results.submissions;
+    assert.ok(submissions, "Expected A Submissions Result");  // should have returned submissions in results
+    assert.strictEqual(submissions.length, 1); // should be a single submission returned
+
+    //The submission Should Not Have Any Pages Set
+    assert.ok(!submissions[0].formSubmittedAgainst.pages);
+
+    finish();
+  });
+};
+
+//Testing that when a getSubmissions call is made with the includeFullSubmission, that the full submission json response is returned from the database.
+module.exports.testGetSubmissionsIncludeFullSubmission = function(finish){
+  var getSubmissionsOptions = _.extend({
+    includeFullSubmission: true
+  }, options);
+  forms.getSubmissions(getSubmissionsOptions, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
+    assert.ok(!err, "Expected No Error"); //, "should not have returned error: " + util.inspect(err));
+    assert.ok(results, "Expected a result");  // should have returned results
+    var submissions = results.submissions;
+    assert.ok(submissions, "Expected A Submissions Result");  // should have returned submissions in results
+    assert.strictEqual(submissions.length, 1); // should be a single submission returned
+
+    //The submission Should Have Pages Set.
+    assert.ok(submissions[0].formSubmittedAgainst.pages);
+
     finish();
   });
 };
