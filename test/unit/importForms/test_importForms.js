@@ -2,6 +2,8 @@ var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var assert = require('assert');
 var importFormsPath = "../../../lib/impl/importForms";
+var path = require('path');
+
 
 describe("Importing Forms", function(){
 
@@ -14,7 +16,7 @@ describe("Importing Forms", function(){
         zipFilePath: "/some/path/to/zip/file.zip"
       }, importCBSpy);
 
-      sinon.assert.calledWith(importCBSpy, sinon.match.match("workingDir"));
+      sinon.assert.calledWith(importCBSpy, sinon.match("workingDir"));
       done();
     });
 
@@ -26,7 +28,7 @@ describe("Importing Forms", function(){
         workingDir: "/some/path/to/working/directory"
       }, importCBSpy);
 
-      sinon.assert.calledWith(importCBSpy, sinon.match.match("fileZipPath"));
+      sinon.assert.calledWith(importCBSpy, sinon.match("zipFilePath"));
       done();
     });
 
@@ -35,8 +37,8 @@ describe("Importing Forms", function(){
         var formsImport = proxyquire(importFormsPath, {});
 
         formsImport.importForms({}, {
-          workingDir: "/some/path/to/working/directory",
-          zipFilePath: "/Fixtures/test.pdf"
+          workingDir: "/tmp",
+          zipFilePath: path.resolve(__dirname, '../../Fixtures/test.pdf')
         }, function(err){
           assert.ok(err.indexOf("application/zip") > -1);
           assert.ok(err.indexOf("application/pdf") > -1);
@@ -47,19 +49,24 @@ describe("Importing Forms", function(){
 
       it("Actual Zip File", function(done){
         var unzipFileStub = sinon.stub().callsArg(1);
+        var importFromDirStub = sinon.stub().yields();
         var formsImport = proxyquire(importFormsPath, {
-          './unzipFile': unzipFileStub
+          './unzipFile': unzipFileStub,
+          './importFromDir': importFromDirStub,
+          'child_process': {
+            exec: sinon.stub().yields()
+          }
         });
 
         formsImport.importForms({}, {
-          workingDir: "/some/path/to/working/directory",
-          zipFilePath: "/Fixtures/test.zip"
+          workingDir: "/tmp",
+          zipFilePath: path.resolve(__dirname, '../../Fixtures/test.zip')
         }, function(err){
           assert.ok(!err, "Expected No Error " + err);
 
-          sinon.assert.calledOnceWith(unzipFileStub, sinon.match({
-            workingDir: "/some/path/to/working/directory",
-            zipFilePath: "/Fixtures/test.zip",
+          sinon.assert.calledWith(unzipFileStub, sinon.match({
+            workingDir: sinon.match("/tmp"),
+            zipFilePath: path.resolve(__dirname, '../../Fixtures/test.zip'),
             queueConcurrency: sinon.match.number
           }), sinon.match.func);
 
