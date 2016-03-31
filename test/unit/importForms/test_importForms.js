@@ -61,23 +61,25 @@ describe("Importing Forms", function(){
       it("Actual Zip File", function(done){
         var unzipFileStub = sinon.stub().callsArg(1);
         var importFromDirStub = sinon.stub().yields();
+        var inputValidatorStub = sinon.stub().yields();
         var formsImport = proxyquire(importFormsPath, {
           './unzipFile': unzipFileStub,
           './importFromDir': importFromDirStub,
-          'child_process': {
+          './inputValidator': inputValidatorStub,
+          'child_process':  {
             exec: sinon.stub().yields()
           }
         });
 
         formsImport.importForms({}, {
           workingDir: "/tmp",
-          zipFilePath: path.resolve(__dirname, '../../Fixtures/test.zip')
+          zipFilePath: path.resolve(__dirname, '../../Fixtures/forms.zip')
         }, function(err){
           assert.ok(!err, "Expected No Error " + err);
 
           sinon.assert.calledWith(unzipFileStub, sinon.match({
             workingDir: sinon.match("/tmp"),
-            zipFilePath: path.resolve(__dirname, '../../Fixtures/test.zip'),
+            zipFilePath: path.resolve(__dirname, '../../Fixtures/forms.zip'),
             queueConcurrency: sinon.match.number
           }), sinon.match.func);
 

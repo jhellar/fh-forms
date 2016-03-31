@@ -13,7 +13,7 @@ describe('Importing forms from dir', function(){
       '../updateForm': updateForm
     });
 
-    var importDirPath = path.resolve(__dirname, '../../Fixtures/forms_import');
+    var importDirPath = path.resolve(__dirname, '../../Fixtures/forms_import/correct');
 
     updateForm.yieldsAsync();
 
