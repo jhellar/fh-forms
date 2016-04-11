@@ -115,5 +115,17 @@ module.exports = {
     assert.equal(result["someformid2"], 30);
 
     done();
+  },
+  "Test Filter Out Null Data": function(done){
+
+    var data = [0, false, NaN, undefined, ''];
+
+    var res = misc.filterOutNullData(data);
+
+    assert.equal(res.length, 2);
+    assert.strictEqual(res[0], 0);
+    assert.strictEqual(res[1], false);
+
+    done();
   }
 };
