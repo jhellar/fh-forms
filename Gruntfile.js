@@ -40,7 +40,7 @@ module.exports = function(grunt) {
     fhignore: ['client/**'],
 
     _unit_runner: '_mocha',
-    _unit_args: '-A -u exports --recursive -t 10000 ./test/unit/',
+    _unit_args: '-A -u exports --recursive -t 10000 ./test/unit',
     unit: '<%= _unit_runner %> <%= _unit_args %>',
     unit_cover: 'istanbul cover --dir cov-unit <%= _unit_runner %> -- <%= _unit_args %>',
 
