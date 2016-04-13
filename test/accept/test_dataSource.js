@@ -44,13 +44,31 @@ var dataOptions = {
   }
 };
 
+
+/**
+ * verifyBackoffIncrement - Verifying the cache backoff index is as expected
+ *
+ * @param  {string} dataSourceId         ID of the data source to check.
+ * @param  {number} expectedBackoffIndex Expected backOffIndex Value
+ * @param  {function} cb
+ */
+function verifyBackoffIncrement(dataSourceId, expectedBackoffIndex, cb){
+  DataSource.findOne({_id: dataSourceId}, function(err, dataSource){
+    assert.ok(!err, "Epected No Error");
+    assert.ok(dataSource, "Expected A Data Source");
+
+    assert.equal(expectedBackoffIndex, dataSource.cache[0].backOffIndex);
+    cb();
+  });
+}
+
 function verifyDataSourceJSON(expected, actual){
   assert.ok(expected, "verifyDataSourceJSON: expected object required");
   assert.ok(actual, "verifyDataSourceJSON: actual object required");
 
   logger.debug("verifyDataSourceJSON ", expected, actual);
 
-  assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
+  assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated", "backOffIndex")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
 
 function verifyDataSourceAuditLogEntry(dsAuditLogEntry, expectedServiceGuid, expectedEndpoint){
@@ -696,7 +714,7 @@ module.exports = {
 
           verifyDataSourceJSON(expectedResult, badUpdate);
 
-          done();
+          verifyBackoffIncrement(dataSourceDataSingleChoice._id, 1, done);
         });
       });
     });
@@ -738,7 +756,93 @@ module.exports = {
           assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.code, "SERVICE_NOT_AVAILABLE");
           cb();
         });
+      },
+      //The backoff index should have incremented
+      function verifyBackoff(cb){
+        verifyBackoffIncrement(testErrorDataSource._id, 1, cb);
       }
+    ], done);
+  },
+  "Test Update Data Source Reset Backoff Index": function(done){
+
+    var testBackoffIndexDataSource = _.clone(dataSourceData);
+    testBackoffIndexDataSource.name = "testDSBackoffIndexReset";
+
+    //Utility function to update a cache entry with an error
+    function updateCacheWithError(cb){
+      var testDate = new Date();
+      testBackoffIndexDataSource.dataError = {
+        userDetail: "Error Getting Data From Service",
+        systemDetail: "Invalid Response Code 500",
+        code: "SERVICE_NOT_AVAILABLE"
+      };
+
+      forms.dataSources.updateCache(options, [testBackoffIndexDataSource], {
+        currentTime: testDate
+      }, function(err, errUpdateResult){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+
+        //It Should Be A Valid Data Source Update With An Error
+        assert.ok(errUpdateResult.validDataSourceUpdates[0]);
+        assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.status, "error");
+        assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.userDetail, "Error Getting Data From Service");
+        assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.systemDetail, "Invalid Response Code 500");
+        assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.error.code, "SERVICE_NOT_AVAILABLE");
+        cb();
+      });
+    }
+
+    //Utility function to update a cache entry with a valid data set
+    function updateCacheWithValidData(cb){
+      var testDate = new Date();
+      var updatedSingleChoiceData = {
+        data: [
+          dataOptions.option2(true),
+          dataOptions.option1(false)
+        ]
+      };
+      updatedSingleChoiceData._id = testBackoffIndexDataSource._id;
+
+      forms.dataSources.updateCache(options, [updatedSingleChoiceData], {
+        currentTime: testDate
+      }, function(err, errUpdateResult){
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+
+        //It Should Be A Valid Data Source Update
+        assert.ok(errUpdateResult.validDataSourceUpdates[0]);
+        assert.equal(errUpdateResult.validDataSourceUpdates[0].currentStatus.status, "ok");
+        cb();
+      });
+    }
+
+    async.series([
+      function createDataSource(cb){
+        logger.debug("testBackoffIndexDataSource1", testBackoffIndexDataSource);
+        forms.dataSources.create(options, testBackoffIndexDataSource, function(err, createdDataSource) {
+          assert.ok(!err, "Unexpected Error: dataSource.create" + util.inspect(err));
+
+          testBackoffIndexDataSource._id = createdDataSource._id;
+          logger.debug("testBackoffIndexDataSource2", testBackoffIndexDataSource);
+          cb();
+        });
+      },
+      updateCacheWithError,
+      //The backoff index should have incremented
+      function verifyBackoff(cb){
+        verifyBackoffIncrement(testBackoffIndexDataSource._id, 1, cb);
+      },
+      updateCacheWithError,
+      //The backOffIndex should increment again
+      function verifyBackoff(cb){
+        verifyBackoffIncrement(testBackoffIndexDataSource._id, 2, cb);
+      },
+      updateCacheWithValidData,
+      //After a valid update, the backOffIndex should reset to 0
+      function verifyBackoff(cb){
+        verifyBackoffIncrement(testBackoffIndexDataSource._id, 0, cb);
+      },
     ], done);
   },
   "Test Validate Data Source Data": function(done){
