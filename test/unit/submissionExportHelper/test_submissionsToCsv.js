@@ -1,6 +1,4 @@
-var proxyquire = require('proxyquire');
 var assert = require('assert');
-var _ = require('underscore');
 var util = require('util');
 
 //Some test data
@@ -23,19 +21,14 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single "text" field',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "test, entry"
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm",
+        "_id": "simple1",
         "pages":[{
           "fields":[
             {
@@ -65,7 +58,6 @@ module.exports = {
   },
   "it_should_export_csv_for_basic_submission_using_field_codes":  function(finish) {
     var sub = [{
-      "formName": "testForm",
       "formId": "simple1",
       "_id": "56a8d23043ae4f64324cdcc5",
       "submissionCompletedTimestamp" : "Wed Jan 27 2016 14:20:32 GMT+0000 (UTC)",
@@ -74,20 +66,14 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single "text" field',
-          "fieldCode": "fieldCodeText",
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "test, entry"
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm",
+        "_id": "simple1",
         "pages":[{
           "fields":[
             {
@@ -126,19 +112,14 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single "text" field',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "test, entry"
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm",
+        "_id": "simple1",
         "pages":[{
           "fields":[
             {
@@ -168,7 +149,8 @@ module.exports = {
   "it_should_export_csv_file_url_and_file_name": function(finish){
 
     var formSubmittedAgainst = {
-      "name" : "A Form",
+      "name" : "testForm",
+      "_id": "simple1",
       "pages":[{
         "fields":[
           {
@@ -204,24 +186,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'textField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "testEntry1"
         ]
       },  {
-        "fieldId": {
-          "name": 'fileField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000004",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000004",
         "fieldValues": [
           {
             contentType: "binary",
@@ -236,13 +206,7 @@ module.exports = {
           }
         ]
       },{
-        "fieldId": {
-          "name": 'textField2',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000005",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000005",
         "fieldValues": [
           "testEntry2"
         ]
@@ -266,7 +230,8 @@ module.exports = {
   "it_should_export_csv_file_url_and_file_name_repeating_file": function(finish){
 
     var formSubmittedAgainst = {
-      "name" : "A Form",
+      "name" : "testForm",
+      "_id": "simple1",
       "pages":[{
         "fields":[
           {
@@ -308,24 +273,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'textField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "testEntry1"
         ]
       },  {
-        "fieldId": {
-          "name": 'fileField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000004",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000004",
         "fieldValues": [
           {
             contentType: "binary",
@@ -350,13 +303,7 @@ module.exports = {
           }
         ]
       },{
-        "fieldId": {
-          "name": 'textField2',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000005",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000005",
         "fieldValues": [
           "testEntry2"
         ]
@@ -380,7 +327,8 @@ module.exports = {
   "it_should_export_csv_file_url_and_file_name_repeating_file_no_entry": function(finish){
 
     var formSubmittedAgainst = {
-      "name" : "A Form",
+      "name" : "testForm",
+      "_id": "simple1",
       "pages":[{
         "fields":[
           {
@@ -422,24 +370,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'textField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "testEntry1"
         ]
       },  {
-        "fieldId": {
-          "name": 'fileField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000004",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000004",
         "fieldValues": [
           {
             contentType: "binary",
@@ -454,13 +390,7 @@ module.exports = {
           }
         ]
       },{
-        "fieldId": {
-          "name": 'textField2',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000005",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000005",
         "fieldValues": [
           "testEntry2"
         ]
@@ -484,7 +414,8 @@ module.exports = {
   "it_should_export_csv_barcode_format_and_text": function(finish){
 
     var formSubmittedAgainst = {
-      "name" : "A Form",
+      "name" : "testForm",
+      "_id": "simple1",
       "pages":[{
         "fields":[
           {
@@ -520,24 +451,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'textField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "testEntry1"
         ]
       },  {
-        "fieldId": {
-          "name": 'barcodeField1',
-          "required": false,
-          "type": "barcode",
-          "_id": "52a65af9a43843f938000004",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000004",
         "fieldValues": [
           {
             text:"barcodeValue",
@@ -545,13 +464,7 @@ module.exports = {
           }
         ]
       },{
-        "fieldId": {
-          "name": 'textField2',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000005",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000005",
         "fieldValues": [
           "testEntry2"
         ]
@@ -575,7 +488,8 @@ module.exports = {
   "it_should_export_csv_barcode_format_and_text_name_repeating_barcode": function(finish){
 
     var formSubmittedAgainst = {
-      "name" : "A Form",
+      "name" : "testForm",
+      "_id": "simple1",
       "pages":[{
         "fields":[
           {
@@ -617,24 +531,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'textField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "testEntry1"
         ]
       },  {
-        "fieldId": {
-          "name": 'barcodeField1',
-          "required": false,
-          "type": "barcode",
-          "_id": "52a65af9a43843f938000004",
-          "repeating": true
-        },
+        "fieldId": "52a65af9a43843f938000004",
         "fieldValues": [
           {
             format: "barcodeFormat1",
@@ -645,13 +547,7 @@ module.exports = {
           }
         ]
       },{
-        "fieldId": {
-          "name": 'textField2',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000005",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000005",
         "fieldValues": [
           "testEntry2"
         ]
@@ -675,7 +571,8 @@ module.exports = {
   "it_should_export_csv_barcode_format_and_text_repeating_barcode_no_entry": function(finish){
 
     var formSubmittedAgainst = {
-      "name" : "A Form",
+      "name" : "testForm",
+      "_id": "simple1",
       "pages":[{
         "fields":[
           {
@@ -717,24 +614,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'textField1',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "testEntry1"
         ]
       },  {
-        "fieldId": {
-          "name": 'barcodeField1',
-          "required": false,
-          "type": "barcode",
-          "_id": "52a65af9a43843f938000004",
-          "repeating": true
-        },
+        "fieldId": "52a65af9a43843f938000004",
         "fieldValues": [
           {
             format: "barcodeFormat",
@@ -742,13 +627,7 @@ module.exports = {
           }
         ]
       },{
-        "fieldId": {
-          "name": 'textField2',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000005",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000005",
         "fieldValues": [
           "testEntry2"
         ]
@@ -780,19 +659,14 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single "text" field',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           null
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm",
+        "_id": "simple1withnull",
         "pages":[{
           "fields":[
             {
@@ -833,19 +707,13 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single text field',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "text1Sub1"
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm",
         "pages":[{
           "fields":[
             {
@@ -867,19 +735,7 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single text field',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": true,
-          "fieldOptions":{
-            "definition":{
-              "maxRepeat":4,
-              "minRepeat":2
-            }
-          }
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "text1Sub2",
           "text2Sub2",
@@ -888,7 +744,8 @@ module.exports = {
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm2",
+        "_id": "simple1withchangingrepitition",
         "pages":[{
           "fields":[
             {
@@ -916,26 +773,14 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": 'single text field',
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": true,
-          "fieldOptions":{
-            "definition":{
-              "maxRepeat":3,
-              "minRepeat":1
-            }
-          }
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "text1Sub3",
           "text2Sub3"
         ]
       }],
       "formSubmittedAgainst":{
-        "name" : "A Form",
+        "name" : "testForm3",
         "pages":[{
           "fields":[
             {
@@ -984,19 +829,14 @@ module.exports = {
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "name":"simple1",
       "formFields": [{
-        "fieldId": {
-          "name": "single text field",
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "test entry"
         ]
       }],
       "formSubmittedAgainst":{
         "name":"simple1",
+        "_id": "simple1",
         "pages":[{
           "fields":[
             {
@@ -1009,22 +849,18 @@ module.exports = {
         }]
       }
     }, {
+      "_id": "56a8d23043ae4f64324cdcc6",
       "name":"simple2",
       "formId": "simple2",
       "formFields": [{
-        "fieldId": {
-          "name": "single text field",
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": false
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": [
           "test entry"
         ]
       }],
       "formSubmittedAgainst":{
         "name":"simple2",
+        "_id": "simple2",
         "pages":[{
           "fields":[
             {
@@ -1063,23 +899,12 @@ module.exports = {
       "deviceIPAddress" : "127.0.0.1",
       "updatedTimestamp" : "Wed Jan 27 2016 14:22:41 GMT+0000 (UTC)",
       "formFields": [{
-        "fieldId": {
-          "name": "repeating",
-          "required": false,
-          "type": "text",
-          "_id": "52a65af9a43843f938000003",
-          "repeating": true,
-          "fieldOptions":{
-            "definition":{
-              "maxRepeat":5,
-              "minRepeat":2
-            }
-          }
-        },
+        "fieldId": "52a65af9a43843f938000003",
         "fieldValues": ["test entry1", "test entry2"]
       }],
       "formSubmittedAgainst":{
-        "name" : "simple2",
+        "name" : "testForm",
+        "_id": "simple2",
         "pages":[{
           "fields":[
             {
@@ -1098,52 +923,6 @@ module.exports = {
         }]
       }
     }];
-
-    var form = {
-      "updatedBy": "testing-admin@example.com",
-      "name": "app forms phase ii",
-      "description": "this is the sample form being used for development of app forms phase ii. it contains all standard fields and has multiple pages and rules.",
-      "_id": "simple1",
-      "pageRules": [],
-      "fieldRules": [],
-      "pages": [
-        {
-          "name": "page 1",
-          "description": "page 1 description",
-          "_id": "52a65af9a43843f938000004",
-          "fields": [
-            {
-              "name": 'repeating',
-              "helpText": "instructions",
-              "required": false,
-              "type": "text",
-              "_id": "52a65af9a43843f938000003",
-              "repeating": true,
-              "fieldOptions":{
-                "definition":{
-                  "maxRepeat":5,
-                  "minRepeat":2
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "lastUpdated": "2013-12-10T00:06:17.653Z",
-      "dateCreated": "2013-12-10T00:06:17.653Z",
-      "pageRef": {
-        "52a65af9a43843f938000004": 0
-      },
-      "fieldRef": {
-        "52a65af9a43843f938000003": {
-          "page": 0,
-          "field": 0
-        }
-      },
-      "appsUsingForm": 123,
-      "submissionsToday": 1234,
-      "submissionsTotal": 124125
-    };
 
     exportHelper.submissionsToCSV({
       fieldHeader: "name",
@@ -1170,8 +949,8 @@ module.exports = {
       var csvKeys = Object.keys(csvs);
       var lines = csvs[csvKeys[0]].split('\r\n');
       assert.equal(lines[0], 'formName,formId,_id,submissionCompletedTimestamp,appCloudName,deviceId,deviceIPAddress,updatedTimestamp,Order,Notification Type,Description,Equipment,Serial Number,Material,Planner Group,Main Work Ctr,Reported by,Coding,Description,Required Start,Priority,Object Part,Damage,Text,Cause Code,Cause Text,Photo-name,Photo-url,Photo 2 ?,Photo 2-name,Photo 2-url,Photo 3 ?,Photo 3-name,Photo 3-url,Required End');
-      assert.equal(lines[1], 'undefined,53a44886d55d83f96dad6ca8,53c3adfdbd66275c654355d9,2014-07-14T10:16:42.606Z,irishrail-t-ogf52urb7qpc400dv90ndm1p-dev,3c4f6fa4160b1cd168414f1bbb5083db,"213.233.148.4,10.189.254.5,10.35.1.7",2014-07-14T10:16:42.618Z,530132297,TI,Vegetation,30003713,UBS542A,BRIDGE,ATH,ATH-STSE,Nmc,Adjust,,,Medium,Abuttments,Debris,,Build-up of debris,,filePlaceHolderd36a25f7b613c3608a25c017202f48f0.png,dummyurl53c3ae081b70525c65000006,Yes,,,No,,,');
-      assert.equal(lines[2], 'undefined,53a44886d55d83f96dad6ca8,53ac7108b8f15d51516d14b0,2014-06-26T19:14:29.409Z,test-t-ogf521234dv90ndm1p-dev,3C5ECCB9-3ABE-4DEC-AD7E-35B11454F366,"213.233.150.90,10.189.254.5",2014-06-26T19:14:29.415Z,,TI,Test text,30002144,OBL126,Stone some new line,LMK,LMK-STSE,Egan_C,Adjust,,2014-07-26,High,Abuttments,Bent,,Authorised Work,,filePlaceHolder10a0bd6f827beb3bc39c5f51d7daa0ea.png,dummyurl53ac7112859dcc5151000001,,,,,,,2014-08-26');
+      assert.equal(lines[1], 'Technical Inspection Notification,53a44886d55d83f96dad6ca8,53c3adfdbd66275c654355d9,2014-07-14T10:16:42.606Z,irishrail-t-ogf52urb7qpc400dv90ndm1p-dev,3c4f6fa4160b1cd168414f1bbb5083db,"213.233.148.4,10.189.254.5,10.35.1.7",2014-07-14T10:16:42.618Z,530132297,TI,Vegetation,30003713,UBS542A,BRIDGE,ATH,ATH-STSE,Nmc,Adjust,,,Medium,Abuttments,Debris,,Build-up of debris,,filePlaceHolderd36a25f7b613c3608a25c017202f48f0.png,dummyurl53c3ae081b70525c65000006,Yes,,,No,,,');
+      assert.equal(lines[2], 'Technical Inspection Notification,53a44886d55d83f96dad6ca8,53ac7108b8f15d51516d14b0,2014-06-26T19:14:29.409Z,test-t-ogf521234dv90ndm1p-dev,3C5ECCB9-3ABE-4DEC-AD7E-35B11454F366,"213.233.150.90,10.189.254.5",2014-06-26T19:14:29.415Z,,TI,Test text,30002144,OBL126,Stone some new line,LMK,LMK-STSE,Egan_C,Adjust,,2014-07-26,High,Abuttments,Bent,,Authorised Work,,filePlaceHolder10a0bd6f827beb3bc39c5f51d7daa0ea.png,dummyurl53ac7112859dcc5151000001,,,,,,,2014-08-26');
       finish();
     });
   }
