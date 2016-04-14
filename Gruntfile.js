@@ -49,5 +49,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-fh-build');
 
   grunt.registerTask('dist', ['concat', 'fh:dist']);
-  grunt.registerTask('default', ['fh-test', 'dist']);
+  grunt.registerTask('default', ['eslint', 'fh-test', 'dist']);
 };
