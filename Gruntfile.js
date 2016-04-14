@@ -6,11 +6,6 @@ module.exports = function(grunt) {
     lint: {
       files: ['lib/common/forms-rules-engine.js']
     },
-    jshint: {
-      globals: {
-        browser: true
-      }
-    },
     concat: {
       "dist_rules_engine":{
         options: {
@@ -54,5 +49,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-fh-build');
 
   grunt.registerTask('dist', ['concat', 'fh:dist']);
-  grunt.registerTask('default', [/*jshint, */'fh:coverage', 'fh:analysis', 'dist']);
+  grunt.registerTask('default', ['fh-test', 'dist']);
 };
