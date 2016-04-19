@@ -12,10 +12,9 @@ var _ = require('underscore');
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
 
-var TEST_TOTAL_NUM_SUBMISSIONS = 1;
+var TEST_TOTAL_NUM_SUBMISSIONS = 5;
 var TEST_SUBMISSION_APPID = "thisisnowaprojectId123456";
 var TEST_UNUSED_APPID = "ThisDidNotSubmit";
-var TEST_APP_NAME_UNKNOWN = 'Unknown';
 var TEST_APP_NAME = 'Joe';
 var TEST_APP_MAP = {"result":[
   {guid: TEST_SUBMISSION_APPID, title: TEST_APP_NAME}
@@ -57,162 +56,6 @@ var testSubmitFormBaseInfo = {
 };
 
 
-// setup 3 groups
-// group 1 give user1 access to form and app
-// group 2 give user2 access to form but not app
-// group 3 give user3 access to app but not form
-function setupTestGroups(user1id, user2id, user3id, formid, appid, cb) {
-  var group1Setup = {
-    name: 'testGroup1',
-    users: [user1id],
-    forms: [formid],
-    apps: [appid],
-    themes: []
-  };
-  var group2Setup = {
-    name: 'testGroup2',
-    users: [user2id],
-    forms: [formid],
-    apps: [],
-    themes: []
-  };
-  var group3Setup = {
-    name: 'testGroup3',
-    users: [user3id],
-    forms: [],
-    apps: [appid],
-    themes: []
-  };
-  forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group1Setup, function (err) {
-    if(err) return cb(err);
-    forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group2Setup, function (err) {
-      if(err) return cb(err);
-      forms.createGroup({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, group3Setup, function (err) {
-        if(err) return cb(err);
-        return cb();
-      });
-    });
-  });
-}
-
-function restrictToUser(user) {
-  var ret = JSON.parse(JSON.stringify(options));
-  ret.restrictToUser = user;
-  return ret;
-}
-
-module.exports.testGetAllSubmissionsWithRestrictions = function(finish){
-  var user1id = 'user1@example.com';
-  var user2id = 'user2@example.com';
-  var user3id = 'user3@example.com';
-  var invalidUser = "notexist@example.com";
-
-  setupTestGroups(user1id, user2id, user3id, TEST_SUBMISSION_FORMID, TEST_SUBMISSION_APPID, function (err) {
-    assert.ok(!err, "should not have returned error: " + util.inspect(err));
-    async.series([
-      function testInvalidUser (cb) {
-        var restrictOptions = restrictToUser(invalidUser);
-        forms.getSubmissions(restrictOptions, {}, function (err, results){
-          assert.ok(!err, "should not have returned error: " + util.inspect(err));
-          assert.ok(results);  // should have returned results
-          var submissions = results.submissions;
-          assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, 0, 'should be nothing returned for invalid user');
-          return cb();
-        });
-      },
-      function testUser1Ok (cb) {
-        var restrictOptions = restrictToUser(user1id);
-        forms.getSubmissions(restrictOptions, {}, function (err, results){
-          assert.ok(!err, "should not have returned error: " + util.inspect(err));
-          assert.ok(results);  // should have returned results
-          var submissions = results.submissions;
-          assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS, 'should have submissions returned for user1');
-          return cb();
-        });
-      },
-      function testUser2Invalid (cb) {
-        var restrictOptions = restrictToUser(user2id);
-        forms.getSubmissions(restrictOptions, {}, function (err, results){
-          assert.ok(!err, "should not have returned error: " + util.inspect(err));
-          assert.ok(results);  // should have returned results
-          var submissions = results.submissions;
-          assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, 0, 'should be nothing returned for invalid user2 - no access to app');
-          return cb();
-        });
-      },
-      function testUser3Invalid (cb) {
-        var restrictOptions = restrictToUser(user3id);
-        forms.getSubmissions(restrictOptions, {}, function (err, results){
-          assert.ok(!err, "should not have returned error: " + util.inspect(err));
-          assert.ok(results);  // should have returned results
-          var submissions = results.submissions;
-          assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, 0, 'should be nothing returned for invalid user3 - no access to form');
-          return cb();
-        });
-      },
-    ], function (err) {
-      assert.ok(!err, "should not have returned error: " + util.inspect(err));
-      finish();
-    });
-  });
-};
-
-module.exports.testGetAllSubmissionsByAppWithRestrictions = function(finish){
-  var user1id = 'user1@example.com';
-  var user2id = 'user2@example.com';
-  var user3id = 'user3@example.com';
-  var invalidUser = "notexist@example.com";
-
-  setupTestGroups(user1id, user2id, user3id, TEST_SUBMISSION_FORMID, TEST_SUBMISSION_APPID, function (err) {
-    assert.ok(!err, "should not have returned error: " + util.inspect(err));
-
-    async.series([
-      function testInvalidUser (cb) {
-        var restrictOptions = restrictToUser(invalidUser);
-        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
-          assert.ok(err, "should have returned error, for invalid user: " + util.inspect(err));
-          return cb();
-        });
-      },
-      function testUser1Ok (cb) {
-        var restrictOptions = restrictToUser(user1id);
-        forms.getSubmissions(restrictOptions, [{appId: TEST_SUBMISSION_APPID,"title":"a title"}], function (err, results){
-          assert.ok(!err, "should not have returned error, for valid user: " + util.inspect(err));
-          assert.ok(results);  // should have returned results
-          var submissions = results.submissions;
-          assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, TEST_TOTAL_NUM_SUBMISSIONS);
-          return cb();
-        });
-      },
-      function testUser2Invalid (cb) {
-        var restrictOptions = restrictToUser(user2id);
-        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
-          assert.ok(err, "should have returned error, for user without access to app: " + util.inspect(err));
-          return cb();
-        });
-      },
-      function testUser3Invalid (cb) {
-        var restrictOptions = restrictToUser(user3id);
-        forms.getSubmissions(restrictOptions, {appId: TEST_SUBMISSION_APPID}, function (err, results){
-          assert.ok(!err, "should not have returned error, for user with access to app: " + util.inspect(err));
-          assert.ok(results);  // should have returned results
-          var submissions = results.submissions;
-          assert.ok(submissions);  // should have returned submissions in results
-          assert.strictEqual(submissions.length, 0, 'should not have returned submissions for user without access to forms: ' + util.inspect(submissions));
-          return cb();
-        });
-      }
-    ], function (err) {
-      assert.ok(!err, "should not have returned error: " + util.inspect(err));
-      finish();
-    });
-  });
-};
 
 module.exports.testGetAllSubmissions = function(finish){
 // forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
@@ -303,7 +146,6 @@ module.exports.testGetAllSubmissionsByFormObject = function(finish){
 };
 
 module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -447,6 +289,71 @@ module.exports.testGetSubmissionsIncludeFullSubmission = function(finish){
   });
 };
 
+module.exports.testGetSubmissionsPagination = function(finish){
+  function _getAndCheckSubmissionPages(page, limit, expectedCount, cb){
+    forms.getSubmissions(options, {paginate: {
+      page: page,
+      limit: limit
+    }}, function (err, result){
+      assert.equal(undefined, err);
+
+      assert.equal(expectedCount, result.submissions.length);
+      cb();
+    });
+  }
+
+  async.series([
+    function checkFirstPage(cb){
+      //Getting the first page with a limit of 3 entries per page.
+      //First page should have 3 submissions
+      _getAndCheckSubmissionPages(1, 3, 3, cb);
+    },
+    function checkSecondPage(cb){
+      //Second page should only have 2 submissions
+      _getAndCheckSubmissionPages(2, 3, 2, cb);
+    },
+    function checkThirdPage(cb){
+      //Third page should have no submissions
+      _getAndCheckSubmissionPages(3, 3, 0, cb);
+    }
+  ], finish);
+};
+
+
+/**
+ * submitFullSubmission - Performing all of the steps required to make a full submission with 2 files.
+ *
+ * @param  {function} cb
+ */
+function submitFullSubmission(cb){
+  var  file1Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolder123456"
+  };
+
+  var  file2Details = {
+    "fileName" : "test.pdf",
+    "fileSize" : 123456,
+    "fileType" : "application/pdf",
+    "fileUpdateTime" : new Date().getTime(),
+    "hashName" : "filePlaceHolder123456789"
+  };
+
+  async.series([
+    async.apply(submitData, assert, [file1Details, file2Details]),
+    async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath),
+    async.apply(submitFile, assert, "filePlaceHolder123456789", testFilePath),
+    async.apply(completeSubmission, assert),
+    async.apply(checkPending, assert, "complete", [])
+  ], function(err){
+    assert.ok(!err, 'error in setUp - err: ' + util.inspect(err));
+    cb();
+  });
+}
+
 module.exports.setUp = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
@@ -456,29 +363,9 @@ module.exports.setUp = function(finish){
       assert.ok(globalFormId, 'form has not been created during test setup');
       assert.notEqual(globalFormId, TEST_UNUSED_FORMID, "generated formid happens to match need to re-run");
 
-      var  file1Details = {
-        "fileName" : "test.pdf",
-        "fileSize" : 123456,
-        "fileType" : "application/pdf",
-        "fileUpdateTime" : new Date().getTime(),
-        "hashName" : "filePlaceHolder123456"
-      };
-
-      var  file2Details = {
-        "fileName" : "test.pdf",
-        "fileSize" : 123456,
-        "fileType" : "application/pdf",
-        "fileUpdateTime" : new Date().getTime(),
-        "hashName" : "filePlaceHolder123456789"
-      };
-
-      async.series([
-        async.apply(submitData, assert, [file1Details, file2Details]),
-        async.apply(submitFile, assert, "filePlaceHolder123456", testFilePath),
-        async.apply(submitFile, assert, "filePlaceHolder123456789", testFilePath),
-        async.apply(completeSubmission, assert),
-        async.apply(checkPending, assert, "complete", [])
-      ], function(err){
+      async.timesSeries(TEST_TOTAL_NUM_SUBMISSIONS, function(index, cb){
+        submitFullSubmission(cb);
+      }, function(err){
         assert.ok(!err, 'error in setUp - err: ' + util.inspect(err));
         finish();
       });
@@ -494,7 +381,6 @@ module.exports.tearDown = function(finish){
 };
 
 function submitData(assert, filesToSubmit, cb){
-//  console.log("SUBMITDATA()");
   var submission = testSubmitFormBaseInfo;
   var filePlaceHolderEntries = filesToSubmit;
   submission.formId = globalFormId;
@@ -503,8 +389,9 @@ function submitData(assert, filesToSubmit, cb){
   var testField;
   var testFieldName;
   for(var i = 0; i < 6; i += 1) {
+
     testFieldName = TEST_FIELD_NAME_PREFIX + i;
-    testFieldValue = TEST_FIELD_VALUE_PREFIX + i;
+    var testFieldValue = TEST_FIELD_VALUE_PREFIX + i;
     testField = {"fieldId" : globalFieldIds[testFieldName], "fieldValues" : [testFieldValue]};
     submission.formFields.push(testField);
   }
@@ -553,7 +440,7 @@ function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
     async.eachSeries(expectedPendingFiles, function(expectedFile){
       assert.ok(result.pendingFiles.indexOf(expectedFile) > -1);
       cb();
-    }, function(err){
+    }, function(){
      cb();
     });
   });
@@ -562,7 +449,7 @@ function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
 function completeSubmission(assert, cb){
   // console.log("COMPLETESUBMISSION()");
 
-  forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"submissionId" : submissionId}}, function(err, result){
+  forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"submissionId" : submissionId}}, function(err){
     if(err) return cb(err);
     assert.ok(!err);
 
