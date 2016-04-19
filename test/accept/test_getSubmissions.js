@@ -290,7 +290,7 @@ module.exports.testGetSubmissionsIncludeFullSubmission = function(finish){
 };
 
 module.exports.testGetSubmissionsPagination = function(finish){
-  function _getAndCheckSubmissionPages(page, limit, expectedCount, cb){
+  function _getAndCheckSubmissionPages(page, limit, expectedCount, expectedPages, expectedTotal, cb){
     forms.getSubmissions(options, {paginate: {
       page: page,
       limit: limit
@@ -298,6 +298,8 @@ module.exports.testGetSubmissionsPagination = function(finish){
       assert.equal(undefined, err);
 
       assert.equal(expectedCount, result.submissions.length);
+      assert.equal(expectedPages, result.pages);
+      assert.equal(expectedTotal, result.total);
       cb();
     });
   }
@@ -306,15 +308,15 @@ module.exports.testGetSubmissionsPagination = function(finish){
     function checkFirstPage(cb){
       //Getting the first page with a limit of 3 entries per page.
       //First page should have 3 submissions
-      _getAndCheckSubmissionPages(1, 3, 3, cb);
+      _getAndCheckSubmissionPages(1, 3, 3, 2, 5, cb);
     },
     function checkSecondPage(cb){
       //Second page should only have 2 submissions
-      _getAndCheckSubmissionPages(2, 3, 2, cb);
+      _getAndCheckSubmissionPages(2, 3, 2, 2, 5, cb);
     },
     function checkThirdPage(cb){
       //Third page should have no submissions
-      _getAndCheckSubmissionPages(3, 3, 0, cb);
+      _getAndCheckSubmissionPages(3, 3, 0, 2, 5, cb);
     }
   ], finish);
 };
