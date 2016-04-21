@@ -298,6 +298,12 @@ module.exports.testGetSubmissionsPagination = function(finish){
       assert.equal(undefined, err);
 
       assert.equal(expectedCount, result.submissions.length);
+      //No form data should be returned as part of the list.
+      if (expectedCount > 0) {
+        assert.equal(undefined, result.submissions[0].formSubmittedAgainst.pages);
+        assert.equal(undefined, result.submissions[0].formSubmittedAgainst.pageRules);
+        assert.equal(undefined, result.submissions[0].formSubmittedAgainst.fieldRules);
+      }
       assert.equal(expectedPages, result.pages);
       assert.equal(expectedTotal, result.total);
       cb();
