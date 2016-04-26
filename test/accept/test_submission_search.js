@@ -254,6 +254,74 @@ module.exports.testSubmissionSearchText = function (finish){
   ,finish);
 };
 
+module.exports.testSubmissionSearchPaginate = function (finish) {
+
+  var query = {
+    "formId": globalFormId,
+    "clauseOperator": "and",
+    "queryFields": {
+      "clauses": [{
+        "fieldId": globalDateField,
+        "restriction": "is at",
+        "value": dateValue
+      }]
+    }
+  };
+
+  async.series([
+    //Testing that 2 records are found without pagination
+    function testIsAt(callback) {
+      forms.submissionSearch({
+        "uri": process.env.FH_DOMAIN_DB_CONN_URL
+      }, query, function (err, submissionResult) {
+        assert.ok(!err,
+          "no error should be returned for submission search " + util.inspect(err));
+        assert.equal(2, submissionResult.submissions.length, "should have found two submissions");
+        assert.equal(2, submissionResult.total);
+        assert.equal(1, submissionResult.pages);
+        assertValueExists(submissionResult.submissions, globalDateField, dateValue);
+        callback();
+      });
+    },
+    function testIsAtPage1(callback) {
+      //Only want 1 record per page
+      var paginationParams = {
+        paginate: {
+          page: 1,
+          limit: 1
+        }
+      };
+      forms.submissionSearch({
+        "uri": process.env.FH_DOMAIN_DB_CONN_URL
+      }, _.extend(paginationParams, query), function (err, submissionResult) {
+        assert.ok(!err,
+          "no error should be returned for submission search " +  util.inspect(err));
+        assert.equal(1, submissionResult.submissions.length, "should have found 1 submission");
+        assert.equal(2, submissionResult.total);
+        assert.equal(2, submissionResult.pages);
+        callback();
+      });
+    },
+    function testIsAtPage2(callback) {
+      var paginationParams = {
+        paginate: {
+          page: 2,
+          limit: 1
+        }
+      };
+      forms.submissionSearch({
+        "uri": process.env.FH_DOMAIN_DB_CONN_URL
+      }, _.extend(paginationParams, query), function (err, submissionResult) {
+        assert.ok(!err,
+          "no error should be returned for submission search " + util.inspect(err));
+        assert.equal(1, submissionResult.submissions.length, "should have found 1 submission");
+        assert.equal(2, submissionResult.total);
+        assert.equal(2, submissionResult.pages);
+        callback();
+      });
+    }
+  ], finish);
+};
 
 module.exports.testSubmissionSearchDate = function (finish){
   async.series([
