@@ -41,6 +41,26 @@ var dataOptions = {
       value: "Option 3",
       selected: selected
     };
+  },
+  //This should be valid, key is not required
+  optionNoKey: function() {
+    return {
+      value: "Value No Key",
+      selected: true
+    };
+  },
+  //This should be valid, selected is not required
+  optionNoSelected: function() {
+    return {
+      key: "keynoselected",
+      value: "Value No Selected"
+    };
+  },
+  //This should be valid, key and selected is not required
+  optionValueOnly: function() {
+    return {
+      value: "Value Only"
+    };
   }
 };
 
@@ -417,11 +437,15 @@ module.exports = {
         var expectedHashSingle = misc.generateHash(dataSourceDataSingleChoice.data);
 
 
+        //Fields with no key/selected values are also valid
         var dataSourceDataMultiChoice = {
           data: [
             dataOptions.option1(false),
             dataOptions.option2(true),
-            dataOptions.option3(true)
+            dataOptions.option3(true),
+            dataOptions.optionNoKey(),
+            dataOptions.optionNoSelected(),
+            dataOptions.optionValueOnly()
           ]
         };
         var expectedHashMulti = misc.generateHash(dataSourceDataMultiChoice.data);
@@ -900,6 +924,37 @@ module.exports = {
         });
       }
     ], done);
+  },
+  "Test Validate Data Source No Key, Selected Applied": function(done) {
+    var baseDataSourceData = _.clone(dataSourceData);
+
+    async.series([
+      function validateNoKey(cb) {
+        var dataSourceDataNoKey = _.extend({
+          data: [
+            dataOptions.optionNoKey(),
+            dataOptions.optionNoSelected(),
+            dataOptions.optionValueOnly()
+          ]
+        }, baseDataSourceData);
+        forms.dataSources.validate(options, dataSourceDataNoKey, function(err, validationResult) {
+          assert.ok(!err, "Expected No Error");
+
+          var expectedResult = _.clone(dataSourceDataNoKey);
+
+          expectedResult.dataHash = misc.generateHash(dataSourceDataNoKey.data);
+          expectedResult.validationResult = {
+            valid: true,
+            message: "Data Source Is Valid"
+          };
+
+          verifyDataSourceJSON(expectedResult, validationResult);
+
+          cb();
+        });
+      }
+    ], done);
   }
+
 
 };
