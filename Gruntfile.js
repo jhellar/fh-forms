@@ -16,6 +16,7 @@ module.exports = function(grunt) {
         src: [
           "client/prefix.js",
           "node_modules/async/lib/async.js",
+          "node_modules/underscore/underscore.js",
           "client/infix.js",
           "lib/common/forms-rule-engine.js",
           "client/suffix.js"
