@@ -8,7 +8,7 @@ var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
  * @param  {boolean} include_blank_option Expecting whether the blank option should available or not
  * @return {object}                      Full form JSON definition
  */
-function getMockDropdownForm(include_blank_option){
+function getMockDropdownForm(include_blank_option) {
   return {
     "_id": "57287eb49b71a8c37fda4849",
     "name": "Test Dropdown Form",
@@ -93,7 +93,7 @@ function getMockSubmission(formFields) {
   };
 }
 
-describe("Dropdown Fields", function() {
+describe("Dropdown Field", function() {
 
   var dropdownFieldId = "57287ec59b71a8c37fda484a";
 
@@ -152,8 +152,8 @@ describe("Dropdown Fields", function() {
 
       var mockForm = getMockDropdownForm(true);
       var mockSubmission = getMockSubmission(formFields);
-
       var engine = formsRulesEngine(mockForm);
+
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
         assert.ok(result.validation.valid, "Epected The Submisison To Be Valid " + JSON.stringify(result));

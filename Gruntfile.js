@@ -6,6 +6,12 @@ module.exports = function(grunt) {
     lint: {
       files: ['lib/common/forms-rules-engine.js']
     },
+    browserify: {
+      rulesEngine: {
+        src: ['./lib/common/forms-rule-engine.js'],
+        dest: 'client/output/rules.js'
+      }
+    },
     concat: {
       "dist_rules_engine":{
         options: {
@@ -14,12 +20,7 @@ module.exports = function(grunt) {
             '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
         src: [
-          "client/prefix.js",
-          "node_modules/async/lib/async.js",
-          "node_modules/underscore/underscore.js",
-          "client/infix.js",
-          "lib/common/forms-rule-engine.js",
-          "client/suffix.js"
+          "client/output/rules.js"
         ],
         dest: 'client/output/rulesengine.js',
         nonull: true
@@ -47,8 +48,11 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-fh-build');
 
-  grunt.registerTask('dist', ['concat', 'fh:dist']);
+  grunt.registerTask('buildClient', ['browserify:rulesEngine', 'concat']);
+
+  grunt.registerTask('dist', ['buildClient', 'fh:dist']);
   grunt.registerTask('default', ['eslint', 'fh-test', 'dist']);
 };

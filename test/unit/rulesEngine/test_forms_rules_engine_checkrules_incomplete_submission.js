@@ -2,7 +2,7 @@ var async = require('async');
 var util = require('util');
 var assert = require('assert');
 
-var formsRulesEngine = require('../../lib/common/forms-rule-engine.js');
+var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
 
 var TEST_BASIC_FORM_1_PAGE_1_NAME = "TEST_BASIC_FORM_1_PAGE_1_NAME";
 var TEST_BASIC_FORM_1_PAGE_1_ID = "000000000000000000000001";
@@ -172,7 +172,7 @@ var TEST_BASIC_FORM_1_DEFINITION = {
   },
   "appsUsing":123,
   "submissionsToday":1234,
-  "submissionsTotal":124125  
+  "submissionsTotal":124125
 };
 
 var TEST_BASIC_FORM_1_SUBMISSION_HIDE_FIELD3 = {
@@ -319,4 +319,3 @@ module.exports.testBasicFormCheckRulesIncompleteSubmission = function (finish) {
       finish();
   });
 };
-

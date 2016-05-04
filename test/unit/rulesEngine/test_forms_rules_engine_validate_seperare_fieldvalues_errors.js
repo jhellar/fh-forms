@@ -2,7 +2,7 @@ var async = require('async');
 var util = require('util');
 var assert = require('assert');
 
-var formsRulesEngine = require('../../lib/common/forms-rule-engine.js');
+var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
 
 var TEST_BASIC_FORM_1_PAGE_1_NAME = "TEST_BASIC_FORM_1_PAGE_1_NAME";
 var TEST_BASIC_FORM_1_PAGE_1_ID = "000000000000000000000001";
@@ -149,7 +149,7 @@ var TEST_BASIC_FORM_1_DEFINITION = {
   },
   "appsUsing":123,
   "submissionsToday":1234,
-  "submissionsTotal":124125  
+  "submissionsTotal":124125
 };
 
 var TEST_BASIC_FORM_1_SUBMISSION_1 = {
@@ -206,7 +206,7 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
 
 
 // "validation": {
-//         "valid":false,    
+//         "valid":false,
 //         "fieldId": {
 //             "fieldId": "",
 //             "valid": true/false,
@@ -228,7 +228,7 @@ var TEST_BASIC_FORM_1_SUBMISSION_1 = {
 module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
   var TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
   TEST_BASIC_FORM_1_SUBMISSION_TEST_INVALID_FIELD.formFields[2].fieldValues[0] = TEST_BASIC_FORM_1_PAGE_1_FIELD_3_MAX_VALUE;
-  
+
   var engine = formsRulesEngine(TEST_BASIC_FORM_1_DEFINITION);
 
   async.series([
@@ -286,6 +286,3 @@ module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
     finish();
   });
 };
-
-
-
