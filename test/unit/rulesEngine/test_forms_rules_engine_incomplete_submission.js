@@ -2,9 +2,9 @@ var async = require('async');
 var util = require('util');
 var assert = require('assert');
 
-var formsRulesEngine = require('../../lib/common/forms-rule-engine.js');
+var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
 
-var FORMDEF = {
+var TEST_FORMDEF_1 = {
       "updatedBy": "user@example.com",
       "createdBy": "user@example.com",
       "name": "testFieldsForm",
@@ -14,7 +14,41 @@ var FORMDEF = {
       "dateCreated": "2013-11-28T14:10:45.865Z",
       "_id": "527d4539639f521e0a000004",
       "pageRules": [{
-         "type": "hide",
+         "type": "show",
+         "targetPage": "527d4539639f521e0a000005",
+         "_id": "52974ee55e272dcb3d0000ad",
+         "ruleConditionalStatements": [{
+            "sourceField": "527d4539639f521e0a000006",
+            "restriction": "contains",
+            "sourceValue": "val"
+         }],
+         "ruleConditionalOperator": "and"
+      }, {
+         "type": "show",
+         "targetPage": "527d4539639f521e0a000005",
+         "_id": "52974ee55e272dcb3d0000ae",
+         "ruleConditionalStatements": [{
+            "sourceField": "527d4539639f521e0a000006",
+            "restriction": "begins with",
+            "sourceValue": "dammit"
+         }],
+         "ruleConditionalOperator": "and"
+      }, {
+         "type": "show",
+         "targetPage": "527d4539639f521e0a000005",
+         "_id": "52974ee55e272dcb3d0000af",
+         "ruleConditionalStatements": [{
+            "sourceField": "527d4539639f521e0a000006",
+            "restriction": "begins with",
+            "sourceValue": "begin"
+         }, {
+            "sourceField": "527d4539639f521e0a000006",
+            "restriction": "ends with",
+            "sourceValue": "dammit"
+         }],
+         "ruleConditionalOperator": "and"
+      }, {
+         "type": "show",
          "targetPage": "527d4539639f521e0a000005",
          "_id": "52974ee55e272dcb3d0000b0",
          "ruleConditionalStatements": [{
@@ -22,9 +56,9 @@ var FORMDEF = {
             "restriction": "is greater than",
             "sourceValue": "5"
          }, {
-            "sourceField": "527d4539639f521e0a000006",
-            "restriction": "contains",
-            "sourceValue": "hidepage"
+            "sourceField": "52974ee55e272dcb3d000098",
+            "restriction": "is less than",
+            "sourceValue": "23"
          }],
          "ruleConditionalOperator": "and"
       }],
@@ -39,8 +73,8 @@ var FORMDEF = {
          }],
          "ruleConditionalOperator": "and"
       }, {
-         "type": "hide",
-         "targetField": "52974ee55e272dcb3d000097",
+         "type": "show",
+         "targetField": "52974ee55e272dcb3d0000a6",
          "_id": "52974ee55e272dcb3d0000aa",
          "ruleConditionalStatements": [{
             "sourceField": "527d4539639f521e0a000006",
@@ -298,7 +332,7 @@ var FORMDEF = {
             "type": "dateTime",
             "required": false,
             "fieldOptions": {
-               
+
                "definition": {
                   "dateTimeUnit": "date",
                   "timeAutopopulate": true,
@@ -314,7 +348,7 @@ var FORMDEF = {
             "type": "dateTime",
             "required": false,
             "fieldOptions": {
-               
+
                "definition": {
                   "dateTimeUnit": "time",
                   "timeAutopopulate": false,
@@ -330,7 +364,7 @@ var FORMDEF = {
             "type": "dateTime",
             "required": false,
             "fieldOptions": {
-               
+
                "definition": {
                   "dateTimeUnit": "dateTime",
                   "timeAutopopulate": true,
@@ -465,250 +499,71 @@ var FORMDEF = {
       "appsUsingForm": 123,
       "submissionsToday": 1234,
       "submissionsTotal": 124125
-   };
+};
 
-var FORMDEF_PHOTO_REQUIRED = {
-  "updatedBy": "user@example.com",
-  "name": "testPhotoFieldRule",
-  "description": "This form is for testing file and photo required fields fields.",
-  "lastUpdatedTimestamp": 1385647845865,
-  "lastUpdated": "2013-11-28T14:10:45.865Z",
-  "dateCreated": "2013-11-28T14:10:45.865Z",
-  "_id": "527d4539639f521e0a0000f5",
-  "pageRules": [],
-  "fieldRules": [{
-    "type": "hide",
-    "targetField": "52974ee55e272dcb3d0000n7",
-    "_id": "52974ee55e272dcb3d0000a9",
-    "ruleConditionalStatements": [{
-      "sourceField": "527d4539639f521e0a000006",
-      "restriction": "contains",
-      "sourceValue": "val"
+var TEST_SUBMISSION_INCOMPLETE = {
+    "_id": null,
+    "_type": "submission",
+    "_ludid": "527d4539639f521e0a000004_submission_1386675705725",
+    "_localLastUpdate": 1386675705725,
+    "formName": "testFieldsForm",
+    "formId": "527d4539639f521e0a000004",
+    "deviceFormTimestamp": 1385647845865,
+    "status": "new",
+    "createDate": "2013-12-10T11:41:45.725Z",
+    "appId": "8P-SzpQTu1EqHLYrZQAdUzPQ",
+    "timezoneOffset" : 120,
+    "appEnvironment": "dev",
+    "appCloudName": "",
+    "comments": [],
+    "formFields": [{
+        "fieldId": "527d4539639f521e0a000006",
+        "fieldValues": ["fdsafads"]
+    }, {
+        "fieldId": "52974ee55e272dcb3d00009a",
+        "fieldValues": ["radio3 checked", "radio3 checked"]
+    }, {
+        "fieldId": "52974ee55e272dcb3d00009d",
+        "fieldValues": [{
+            "selections": ["1", "2"]
+        }, {
+            "selections": ["1", "2"]
+        }]
+    }, {
+        "fieldId": "52974ee55e272dcb3d00009b",
+        "fieldValues": ["dropdownVal3", "dropdownVal3"]
+    }, {
+        "fieldId": "52974ee55e272dcb3d0000a0",
+        "fieldValues": [{
+            "lat": 52.251030799999995,
+            "long": -7.153408600000034,
+            "zoom": 16
+        }]
     }],
-    "ruleConditionalOperator": "and"
-  }],
-  "pages": [{
-    "name": "testPage",
-    "description": "This is a test page for the win.",
-    "_id": "527d4539639f521e0a000005",
-    "fields": [{
-      "name": "textField",
-      "helpText": "This is a text field",
-      "type": "text",
-      "required": true,
-      "fieldOptions": {
-        "definition": {
-        },
-        "validation": {
-        }
-      },
-      "_id": "527d4539639f521e0a000006",
-      "repeating": false
-    }, {
-      "name": "photoField",
-      "helpText": "This is a photo field",
-      "type": "photo",
-      "required": true,
-      "fieldOptions": {
-        "definition": {
-          "photoHeight": 200,
-          "photoWidth": 300,
-          "photoQuality": 50,
-          "maxRepeat": 5,
-          "minRepeat": 2
-        }
-      },
-      "_id": "52974ee55e272dcb3d0000n7",
-      "repeating": true
-    }]
-  }],
-  "pageRef": {
-    "527d4539639f521e0a000005": 0
-  },
-  "fieldRef": {
-    "527d4539639f521e0a000006": {
-      "page": 0,
-      "field": 0
-    },
-    "52974ee55e272dcb3d0000n7": {
-      "page": 0,
-      "field": 1
-    }
-  },
-  "appsUsingForm": 123,
-  "submissionsToday": 1234,
-  "submissionsTotal": 124125
+    "saveDate": null,
+    "submitDate": null,
+    "uploadStartDate": null,
+    "submittedDate": null
 };
 
+module.exports.testBasicFormCheckRulesFieldSetToShowInRule = function (finish) {
+  var engine = formsRulesEngine(TEST_FORMDEF_1);
 
+      engine.checkRules(TEST_SUBMISSION_INCOMPLETE, function (err, results) {
+        assert.ok(!err);
+        assert.ok(results);
+        assert.ok(results.actions);
+        assert.ok(results.actions.fields);
+        assert.equal(Object.keys(results.actions.fields).length, 3, 'Should only be 3 fields listed, since only 3 targets specified in rules');
 
+        assert.equal(results.actions.fields['52974ee55e272dcb3d0000a6'].action, "hide");
+        assert.equal(results.actions.fields['52974ee55e272dcb3d0000a7'].action, "hide");
+        assert.equal(results.actions.fields['52974ee55e272dcb3d0000a8'].action, "hide");
 
-var SUBMISSION = {
-  "_id": null,
-  "_type": "submission",
-  "_ludid": "527d4539639f521e0a000004_submission_1386777426898",
-  "_localLastUpdate": 1386777426898,
-  "formName": "testFieldsForm",
-  "formId": "527d4539639f521e0a000004",
-  "deviceFormTimestamp": 1385647845865,
-  "status": "new",
-  "createDate": "2013-12-11T15:57:06.898Z",
-  "appId": "8P-SzpQTu1EqHLYrZQAdUzPQ",
-  "timezoneOffset" : 120,
-  "appEnvironment": "dev",
-  "appCloudName": "",
-  "comments": [],
-  "formFields": [{
-    "fieldId": "527d4539639f521e0a000006",
-    "fieldValues": ["", "fdsas"]
-  }, {
-    "fieldId": "52974ee55e272dcb3d000097",
-    "fieldValues": ["", "", ""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d000098",
-    "fieldValues": [0, 0]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a4",
-    "fieldValues": [""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d000099",
-    "fieldValues": [""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d00009a",
-    "fieldValues": ["radio3 checked", "radio3 checked"]
-  }, {
-    "fieldId": "52974ee55e272dcb3d00009d",
-    "fieldValues": [{
-      "selections": ["1", "2"]
-    }, {
-      "selections": ["1", "2"]
-    }]
-  }, {
-    "fieldId": "52974ee55e272dcb3d00009b",
-    "fieldValues": ["dropdownVal3", "dropdownVal3"]
-  }, {
-    "fieldId": "52974ee55e272dcb3d00009e",
-    "fieldValues": [null, null]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a5",
-    "fieldValues": [""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d00009f",
-    "fieldValues": [null, null]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a0",
-    "fieldValues": [{
-      "lat": 52.251065499999996,
-      "long": -7.1533761000000595,
-      "zoom": 16
-    }]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a1",
-    "fieldValues": [""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a2",
-    "fieldValues": ["", ""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a3",
-    "fieldValues": [""]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000a6",
-    "fieldValues": [null, null]
-  }],
-  "saveDate": null,
-  "submitDate": null,
-  "uploadStartDate": null,
-  "submittedDate": null,
-  "timezoneOffset": 0
-};
+        assert.ok(results.actions.pages);
+        assert.equal(Object.keys(results.actions.pages).length, 1, 'Should be 1 pages listed');
+        assert.equal(results.actions.pages['527d4539639f521e0a000005'].action, "hide");
 
-var SUBMISSION_REQUIRED_PHOTO = {
-  "_id": null,
-  "_type": "submission",
-  "_ludid": "527d4539639f521e0a000004_submission_1386777426898",
-  "_localLastUpdate": 1386777426898,
-  "formName": "testFieldsForm",
-  "formId": "527d4539639f521e0a0000f5",
-  "deviceFormTimestamp": 1385647845865,
-  "status": "new",
-  "createDate": "2013-12-11T15:57:06.898Z",
-  "appId": "8P-SzpQTu1EqHLYrZQAdUzPQ",
-  "timezoneOffset" : 120,
-  "appEnvironment": "dev",
-  "appCloudName": "",
-  "comments": [],
-  "formFields": [{
-    "fieldId": "527d4539639f521e0a000006",
-    "fieldValues": ["val"]
-  }, {
-    "fieldId": "52974ee55e272dcb3d0000n7",
-    "fieldValues": []
-  }],
-  "saveDate": null,
-  "submitDate": null,
-  "uploadStartDate": null,
-  "submittedDate": null,
-  "timezoneOffset": 0
-}
-
-
-
-
-
-// "validation": {
-//         "valid":false,    
-//         "fieldId": {
-//             "fieldId": "",
-//             "valid": true/false,
-//             "errorMessages": [
-//                 null,
-//                 "should not contain dammit"
-//             ],
-//             "fieldErrorMessage":[
-//                 "this field is required",
-//                 "this field should repeat at least twice"
-//             ]
-//         },
-//         "fieldId1": {
-
-//         }
-//     }
-// }
-
-module.exports.testBasicForm1ValidateFormInvalid = function (finish) {
-  var engine = formsRulesEngine(FORMDEF);
-
-  async.series([
-    function (cb) {
-      engine.validateForm(SUBMISSION, function (err, results) {
-        assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
-        assert.ok(!results.validation.valid, "UnExpected valid result: " + util.inspect(results.validation));
-        return cb();
+        finish();
       });
-    }
-  ], function (err) {
-    assert.ok(!err, "Unexpected error: " + util.inspect(err));
-    finish();
-  });
 };
-
-
-module.exports.testRequiredPhotoFieldHidden = function (finish) {
-  var engine = formsRulesEngine(FORMDEF_PHOTO_REQUIRED);
-
-  async.series([
-    function (cb) {
-      engine.validateForm(SUBMISSION_REQUIRED_PHOTO, function (err, results) {
-        assert.ok(!err, 'unexpected error from validateForm: ' + util.inspect(err));
-        assert.ok(results.validation.valid, "UnExpected invalid result: " + util.inspect(results.validation));
-        return cb();
-      });
-    }
-  ], function (err) {
-    assert.ok(!err, "Unexpected error: " + util.inspect(err));
-    finish();
-  });
-};
-
-
-

@@ -2,7 +2,7 @@ var async = require('async');
 var util = require('util');
 var assert = require('assert');
 
-var formsRulesEngine = require('../../lib/common/forms-rule-engine.js');
+var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
 
 var TEST_BASIC_FORM_1_PAGE_1_NAME = "TEST_BASIC_FORM_1_PAGE_1_NAME";
 var TEST_BASIC_FORM_1_PAGE_1_ID = "000000000000000000000001";
