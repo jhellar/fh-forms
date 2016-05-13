@@ -436,11 +436,25 @@ module.exports = (function(){
       "fieldOptions": {
         "definition" : {
           "datetimeUnit": "datetime",
+          "dateTimeFormat": "YYYY-MM-DD HH:mm:ss",
           "timeAutopopulate":true,
           "maxRepeat":6,
           "minRepeat":1
         },
         "validation" : {"validateImmediately":true}
+      }
+    },
+    "dateTimeFieldDataNoFormat":{
+      "name":"dateTimeField",
+      "helpText":"This is a dateTime field",
+      "type":"dateTime",
+      "adminOnly": false,
+      "repeating":true,
+      "required":false,
+      "fieldOptions": {
+        "definition" : {
+          "datetimeUnit": "datetime"
+        }
       }
     },
     "sectionBreakFieldData":{

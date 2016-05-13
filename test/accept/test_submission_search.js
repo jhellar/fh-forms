@@ -30,9 +30,10 @@ var submissionId;
 var subids = [];
 var testFilePath = "./test/Fixtures/test.pdf";
 savedFields = [];
-var lessDateValue = moment().subtract(10, 'days').format('YYYY-MM-DD hh:mm');
-var greaterValue =  moment().add(10, 'days').format('YYYY-MM-DD hh:mm');
-var dateValue = moment().format('YYYY-MM-DD hh:mm');
+var testFormat = 'YYYY-MM-DD HH:mm:ss';
+var lessDateValue = moment().subtract(10, 'days').format(testFormat);
+var greaterValue =  moment().add(10, 'days').format(testFormat);
+var dateValue = moment().format(testFormat);
 
 var testSubmitFormBaseInfo = {
   "appId": TEST_SUBMISSION_APPID,
