@@ -8,6 +8,7 @@ var assert = require('assert');
 var util = require('util');
 var _ = require('underscore');
 var logger = require('../../lib/common/logger').getLogger();
+var moment = require('moment');
 
 var testFilePath = "./test/Fixtures/test.pdf";
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
@@ -493,7 +494,7 @@ module.exports.testSubmitDate = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateField"],
-    "fieldValues": [new Date().toDateString(), new Date().toDateString()]
+    "fieldValues": [moment().format("YYYY/MM/DD"), moment().format("YYYY/MM/DD")]
   }];
 
   submission.formFields = testValues;
@@ -509,7 +510,7 @@ module.exports.testSubmitDateInvalid = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateField"],
-    "fieldValues": [new Date().toDateString(), "14*23452346/235236"]
+    "fieldValues": [moment().format("YYYY/MM/DD"), "14*23452346/235236"]
   }];
 
   submission.formFields = testValues;
@@ -526,7 +527,7 @@ module.exports.testSubmitDateTime = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateTimeField"],
-    "fieldValues": [new Date().toUTCString(), new Date().toUTCString()]
+    "fieldValues": [moment().format("YYYY-MM-DD HH:mm:ss"), moment().format("YYYY-MM-DD HH:mm:ss")]
   }];
 
   submission.formFields = testValues;
@@ -543,7 +544,7 @@ module.exports.testSubmitDateTimeInvalid = function(finish){
 
   var testValues = [{
     "fieldId" : bigFieldIds["dateTimeField"],
-    "fieldValues": [new Date().toUTCString(), "5/11/13 332523:05:54"]
+    "fieldValues": [moment().format("YYYY-MM-DD HH:mm:ss"), "5/11/13 332523:05:54"]
   }];
 
   submission.formFields = testValues;
