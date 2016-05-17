@@ -47,6 +47,34 @@ module.exports.setUp = function(done) {
 
 };
 
+
+/**
+ * Utility function to submit a JSON submission
+ * @param {object}  full submission JSON definition
+ * @param cb
+ */
+function submitFormData(submission, cb) {
+  forms.submitFormData(_.extend({
+    submission: submission
+  }, options), function(err, submissionResult) {
+    assert.ok(!err, "Expected no error " + util.inspect(err));
+    assert.ok(!submissionResult.error, "Expected No Submission Error " + util.inspect(submissionResult.error));
+    assert.ok(submissionResult.submissionId, "Expected A Submission ID");
+
+    cb(undefined, submissionResult.submissionId);
+  });
+}
+
+function completeSubmission(submissionId, cb) {
+  forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submissionId}}, function(err, completionResult) {
+    assert.ok(!err, "Expected no error " + util.inspect(err));
+
+    assert.strictEqual(completionResult.formSubmission.status, "complete", "should be COMPLETE submission: " + util.inspect(completionResult.formSubmission));
+
+    cb(undefined, submissionId);
+  });
+}
+
 module.exports.tearDown = function(done) {
 
   //Closing the mongo connection
@@ -71,28 +99,10 @@ module.exports.testSubmitFormDataWithAdminFields = function(done) {
   async.waterfall([
 
     //Submitting the submission JSON
-    function submitFormData(cb) {
-      forms.submitFormData(_.extend({
-        submission: submission
-      }, options), function(err, submissionResult) {
-        assert.ok(!err, "Expected no error " + util.inspect(err));
-        assert.ok(!submissionResult.error, "Expected No Submission Error " + util.inspect(submissionResult.error));
-        assert.ok(submissionResult.submissionId, "Expected A Submission ID");
-
-        cb(undefined, submissionResult.submissionId);
-      });
-    },
+    async.apply(submitFormData, submission),
 
     //verifying and marking the submission as complete
-    function completeSubmission(submissionId, cb) {
-      forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submissionId}}, function(err, completionResult) {
-        assert.ok(!err, "Expected no error " + util.inspect(err));
-
-        assert.strictEqual(completionResult.formSubmission.status, "complete", "should be COMPLETE submission: " + util.inspect(completionResult.formSubmission));
-
-        cb(undefined, submissionId);
-      });
-    },
+    completeSubmission,
 
     //Verifying that the stored submission has the admin field.
     function verifySubmissionAdminField(submissionId, cb) {
@@ -115,6 +125,71 @@ module.exports.testSubmitFormDataWithAdminFields = function(done) {
         assert.strictEqual(true, submission.formSubmittedAgainst.pages[0].fields[1].adminOnly, "Expected the admin text field to be adminOnly");
 
         connection.close(cb);
+      });
+    }
+  ], done);
+};
+
+//Testing that updating admin fields is persisted to the submission
+module.exports.testUpdateSubmissionWithAdminFields = function(done) {
+  var submission = baseSubmission();
+
+  submission.formId = createdFormId;
+
+  submission.formFields = [{
+    "fieldId": textFieldId,
+    "fieldValues": ["Some Text Value1", "Some Text Value2"]
+  }];
+
+  async.waterfall([
+
+    //Submitting the submission JSON
+    async.apply(submitFormData, submission),
+
+    //verifying and marking the submission as complete
+    completeSubmission,
+
+    //Verifying that the stored submission has the admin field.
+    function getSubmission(submissionId, cb) {
+      forms.getSubmission(options, {_id: submissionId}, function(err, submission) {
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+        assert.ok(submission, "Expected a submission");
+
+        cb(err, submission);
+      });
+    },
+    function updateCompletedSubmissionAdminField(submission, cb) {
+      var adminText = "SOME ADMIN TEXT FOR THE WIN!!";
+      submission.formFields = _.map(submission.formFields, function(formField) {
+        var returnVal = {
+          fieldId: formField.fieldId._id
+        };
+
+        if (formField.fieldId._id.toString() === adminTextFieldId) {
+          returnVal.fieldValues = [adminText];
+        } else {
+          returnVal.fieldValues = formField.fieldValues;
+        }
+
+        return returnVal;
+      });
+
+      logger.debug("*** Updating submission", submission);
+
+      //Now update the submission
+      forms.submitFormData(_.extend({
+        submission: submission,
+        skipValidation: true
+      }, options), function(err, submissionResult) {
+        assert.ok(!err, "Expected no error " + util.inspect(err));
+        assert.ok(!submissionResult.error, "Expected No Submission Error " + util.inspect(submissionResult.error));
+        assert.ok(submissionResult.submissionId, "Expected A Submission ID");
+
+        logger.debug("*** Finished Updating submission", submissionResult.formSubmission.formFields);
+
+        assert.strictEqual(adminText, submissionResult.formSubmission.formFields[1].fieldValues[0]);
+
+        cb();
       });
     }
   ], done);
