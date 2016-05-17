@@ -21,6 +21,24 @@ module.exports = (function(){
         }
       }
     },
+    "adminTextFieldData":{
+      "name":"adminTextField",
+      "helpText":"This is an admin text field",
+      "type":"text",
+      "adminOnly": true,
+      "repeating":true,
+      "required":false,
+      "fieldOptions":{
+        "definition":{
+          "maxRepeat":5,
+          "minRepeat":2
+        },
+        "validation":{
+          "min":5,
+          "max":20
+        }
+      }
+    },
     "urlFieldData":{
       "name":"urlField",
       "helpText":"This is a url field",

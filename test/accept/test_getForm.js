@@ -56,6 +56,29 @@ module.exports.testGetFormWorksSinglePage = function(finish){
   });
 };
 
+//Testing that when a form is requested with admin fields, the admin fields should be returned
+module.exports.testGetFormWithAdminField = function(finish) {
+
+  async.waterfall([
+    function getFormsList(cb) {
+      forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, cb);
+    },
+    function getFormWithAdminFields(formsList, cb){
+      forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : formsList[0]._id, showAdminFields: true}, function(err, form) {
+        assert.ok(!err, "Expected no error " + util.inspect(err));
+        assert.ok(form, "Expected A Form");
+
+        //Checking that admin fields are returned
+        assert.strictEqual(3, form.pages[0].fields.length);
+        assert.strictEqual(true, form.pages[0].fields[2].adminOnly, "Expected field 3 to be an admin field");
+
+        cb();
+      });
+    }
+  ], finish);
+
+};
+
 module.exports.testExportFormWorks = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
