@@ -54,12 +54,8 @@ module.exports.testGetSubmission = function(finish){
     assert.equal(results._id, TEST_SUBMISSION_ID, "Invalid id - actual: " + results._id + ", expected: " + TEST_SUBMISSION_ID);
     assert.equal(results.appId, TEST_SUBMISSION_APPID);
     assert.equal(results.formId, TEST_SUBMISSION_FORMID);
+    finish();
 
-    // test delete
-    forms.deleteSubmission(options, {_id: TEST_SUBMISSION_FORMID}, function(err) {
-      assert.ok(!err, "should not have returned error: " + util.inspect(err));
-      finish();
-    });
   });
 };
 
@@ -128,9 +124,12 @@ module.exports.setUp = function(finish){
 };
 
 module.exports.tearDown = function(finish){
-  forms.tearDownConnection(options, function(err) {
-    assert.ok(!err);
-    finish();
+  forms.deleteSubmission(options, {_id: TEST_SUBMISSION_ID}, function(err) {
+    assert.ok(!err, "should not have returned error: " + util.inspect(err));
+    forms.tearDownConnection(options, function(err) {
+      assert.ok(!err);
+      finish();
+    });
   });
 };
 
