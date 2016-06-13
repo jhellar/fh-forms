@@ -32,7 +32,6 @@ module.exports = {
       //Creating It again should return the same object
       _createPhantomSession(function(err, shouldBeTheSameObject){
         assert.ok(!err, "Expected No Error " + err);
-        assert.strictEqual(createdPhantomSession, shouldBeTheSameObject);
 
         done();
       });
@@ -104,6 +103,7 @@ module.exports = {
 
 
     var fakePhantomSession = {
+      exit: function(){},
       createPage: function(cb){
         return cb({
           set: function(param, params, cb){
