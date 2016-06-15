@@ -2,7 +2,7 @@ require('./../Fixtures/env.js');
 var mongoose = require('mongoose');
 var async = require('async');
 var assert = require('assert');
-var Db = require('mongodb').Db;
+var MongoClient = require('mongodb').MongoClient;
 var models = require('../../lib/common/models')();
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
@@ -17,7 +17,7 @@ module.exports = {
       function checkIndexesCreated(cb){
         async.waterfall([
           function getSubmissionsCollection(callback){
-            Db.connect(options.uri, function(err, dbConnection){
+            MongoClient.connect(options.uri, function(err, dbConnection){
               assert.ok(!err, "Expected no error " + err);
 
               _dbConnection = dbConnection;

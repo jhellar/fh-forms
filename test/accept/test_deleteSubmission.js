@@ -1,5 +1,6 @@
 require('./../Fixtures/env.js');
 var forms = require('../../lib/forms.js');
+var logger = require('../../lib/common/logger').getLogger();
 var mongoose = require('mongoose');
 var async = require('async');
 var assert = require('assert');
@@ -124,26 +125,30 @@ module.exports.testDeleteSubmission = function(finish) {
     function getSubmission(submissionId, callback) {
       forms.getSubmission(options, {_id: submissionId}, function (err, submission){
         callback(err, submission);
-      })
+      });
     },
     function extractGroupId(submission, callback) {
       assert.ok(submission, "Should have found a submission");
       var submissionId = submission._id;
       var groupId = submission.formFields[1].fieldValues[0].groupId;
-      forms.getSubmissionFile(options, {'_id': groupId}, function(err) {
+      forms.getSubmissionFile(options, {'_id': groupId}, function(err, res) {
+        logger.debug("getSubmissionFile", {err: err, groupId: groupId, res: res});
         callback(err, {submissionId: submissionId, groupId: groupId});
-      })
+      });
     },
     function deleteSubmission(extractResult, callback) {
       forms.deleteSubmission(options, {_id: extractResult.submissionId}, function(err) {
+        if(err){
+          logger.error("Error deleting submission", {err: err});
+        }
         callback(err, extractResult.groupId);
-      })
+      });
     },
     function verifyFileRemoval(groupId, callback) {
       forms.getSubmissionFile(options, {'_id': groupId}, function(err) {
         assert.ok(err, "File with groupId " + groupId + " should have been deleted, hence err not found");
         callback(null);
-      })
+      });
     }],
     function(err) {
       assert.ok(!err, "should not have returned error: " + util.inspect(err));
