@@ -3,6 +3,11 @@ var assert = require('assert');
 
 describe('Destroy A Phantom Session', function() {
 
+  before(function(done){
+    this.destroyPhantomJSPath = '../../../lib/impl/pdfGeneration/destroyPhantomSession.js';
+    done();
+  });
+
   it('It Should Destroy an exising session', function(done) {
 
     var exitSpy = sinon.spy();
@@ -11,7 +16,7 @@ describe('Destroy A Phantom Session', function() {
       exit: exitSpy
     };
 
-    var destroyPhantomSession = require('../../../lib/impl/pdfGeneration/destroyPhantomSession.js');
+    var destroyPhantomSession = require(this.destroyPhantomJSPath);
 
     destroyPhantomSession(mockPhantomSession, function(err) {
       assert.ok(!err, "Expected no error");
@@ -23,7 +28,7 @@ describe('Destroy A Phantom Session', function() {
 
   it('It Should Require a session to destroy', function(done) {
 
-    var destroyPhantomSession = require('../../../lib/impl/pdfGeneration/destroyPhantomSession.js');
+    var destroyPhantomSession = require(this.destroyPhantomJSPath);
 
     destroyPhantomSession(null, function(err) {
       assert.ok(err, "Expected an error");

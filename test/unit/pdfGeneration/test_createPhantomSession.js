@@ -1,8 +1,20 @@
+var _ = require('underscore');
 var sinon = require('sinon');
 var assert = require('assert');
 var proxyquire = require('proxyquire');
 
 describe('Create A PhantomJS Session', function() {
+
+  function createMockedFunction(createStub, getNextPortNumberStub){
+    var mocks = {
+      'phantom': {
+        create: createStub
+      },
+      './getNextPhantomPort': getNextPortNumberStub
+    };
+
+    this.createPhantomSession = proxyquire('../../../lib/impl/pdfGeneration/createPhantomSession.js', mocks);
+  }
 
   it("It should create a phantom session", function(done) {
     var mockPhantomSession = {
@@ -11,16 +23,9 @@ describe('Create A PhantomJS Session', function() {
     var createStub = sinon.stub().callsArgWith(1, mockPhantomSession);
     var getNextPortNumberStub = sinon.stub().returns(10100);
 
-    var mocks = {
-      'phantom': {
-        create: createStub
-      },
-      './getNextPhantomPort': getNextPortNumberStub
-    };
+    _.bind(createMockedFunction, this)(createStub, getNextPortNumberStub);
 
-    var createPhantomSession = proxyquire('../../../lib/impl/pdfGeneration/createPhantomSession.js', mocks);
-
-    createPhantomSession(function(err, createdSession) {
+    this.createPhantomSession(function(err, createdSession) {
       assert.ok(!err, "Expected No Error " + err);
       assert.equal(mockPhantomSession, createdSession, "Expected phantom sessions to be equal");
 
@@ -41,16 +46,9 @@ describe('Create A PhantomJS Session', function() {
     var createStub = sinon.stub().throws(errMessage);
     var getNextPortNumberStub = sinon.stub().returns(10100);
 
-    var mocks = {
-      'phantom': {
-        create: createStub
-      },
-      './getNextPhantomPort': getNextPortNumberStub
-    };
+    _.bind(createMockedFunction, this)(createStub, getNextPortNumberStub);
 
-    var createPhantomSession = proxyquire('../../../lib/impl/pdfGeneration/createPhantomSession.js', mocks);
-
-    createPhantomSession(function(err, createdSession) {
+    this.createPhantomSession(function(err, createdSession) {
       assert.ok(err, "Expected An Error ");
       assert.ok(err.indexOf(errMessage) > -1, "Expected the thrown error to be passed " + err);
       assert.equal(undefined, createdSession, "Expected phantom sessions to be undefined");

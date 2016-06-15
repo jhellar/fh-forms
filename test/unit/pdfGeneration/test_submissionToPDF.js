@@ -9,6 +9,8 @@ describe("Testing Submission PDF Generation Queue", function() {
 
   before(function(done){
     this.timeoutMS = 200;
+    this.renderPDFPath = '../../../lib/impl/pdfGeneration/renderPDF';
+    this.mockLocation = "http://some.location.com";
     done();
   });
 
@@ -22,7 +24,6 @@ describe("Testing Submission PDF Generation Queue", function() {
         _id: "someformid"
       }
     };
-    var mockLocation = "http://some.location.com";
 
     var mocks = {
       './doPdfGeneration': function(params, cb) {
@@ -40,14 +41,14 @@ describe("Testing Submission PDF Generation Queue", function() {
       }
     };
 
-    var submissionToPDF = proxyquire('../../../lib/impl/pdfGeneration/renderPDF', mocks).submissionToPDF;
+    var submissionToPDF = proxyquire(this.renderPDFPath, mocks).submissionToPDF;
 
     async.parallel([
       function firstCall(cb) {
         submissionToPDF({
           submission: mockSubmission,
           options: {
-            location: mockLocation
+            location: self.mockLocation
           },
           maxConcurrentPhantomPerWorker: 1
         }, function(err) {
@@ -59,7 +60,7 @@ describe("Testing Submission PDF Generation Queue", function() {
         submissionToPDF({
           submission: mockSubmission,
           options: {
-            location: mockLocation
+            location: self.mockLocation
           },
           maxConcurrentPhantomPerWorker: 1
         },  function(err) {
@@ -81,7 +82,6 @@ describe("Testing Submission PDF Generation Queue", function() {
         _id: "someformid"
       }
     };
-    var mockLocation = "http://some.location.com";
 
     var mocks = {
       './doPdfGeneration': function(params, cb) {
@@ -98,14 +98,14 @@ describe("Testing Submission PDF Generation Queue", function() {
       }
     };
 
-    var submissionToPDF = proxyquire('../../../lib/impl/pdfGeneration/renderPDF', mocks).submissionToPDF;
+    var submissionToPDF = proxyquire(this.renderPDFPath, mocks).submissionToPDF;
 
     async.parallel([
       function firstCall(cb) {
         submissionToPDF({
           submission: mockSubmission,
           options: {
-            location: mockLocation
+            location: self.mockLocation
           },
           maxConcurrentPhantomPerWorker: 2
         }, function(err) {
@@ -117,7 +117,7 @@ describe("Testing Submission PDF Generation Queue", function() {
         submissionToPDF({
           submission: mockSubmission,
           options: {
-            location: mockLocation
+            location: self.mockLocation
           },
           maxConcurrentPhantomPerWorker: 2
         },  function(err) {
