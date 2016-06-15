@@ -1,6 +1,4 @@
 var assert = require('assert');
-var proxyquire = require('proxyquire');
-var Handlebars = require('handlebars');
 var _ = require('underscore');
 
 module.exports = {
@@ -9,47 +7,6 @@ module.exports = {
   },
   tearDown: function(done){
     done();
-  },
-  "Test Create Phantom Session": function(done){
-
-    var mocks = {
-      'phantom': {
-        create: function(params, cb) {
-          return cb({
-            fake: "phantom",
-            exit: function(){}
-          });
-        }
-      }
-    };
-
-    var _createPhantomSession = proxyquire('../../../lib/impl/pdfGeneration/renderPDF.js', mocks).createPhantomSession;
-
-    _createPhantomSession(function(err, createdPhantomSession){
-      assert.ok(!err, "Expected No Error " + err);
-      assert.equal(createdPhantomSession.fake, "phantom");
-
-      //Creating It again should return the same object
-      _createPhantomSession(function(err, shouldBeTheSameObject){
-        assert.ok(!err, "Expected No Error " + err);
-        assert.strictEqual(createdPhantomSession, shouldBeTheSameObject);
-
-        done();
-      });
-    });
-  },
-  "Test Load PDF Template": function(done){
-
-    var _loadPdfTemplate = require('../../../lib/impl/pdfGeneration/renderPDF.js').loadPdfTemplate;
-
-    _loadPdfTemplate({
-      location: "http://somehost.com"
-    }, function(err, formTemplate){
-      assert.ok(!err, "Expected No Error " + err);
-
-      assert.ok(_.isFunction(formTemplate), "Expected A Compiled Form Template");
-      done();
-    });
   },
   "Test Render PDF": function(done){
     var fileDetails = {
@@ -100,21 +57,25 @@ module.exports = {
       }
     };
 
-    var _renderPdf = require('../../../lib/impl/pdfGeneration/renderPDF.js').renderPdf;
+    var timestamp = Date.now();
+    var expectedFilePath = "/some/place/to/export/pdf/and/files/to/someformid_somesubmissionid_" + timestamp + ".pdf";
+
+    var _renderPdf = require('../../../lib/impl/pdfGeneration/renderSinglePDF');
 
 
     var fakePhantomSession = {
+      exit: function(){},
       createPage: function(cb){
         return cb({
-          set: function(param, params, cb){
+          set: function(param, params, cb) {
             return cb();
           },
-          setContent: function(html, param, cb){
+          setContent: function(html, param, cb) {
             assert.equal(html,"somehtml");
             cb("ok");
           },
-          render: function(filePath, cb){
-            assert.equal(filePath, "/some/place/to/export/pdf/and/files/to/someformid_somesubmissionid.pdf");
+          render: function(filePath, cb) {
+            assert.equal(filePath, expectedFilePath);
             return cb();
           },
           close: function(){}
@@ -122,7 +83,7 @@ module.exports = {
       }
     };
 
-    var fakeTemplate = function(templateParams){
+    var fakeTemplate = function(templateParams) {
       assert.ok(templateParams.subexport, "Expected A Submission To Export");
       assert.ok(templateParams.form, "Expected A Form To Export");
       assert.equal(templateParams.location, "http://location.for.pdf.com");
@@ -134,11 +95,12 @@ module.exports = {
       session: fakePhantomSession,
       form: testSubmission.formSubmittedAgainst,
       submission: testSubmission,
+      generationTimestamp: timestamp,
       location: "https://location.for.pdf.com",
       pdfExportDir: "/some/place/to/export/pdf/and/files/to"
-    }, function(err, renderedPDFFilePath){
+    }, function(err, renderedPDFFilePath) {
       assert.ok(!err, "Expectd No Error " + err);
-      assert.equal(renderedPDFFilePath, "/some/place/to/export/pdf/and/files/to/someformid_somesubmissionid.pdf");
+      assert.equal(expectedFilePath, renderedPDFFilePath);
 
       done();
     });
