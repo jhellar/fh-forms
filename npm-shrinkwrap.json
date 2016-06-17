@@ -184,7 +184,7 @@
     "fh-gridfs": {
       "version": "1.0.2",
       "from": "fh-gridfs@1.0.2",
-      "resolved": "fh-gridfs-1.0.2.tar.gz",
+      "resolved": "https://registry.npmjs.org/fh-gridfs/-/fh-gridfs-1.0.2.tgz",
       "dependencies": {
         "archiver": {
           "version": "0.4.9",
