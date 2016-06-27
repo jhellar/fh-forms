@@ -1,18 +1,20 @@
-var proxyquire =  require('proxyquire').noCallThru(),
+var proxyquire = require('proxyquire').noCallThru(),
   application, ditchMock, authMock;
 
 var bunyan = require('bunyan');
 var bunyanLogger = bunyan.createLogger({
   name: 'fh-forms',
-  streams:[ {
-    level: 'trace',
+  streams: [{
+    level: 'error',
     stream: process.stdout,
     src: true
-  } ]
+  }]
 });
 
 var logger = require('../lib/common/logger');
 logger.setLogger(bunyanLogger);
+
+var log = logger.getLogger();
 
 var testAppFormsDb = "testAppFormsDb";
 var DB = require('mongodb').Db;
@@ -23,7 +25,7 @@ var assert = require('assert');
 var testsConfig = {
   "dbUser": "appformsuser",
   "dbPassword": "appformspass",
-  "dbAddress" : "localhost",
+  "dbAddress": "localhost",
   "dbPort": 27017,
   "dbForTests": "testAppFormsDb"
 };
@@ -127,7 +129,7 @@ var fieldLocationPhoto = {
   "label": "Photo Field",
   "helpText": "This is Photo Field 1.",
   "type": "photo",
-  "options": [{"key": "convertWidth", "val": "200"}, {"key" : "convertHeight", "val": "200"}], // Only one can be selected at a time. Part of validation. Has to have at least one entry.
+  "options": [{"key": "convertWidth", "val": "200"}, {"key": "convertHeight", "val": "200"}], // Only one can be selected at a time. Part of validation. Has to have at least one entry.
   "required": false
 };
 
@@ -136,7 +138,7 @@ var fieldLocationSignature = {
   "label": "Signature Field",
   "helpText": "This is Signature Field 1.",
   "type": "signature",
-  "options": [{"key": "convertWidth", "val": "200"}, {"key" : "convertHeight", "val": "200"}], // Only one can be selected at a time. Part of validation. Has to have at least one entry.
+  "options": [{"key": "convertWidth", "val": "200"}, {"key": "convertHeight", "val": "200"}], // Only one can be selected at a time. Part of validation. Has to have at least one entry.
   "required": false
 };
 
@@ -181,7 +183,10 @@ var fieldSectionBreak = {
   "label": "SectionBreak Field",
   "helpText": "This is SectionBreak Field 1.",
   "type": "sectionBreak",
-  "options": [{"key": "sectionTitle", "val": "Some Section Title"}, {"key": "sectionDescription", "val": "I am a section."}], // Only one can be selected at a time. Part of validation. Has to have at least one entry.
+  "options": [{"key": "sectionTitle", "val": "Some Section Title"}, {
+    "key": "sectionDescription",
+    "val": "I am a section."
+  }], // Only one can be selected at a time. Part of validation. Has to have at least one entry.
   "required": false
 };
 
@@ -189,16 +194,16 @@ var fieldSectionBreak = {
 ///////////////////////// PAGES//////////////////////
 
 var pageTest1 = {
-  "_id" : "page1ID123456789",
-  "name" : "The First Page",
-  "description" : "The First Page Description.",
+  "_id": "page1ID123456789",
+  "name": "The First Page",
+  "description": "The First Page Description.",
   "fields": ["123456789", "123456788", "123456787"]
 }
 
 var pageTest2 = {
-  "_id" : "page2ID123456788",
-  "name" : "The Second Page",
-  "description" : "The Second Page Description.",
+  "_id": "page2ID123456788",
+  "name": "The Second Page",
+  "description": "The Second Page Description.",
   "fields": ["123456786", "123456785", "123456784"]
 }
 
@@ -206,9 +211,9 @@ var pageTest2 = {
 //////////////////////FORMS ///////////////////////////
 
 
-exports.setUp = function(finish){
+exports.setUp = function (finish) {
 
-  initDatabase(assert, function(err){
+  initDatabase(assert, function (err) {
     assert.ok(!err);
 
     finish();
@@ -216,25 +221,25 @@ exports.setUp = function(finish){
 
 }
 
-exports.tearDown = function(finish){
-  cleanDatabase(assert, function(err){
-    if(err) console.log(err);
+exports.tearDown = function (finish) {
+  cleanDatabase(assert, function (err) {
+    if (err) console.log(err);
     finish();
   });
 }
 
-function cleanDatabase(assert, cb){
+function cleanDatabase(assert, cb) {
   var db = new DB(testAppFormsDb, new Server(testsConfig.dbAddress, testsConfig.dbPort), {"w": 1, j: false});
 
-  db.open(function(err, db){
-   assert.ok(!err);
+  db.open(function (err, db) {
+    assert.ok(!err);
     assert.ok(db);
 
-    db.authenticate("admin", "admin", {"authSource": "admin"}, function(err, ok){
-     assert.ok(!err);
+    db.authenticate("admin", "admin", {"authSource": "admin"}, function (err, ok) {
+      assert.ok(!err);
 
-      db.dropDatabase(function(err, ok){
-       assert.ok(!err);
+      db.dropDatabase(function (err, ok) {
+        assert.ok(!err);
 
         db.close(cb);
       });
@@ -242,30 +247,47 @@ function cleanDatabase(assert, cb){
   });
 }
 
-function setUpDatabase(assert, cb){
+function setUpDatabase(assert, callback) {
+  log.debug("setUpDatabase");
   var db = new DB(testAppFormsDb, new Server(testsConfig.dbAddress, testsConfig.dbPort), {"w": 1, j: false});
 
-  db.open(function(err, db){
-   assert.ok(!err);
+  async.waterfall([
+    function(cb){
+      db.open(cb);
+    },
+    function (db, cb) {
+      log.debug("setUpDatabase authenticating");
+      db.authenticate("admin", "admin", {"authSource": "admin"}, function (err, ok) {
+        assert.ok(!err);
+        log.debug("ok", ok);
 
-    db.authenticate("admin", "admin", {"authSource": "admin"}, function(err, ok){
-     assert.ok(!err);
+        cb(err, db);
+      });
+    },
+    function (db, cb) {
+      db.removeUser(testsConfig.dbUser, function (err) {
+        assert.ok(!err, err);
 
-      db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {}, function(err, ok){
-       assert.ok(!err);
+        cb(err, db);
+      });
+    },
+    function (db, cb) {
+      db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {}, function (err, ok) {
+        log.debug("User Add", ok);
+        assert.ok(!err, err);
 
         db.close(cb);
       });
-    });
-  });
+    }
+  ], callback);
 }
 
-function initDatabase(assert, cb){
-  cleanDatabase(assert, function(err){
-   assert.ok(!err);
+function initDatabase(assert, cb) {
+  cleanDatabase(assert, function (err) {
+    assert.ok(!err);
 
-    setUpDatabase(assert, function(err){
-     assert.ok(!err);
+    setUpDatabase(assert, function (err) {
+      assert.ok(!err);
 
       return cb(err);
     });

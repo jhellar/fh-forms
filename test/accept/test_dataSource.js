@@ -86,7 +86,10 @@ function verifyDataSourceJSON(expected, actual){
   assert.ok(expected, "verifyDataSourceJSON: expected object required");
   assert.ok(actual, "verifyDataSourceJSON: actual object required");
 
-  logger.debug("verifyDataSourceJSON ", expected, actual);
+  logger.debug("verifyDataSourceJSON", {
+    expected: expected,
+    actual: actual
+  });
 
   assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated", "backOffIndex")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
@@ -733,7 +736,7 @@ module.exports = {
           expectedResult.error = {
             code: ERROR_CODES.FH_FORMS_INVALID_PARAMETERS,
             userDetail: "Invalid Data For Cache Update.",
-            systemDetail: "Validation failed"
+            systemDetail: "DataSource validation failed"
           };
 
           verifyDataSourceJSON(expectedResult, badUpdate);
