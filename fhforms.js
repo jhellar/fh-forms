@@ -11,6 +11,7 @@ module.exports.setLogger = function setFormsLogger(logger) {
 
   //fh-forms needs a logger.
   if (!logger) {
+    console.log("FH-FORMS: No Logger passed for setLogger.");
     return;
   }
 
