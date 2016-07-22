@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var clsMongoose = require('cls-mongoose');
+var clsMongoose = require('fh-cls-mongoose');
 var log = require('./lib/common/logger');
 var forms = require('./lib/forms.js');
 var formsMiddleware = require('./lib/middleware.js');
