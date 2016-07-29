@@ -1,18 +1,7 @@
 var proxyquire = require('proxyquire').noCallThru(),
-  application, ditchMock, authMock;
-
-var bunyan = require('bunyan');
-var bunyanLogger = bunyan.createLogger({
-  name: 'fh-forms',
-  streams: [{
-    level: 'error',
-    stream: process.stdout,
-    src: true
-  }]
-});
+  application;
 
 var logger = require('../lib/common/logger');
-logger.setLogger(bunyanLogger);
 
 var log = logger.getLogger();
 
@@ -272,7 +261,9 @@ function setUpDatabase(assert, callback) {
       });
     },
     function (db, cb) {
-      db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {}, function (err, ok) {
+      db.addUser(testsConfig.dbUser, testsConfig.dbPassword, {
+        roles: ['dbOwner']
+      }, function (err, ok) {
         log.debug("User Add", ok);
         assert.ok(!err, err);
 
