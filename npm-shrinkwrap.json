@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "dependencies": {
     "archiver": {
       "version": "0.14.3",
