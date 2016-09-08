@@ -2,8 +2,10 @@ var proxyquire = require('proxyquire');
 var assert = require('assert');
 var _ = require('underscore');
 var fakeForms = require('../../Fixtures/mockforms.js');
+var sinon = require('sinon');
 
 var fakeMongoString = "mongo://127.0.0.1:27017";
+var mockSubmissions = require('../../Fixtures/mockSubmissions');
 var mocks = {
   '../forms.js': fakeForms
 };
@@ -26,7 +28,6 @@ module.exports = {
 
     submissionsHandler.list(req, {}, function(err){
       assert.ok(!err, "Expected No Error");
-
       assert.ok(_.isArray(req.appformsResultPayload.data), "Expected An Array Of Submissions To Be Returned");
       done();
     });
@@ -166,6 +167,37 @@ module.exports = {
       assert.ok(!err, "Expected No Error");
 
       assert.ok(_.isArray(req.appformsResultPayload.data), "Expected A Submissions Array.");
+      done();
+    });
+  },
+  "It Should Filter on getSubmissions": function(done){
+    var req = {
+      connectionOptions: {
+        uri: fakeMongoString
+      },
+      params: {
+        projectid: mockSubmissions.complexSubmission1.appId
+      },
+      body: {
+        formId: "someSubmissionFormId",
+        subid: "someSubmissionId"
+      }
+    };
+    submissionsHandler.listProjectSubmissions(req, {}, function(err) {
+      assert.ok(!err, "Expected No Error");
+      sinon.assert.calledWith(fakeForms.getSubmissions,
+        sinon.match({
+          uri: sinon.match(fakeMongoString)
+        }),
+        sinon.match({
+          formId: req.body.formId,
+          subid: [sinon.match(req.body.subid)],
+          wantRestrictions: sinon.match.bool,
+          appId: sinon.match(mockSubmissions.complexSubmission1.appId)
+        }),
+        sinon.match.func
+      );
+      assert.equal(req.appformsResultPayload.data.submissions[0]._id, req.body.subid, "Expected same submission id");
       done();
     });
   }
