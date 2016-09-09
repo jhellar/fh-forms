@@ -1,5 +1,6 @@
 var assert = require('assert');
 var _ = require('underscore');
+var sinon = require('sinon');
 
 var dataSources = {
   "dataSource1234": {
@@ -15,7 +16,20 @@ var dataTargets = {
   }
 };
 
+var getSubmissionsStub = function() {
+  var stub = sinon.stub();
+  stub.yields(undefined, {
+    submissions: [{
+      _id: "someSubmissionId",
+      formId: "someSubmissionFormId"
+    }]
+  });
+  return stub;
+};
+
 module.exports = {
+  getSubmissions: getSubmissionsStub(),
+
   dataSources: {
     list: function (options, params, cb) {
       assert.ok(options.uri, "Expected A Mongo URI");
@@ -289,14 +303,7 @@ module.exports = {
       forms: ["someFormID"]
     }]);
   },
-  getSubmissions: function(options, params, cb){
-    assert.ok(options.uri, "Expected A Mongo URI");
 
-    return cb(undefined, {submissions: [{
-      _id: "someSubmissionId",
-      formId: "someSubmissionFormId"
-    }]});
-  },
   getSubmission: function(options, params, cb){
     assert.ok(options.uri, "Expected A Mongo URI");
     assert.ok(params._id, "Expected A Submission ID");
