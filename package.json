@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "1.9.6",
+  "version": "1.9.7",
   "description": "Cloud Forms API for form submission",
   "main": "fhforms.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "appforms"
   ],
   "author": "Feedhenry",
-  "license": "Copyright (c) 2014 FeedHenry Ltd, All Rights Reserved.",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/fheng/fh-forms/issues"
   },
