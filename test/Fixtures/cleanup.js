@@ -18,12 +18,6 @@ function cleanUp(cb) {
     dataSourceModel = models.get(connection, models.MODELNAMES.DATA_SOURCE);
     dataTargetModel = models.get(connection, models.MODELNAMES.DATA_TARGET);
 
-    //fieldRuleModel.remove,
-    //  pageRuleModel.remove,
-    //  dataTargetModel.remove,
-    //  dataSourceModel.remove,
-    //  fieldModel.remove
-
     async.parallel([
       function(cb){
         formModel.remove({}, cb);

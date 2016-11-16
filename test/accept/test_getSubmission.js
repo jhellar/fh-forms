@@ -46,7 +46,6 @@ var testSubmitFormBaseInfo = {
 };
 
 module.exports.testGetSubmission = function(finish){
-// forms.getSubmission({"uri": mongoUrl}, {"_id" : req.params.submissionId, function(err, results){
 
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -60,7 +59,6 @@ module.exports.testGetSubmission = function(finish){
 };
 
 module.exports.testGetSubmissionsAndCheckFields = function(finish){
-// forms.getSubmission({"uri": mongoUrl}, {"_id" : req.params.submissionId, function(err, results){
 
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, result){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -76,7 +74,6 @@ module.exports.testGetSubmissionsAndCheckFields = function(finish){
 };
 
 module.exports.testGetInvalidSubmission = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmission(options, {_id: TEST_UNUSED_FORMID}, function (err, results){
     assert.ok(err, "should have returned error: " + util.inspect(err));

@@ -266,9 +266,6 @@ module.exports.it_should_validate_groups = function(finish) {
         return cb();
       });
     },
-    // function (cb) {
-
-    // },
   ], function(err){
     assert.ok(!err, "received error: " + util.inspect(err));
     finish();

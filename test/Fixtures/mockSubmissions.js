@@ -9,7 +9,7 @@ var complexSubmission1 = {
   "deviceId": "3C5ECCB9-3ABE-4DEC-AD7E-35B11454F366",
   "formId": "53a44886d55d83f96dad6ca8",
   "formSubmittedAgainst": {
-    "updatedBy": "niall.donnelly@feedhenry.com",
+    "updatedBy": "test@example.com",
     "name": "Technical Inspection Notification",
     "description": "",
     "_id": "53a44886d55d83f96dad6ca8",
@@ -598,7 +598,7 @@ var complexSubmissionOrder = {
     "_id": "53a44886d55d83f96dad6ca8",
     "description": "",
     "name": "Technical Inspection Notification",
-    "updatedBy": "mj.ocarroll@feedhenry.com",
+    "updatedBy": "test@example.com",
     "subscribers": [],
     "pageRules": [],
     "fieldRules": [{
