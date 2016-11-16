@@ -215,7 +215,7 @@ var TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2 = {
 };
 
 /**
- * END ADMIN Form Testing deinition
+ * END ADMIN Form Testing definition
  */
 
 var TEST_BASIC_FORM_1_DEFINITION = {
@@ -2387,7 +2387,6 @@ module.exports.testBasicFormCheckRulesFieldSetToShowInRule = function (finish) {
   TEST_FORM_WITH_A_RULE_SET_TO_SHOW_A_FIELD.fieldRules.push(NEW_RULE);
 
   var engine = formsRulesEngine(TEST_FORM_WITH_A_RULE_SET_TO_SHOW_A_FIELD);
-  //engine.initSubmission(TEST_BASIC_FORM_1_SUBMISSION_1);
 
   var TEST_SUBMISSION_WITH_SHOW_FIELD = JSON.parse(JSON.stringify(TEST_BASIC_FORM_1_SUBMISSION_1));
   TEST_SUBMISSION_WITH_SHOW_FIELD.formFields[1].fieldValues[0] = "show 4";   //  This should trigger rule that causes fields 4 to be shown

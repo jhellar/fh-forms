@@ -13,7 +13,7 @@ describe('Data Source Update Interval', function(){
     mockDataSource.cache = [];
 
     var filteredResults = checkUpdateInterval([mockDataSource], now);
-    //This data source should be schedudled for update
+    //This data source should be scheduled for update
     assert.equal(mockDataSource, filteredResults[0]);
     done();
   });
@@ -33,7 +33,7 @@ describe('Data Source Update Interval', function(){
     }];
 
     var filteredResults = checkUpdateInterval([mockDataSource], now);
-    //This data source should be schedudled for update
+    //This data source should be scheduled for update
     assert.equal(mockDataSource, filteredResults[0]);
     done();
   });
@@ -106,7 +106,7 @@ describe('Data Source Update Interval', function(){
     });
 
     it('Scheduled BEFORE 5 mins after update.', function(done){
-      //Update was a minute ago so it should not be secheduled for update 14 mins 59 seconds from the last update.
+      //Update was a minute ago so it should not be scheduled for update 14 mins 59 seconds from the last update.
       var before15MinsAfterUpdate = (now + (4 * 60000)) - 1;
       var filteredResults = checkUpdateInterval([mockDataSource], before15MinsAfterUpdate);
       //This data source should not be scheduled for update
@@ -124,7 +124,7 @@ describe('Data Source Update Interval', function(){
     });
 
     it('Scheduled AFTER 5 mins after update.', function(done){
-      //Update was a minute ago so it should  be secheduled for update after 15 mins after the last update.
+      //Update was a minute ago so it should  be scheduled for update after 15 mins after the last update.
       var after15MinsAfterUpdate = (now + (4 * 60000)) + 1;
       var filteredResults = checkUpdateInterval([mockDataSource], after15MinsAfterUpdate);
       //This data source should not be scheduled for update

@@ -4,10 +4,10 @@ var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
 
 var testForm = {
    "_id":"56c43c1d68aac0fc6f90b745",
-   "createdBy":"testing-admin@example.com",
+   "createdBy":"test@example.com",
    "description":"Blank form with no fields",
    "name":"testform2",
-   "updatedBy":"testing-admin@example.com",
+   "updatedBy":"test@example.com",
    "pageRules":[
       {
          "type":"skip",
@@ -157,7 +157,7 @@ describe('Rules Engine Hidden Page With Required Fields', function(){
 
     var engine = formsRulesEngine(testForm);
     engine.validateForm(submission, function (err, result) {
-      assert.ok(result.validation.valid, "Epected The Submisison To Be Valid " + JSON.stringify(result));
+      assert.ok(result.validation.valid, "Expected The Submission To Be Valid " + JSON.stringify(result));
       done();
     });
   });

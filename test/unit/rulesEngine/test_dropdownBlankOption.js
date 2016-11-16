@@ -112,7 +112,7 @@ describe("Dropdown Field", function() {
     var engine = formsRulesEngine(mockForm);
     engine.validateForm(mockSubmission, function(err, result) {
       assert.ok(!err, "Expected no error ");
-      assert.ok(result.validation.valid, "Epected The Submisison To Be Valid " + JSON.stringify(result));
+      assert.ok(result.validation.valid, "Expected The Submission To Be Valid " + JSON.stringify(result));
       done();
     });
   });
@@ -132,7 +132,7 @@ describe("Dropdown Field", function() {
     var engine = formsRulesEngine(mockForm);
     engine.validateForm(mockSubmission, function(err, result) {
       assert.ok(!err, "Expected no error ");
-      assert.ok(!result.validation.valid, "Epected The Submisison To Be Invalid " + JSON.stringify(result));
+      assert.ok(!result.validation.valid, "Expected The Submission To Be Invalid " + JSON.stringify(result));
       done();
     });
   });
@@ -156,7 +156,7 @@ describe("Dropdown Field", function() {
 
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
-        assert.ok(result.validation.valid, "Epected The Submisison To Be Valid " + JSON.stringify(result));
+        assert.ok(result.validation.valid, "Expected The Submission To Be Valid " + JSON.stringify(result));
         done();
       });
     });
@@ -175,7 +175,7 @@ describe("Dropdown Field", function() {
       var engine = formsRulesEngine(mockForm);
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
-        assert.ok(result.validation.valid, "Epected The Submisison To Be Valid " + JSON.stringify(result));
+        assert.ok(result.validation.valid, "Expected The Submission To Be Valid " + JSON.stringify(result));
         done();
       });
     });
@@ -190,7 +190,7 @@ describe("Dropdown Field", function() {
       var engine = formsRulesEngine(mockForm);
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
-        assert.ok(result.validation.valid, "Epected The Submisison To Be Valid " + JSON.stringify(result));
+        assert.ok(result.validation.valid, "Expected The Submission To Be Valid " + JSON.stringify(result));
         done();
       });
     });
@@ -211,7 +211,7 @@ describe("Dropdown Field", function() {
       var engine = formsRulesEngine(mockForm);
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
-        assert.ok(!result.validation.valid, "Epected The Submisison To Be Invalid " + JSON.stringify(result));
+        assert.ok(!result.validation.valid, "Expected The Submission To Be Invalid " + JSON.stringify(result));
         done();
       });
     });
@@ -230,7 +230,7 @@ describe("Dropdown Field", function() {
       var engine = formsRulesEngine(mockForm);
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
-        assert.ok(!result.validation.valid, "Epected The Submisison To Be Invalid " + JSON.stringify(result));
+        assert.ok(!result.validation.valid, "Expected The Submission To Be Invalid " + JSON.stringify(result));
         done();
       });
     });
