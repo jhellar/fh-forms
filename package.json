@@ -34,7 +34,7 @@
     "moment": "2.14.1",
     "mongodb": "2.1.18",
     "mongoose": "4.5.0",
-    "mongoose-paginate": "4.2.0",
+    "mongoose-paginate": "5.0.3",
     "phantom": "fheng/phantomjs-node#514c855834",
     "request": "2.74.0",
     "underscore": "1.8.0",
