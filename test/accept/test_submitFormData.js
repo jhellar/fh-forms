@@ -1172,9 +1172,7 @@ function checkSubmissionExists(assert, submissionId, options, cb){
     //Now full comparison with the expected form submission definition.
     var expectedSubmissionJSON = options.expectedSubmissionJSON;
     expectedSubmissionJSON.status = "pending";//Status for these tests will always be pending
-
-    //assert.ok(lodash.isEqual(expectedSubmissionJSON, submissionJSON), "Expected " + JSON.stringify(expectedSubmissionJSON) + " but got " + JSON.stringify(submissionJSON));
-
+    
     connection.close(function(err){
       if(err) console.log("Mongoose Conn Err", err);
 

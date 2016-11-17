@@ -58,7 +58,6 @@ var testSubmitFormBaseInfo = {
 
 
 module.exports.testGetAllSubmissions = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -75,7 +74,6 @@ module.exports.testGetAllSubmissions = function(finish){
 };
 
 module.exports.testGetAllSubmissionsWithAppMap = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {appMap: TEST_APP_MAP}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -94,7 +92,6 @@ module.exports.testGetAllSubmissionsWithAppMap = function(finish){
 
 
 module.exports.testGetAllSubmissionsByApp = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -110,7 +107,6 @@ module.exports.testGetAllSubmissionsByApp = function(finish){
 };
 
 module.exports.testGetAllSubmissionsByForm = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -126,7 +122,6 @@ module.exports.testGetAllSubmissionsByForm = function(finish){
 };
 
 module.exports.testGetAllSubmissionsByFormObject = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : TEST_SUBMISSION_FORMID}, function(err, result){
     assert.ok(!err, "Unexpected Error When Getting A Form: ", err);
@@ -190,7 +185,6 @@ module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
 };
 
 module.exports.testGetAllSubmissionsForNonExistantForm = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -203,7 +197,6 @@ module.exports.testGetAllSubmissionsForNonExistantForm = function(finish){
 };
 
 module.exports.testGetAllSubmissionsForNonExistantApp = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -216,7 +209,6 @@ module.exports.testGetAllSubmissionsForNonExistantApp = function(finish){
 };
 
 module.exports.testGetAllSubmissionsForNonExistantFormAndApp = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID, appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -229,7 +221,6 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndApp = function(finish){
 };
 
 module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID, appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -242,7 +233,6 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(fi
 };
 
 module.exports.testGetSubmissionsArraySubids = function(finish){
-// forms.getSubmissions({"uri": mongoUrl}, {"appId" : req.params.appId, "formId": req.params.formId}, function(err, results){
 
   forms.getSubmissions(options, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -421,7 +411,7 @@ function submitData(assert, filesToSubmit, cb){
 }
 
 function submitFile(assert, placeholderText, filePath, cb){
-  // console.log("SUBMITFILE()");
+
   var testFileSubmission = {"submissionId" : submissionId, "fileId": placeholderText, "fieldId": globalFieldIds["fileField"], "fileStream" : filePath, "keepFile": true};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     if(err) console.log(err);
@@ -434,7 +424,6 @@ function submitFile(assert, placeholderText, filePath, cb){
 }
 
 function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
-  // console.log("CHECKPENDING()");
 
   forms.getSubmissionStatus({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"submissionId" : submissionId}}, function(err, result){
     if(err) console.log(err);
@@ -455,7 +444,6 @@ function checkPending(assert, expectedStatus, expectedPendingFiles, cb){
 }
 
 function completeSubmission(assert, cb){
-  // console.log("COMPLETESUBMISSION()");
 
   forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : {"submissionId" : submissionId}}, function(err){
     if(err) return cb(err);

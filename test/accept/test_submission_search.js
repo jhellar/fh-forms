@@ -393,8 +393,7 @@ module.exports.setUp = function(finish){
         });
      }
      console.log("CREATED SUBMISSION ", submission.formFields);
-//      finish();
-//
+
       async.series([
         async.apply(doSubmission,submission),
         async.apply(completeSubmission, assert)
