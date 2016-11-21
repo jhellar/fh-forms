@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "1.9.8",
+  "version": "1.10.8",
   "description": "Cloud Forms API for form submission",
   "main": "fhforms.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "url": "https://github.com/fheng/fh-forms/issues"
   },
   "dependencies": {
-    "archiver": "0.14.3",
+    "archiver": "1.2.0",
     "async": "0.2.9",
     "fh-cls-mongoose": "2.1.0",
     "fh-gridfs": "1.0.4",
