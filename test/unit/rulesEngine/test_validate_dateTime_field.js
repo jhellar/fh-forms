@@ -8,7 +8,7 @@ var getBaseSubmission = require('../../Fixtures/baseSubmission');
 
 
 /**
- * Small utilily function to test a single field in a submission
+ * Small utility function to test a single field in a submission
  *
  * @param fieldDef     Full JSON definition of the field
  * @param submission   A full submission JSON to test

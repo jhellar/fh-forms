@@ -453,7 +453,7 @@ var TEST_BASIC_FORM_2_SUBMISSION_1 = {
 };
 
 /**
- * START ADMIN Form Testing deinition
+ * START ADMIN Form Testing definition
  * @type {string}
  */
 
@@ -669,7 +669,7 @@ var TEST_BASIC_ADMIN_FORM_1_SUBMISSION_2 = {
 };
 
 /**
- * END ADMIN Form Testing deinition
+ * END ADMIN Form Testing definition
  */
 
 /**

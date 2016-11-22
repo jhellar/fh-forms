@@ -168,8 +168,8 @@ module.exports.testDatTimeConditions = function (finish) {
   var fieldValue = "2013/12/02 13:22:08";
   var beforeValue = "2013/12/02 13:22:09";
   var beforeYearValue = "2014/12/02 13:22:08";
-  var afterValue = "2013/12/02 13:22:07"
-  var afterYearValue = "2012/12/02 13:22:08"
+  var afterValue = "2013/12/02 13:22:07";
+  var afterYearValue = "2012/12/02 13:22:08";
 
   var testValues = [
     { condition: "is at", datetimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_DATETIME, value: fieldValue, expected: true },
@@ -216,8 +216,8 @@ module.exports.testDateOnlyConditions = function (finish) {
   var fieldValue = "2013/12/02 00:00:00";
   var beforeValue = "2013/12/03 13:22:09";
   var beforeYearValue = "2014/12/02 00:00:00";
-  var afterValue = "2013/12/01 00:00:00"
-  var afterYearValue = "2012/12/02 00:00:00"
+  var afterValue = "2013/12/01 00:00:00";
+  var afterYearValue = "2012/12/02 00:00:00";
 
   var testValues = [
     { condition: "is at", datetimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_DATEONLY, value: fieldValue, expected: true },
@@ -270,8 +270,8 @@ module.exports.testTimeOnlyConditions = function (finish) {
   var otherRepresentationOfFieldValue6 =  "12:0";
   var beforeValue = "12:00:01";
   var beforeYearValue = "23:59:59";
-  var afterValue = "11:59:59"
-  var afterYearValue = "00:00:01"
+  var afterValue = "11:59:59";
+  var afterYearValue = "00:00:01";
 
   var testValues = [
     { condition: "is at", datetimeUnit: FIELD_TYPE_DATETIME_DATETIMEUNIT_TIMEONLY, value: fieldValue, expected: true },

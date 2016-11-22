@@ -13,7 +13,7 @@ var mockSub = {
     "_id": "52fe126de542d21b7dc11101",
     "description": "",
     "name": "fh-forms_beta",
-    "updatedBy": "testing-admin@example.com",
+    "updatedBy": "test@example.com",
     "subscribers": [],
     "pageRules": [],
     "fieldRules": [],

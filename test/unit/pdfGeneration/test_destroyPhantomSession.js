@@ -8,7 +8,7 @@ describe('Destroy A Phantom Session', function() {
     done();
   });
 
-  it('It Should Destroy an exising session', function(done) {
+  it('It Should Destroy an existing session', function(done) {
 
     var exitSpy = sinon.spy();
 

@@ -1058,7 +1058,7 @@ module.exports.testFullThemeGeneration = function (finished) {
   var result = themeCSSGenerator(testJSON, styleStructure).generateThemeCSS();
 
   assert.ok(result);
-  assert.ok(result.generationResult.failed === false, "Expected generation to suceed, but it failed. " + util.inspect(result.generationResult));
+  assert.ok(result.generationResult.failed === false, "Expected generation to succeed, but it failed. " + util.inspect(result.generationResult));
 
   var resultCSS = result.generatedCSS;
   assert.ok(resultCSS);
