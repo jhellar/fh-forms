@@ -1,6 +1,6 @@
 {
   "name": "fh-forms",
-  "version": "1.10.9",
+  "version": "1.11.0",
   "description": "Cloud Forms API for form submission",
   "main": "fhforms.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "mongodb": "2.1.18",
     "mongoose": "4.5.0",
     "mongoose-paginate": "5.0.3",
-    "phantom": "fheng/phantomjs-node#514c855834",
+    "phantom": "2.1.21",
     "request": "2.74.0",
     "underscore": "1.8.0",
     "yauzl": "2.4.1"
