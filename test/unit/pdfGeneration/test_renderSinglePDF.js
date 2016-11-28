@@ -1,4 +1,6 @@
 var assert = require('assert');
+var sinon = require('sinon');
+var sinonAsPromised = require('sinon-as-promised');
 var _ = require('underscore');
 
 module.exports = {
@@ -62,25 +64,18 @@ module.exports = {
 
     var _renderPdf = require('../../../lib/impl/pdfGeneration/renderSinglePDF');
 
+    var setContentStub = sinon.stub();
+    setContentStub.withArgs(sinon.match("somehtml")).resolves("OK");
+    setContentStub.rejects("Expected 'somehtml' argument");
 
     var fakePhantomSession = {
-      exit: function(){},
-      createPage: function(cb){
-        return cb({
-          set: function(param, params, cb) {
-            return cb();
-          },
-          setContent: function(html, param, cb) {
-            assert.equal(html,"somehtml");
-            cb("ok");
-          },
-          render: function(filePath, cb) {
-            assert.equal(filePath, expectedFilePath);
-            return cb();
-          },
-          close: function(){}
-        });
-      }
+      exit: sinon.stub(),
+      createPage: sinon.stub().resolves({
+        property: sinon.stub().resolves(),
+        setContent: setContentStub,
+        render: sinon.stub().resolves(),
+        close: sinon.stub()
+      })
     };
 
     var fakeTemplate = function(templateParams) {
