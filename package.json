@@ -57,6 +57,7 @@
     "proxyquire": "^1.7.4",
     "recursive-readdir": "^2.0.0",
     "sinon": "^1.17.3",
+    "sinon-as-promised": "4.0.2",
     "turbo-test-runner": "0.3.3"
   },
   "engines": {
