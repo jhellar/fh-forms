@@ -20,6 +20,8 @@ node_modules
 cov-accept/
 plato/
 
+.vscode/
+
 client/
 cov-unit/
 output/
