@@ -1,0 +1,66 @@
+{
+  "name": "fh-forms",
+  "version": "1.11.0",
+  "description": "Cloud Forms API for form submission",
+  "main": "fhforms.js",
+  "scripts": {
+    "test": "grunt eslint fh-test",
+    "version": "sed -i.bak \"s/sonar.projectVersion=.*/sonar.projectVersion=${npm_package_version}/\" sonar-project.properties && rm sonar-project.properties.bak && git add sonar-project.properties"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/feedhenry/fh-forms.git"
+  },
+  "keywords": [
+    "appforms"
+  ],
+  "author": "Feedhenry",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/feedhenry/fh-forms/issues"
+  },
+  "dependencies": {
+    "archiver": "1.2.0",
+    "async": "0.2.9",
+    "fh-cls-mongoose": "2.1.0",
+    "fh-gridfs": "1.0.4",
+    "fh-logger": "0.5.0",
+    "fh-mbaas-client": "0.15.0",
+    "handlebars": "4.0.6",
+    "lodash": "2.2.1",
+    "mime": "1.2.11",
+    "mkdirp": "^0.5.1",
+    "mmmagic": "^0.4.1",
+    "moment": "2.14.1",
+    "mongodb": "2.1.18",
+    "mongoose": "4.5.0",
+    "mongoose-paginate": "5.0.3",
+    "phantom": "2.1.21",
+    "request": "2.74.0",
+    "underscore": "1.8.0",
+    "yauzl": "2.4.1"
+  },
+  "devDependencies": {
+    "bunyan": "^1.5.1",
+    "cli-color": "^1.1.0",
+    "eslint": "^2.7.0",
+    "grunt": "^1.0.1",
+    "grunt-browserify": "5.0.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-nodeunit": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-fh-build": "^1.0.1",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.2.5",
+    "nock": "^8.0.0",
+    "proxyquire": "^1.7.4",
+    "recursive-readdir": "^2.0.0",
+    "sinon": "^1.17.3",
+    "sinon-as-promised": "4.0.2",
+    "turbo-test-runner": "0.3.3"
+  },
+  "engines": {
+    "node": "4.4"
+  }
+}

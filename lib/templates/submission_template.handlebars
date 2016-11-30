@@ -1,0 +1,106 @@
+<div class="row-fluid submissionDetail {{#if editMode}}editMode{{/if}}">
+    <div class="span12">
+        <form class="" id="submissionForm">
+          {{#form}}
+            {{#each pages}}
+                <h5 class="pageheading">
+                    <i class="icon-file"></i> {{name}}
+                </h5>
+
+                <table class="table table-striped">
+                  {{#each fields}}
+                      <tr class="{{#createAdminFieldClass adminOnly}}{{/createAdminFieldClass}}">
+                          <td class="fieldlabel" style="text-align:left;">{{#createFormLabel type}}{{/createFormLabel}} {{#createFieldCode fieldCode}}{{/createFieldCode}} {{name}}:</td>
+
+                          <td class="formfield">
+                            {{#if ../../../editMode}}
+                              {{#createFormField this true}}{{/createFormField}}
+                            {{else}}
+                              {{#createFormField this false}}{{/createFormField}}
+                            {{/if}}
+                          </td>
+                      </tr>
+                    {{#is 'sectionBreak' type}}
+                        <div class="page-break"></div>
+                    {{/is}}
+                  {{/each}}
+                </table>
+            {{/each}}
+
+
+
+          {{/form}}
+        </form>
+        <!-- Note subexport is used by supercore for generating pdf -->
+      {{#if subexport}}
+        {{#subexport}}
+            <br/>
+            <h5 class="submissionheading"><i class="icon-info-sign"></i> Submission Information</h5>
+            <table class="table table-striped">
+
+                <tr >
+                    <td>Form Name:</td>
+                    <td>{{formName}}&nbsp;</td>
+                </tr>
+                <tr >
+                    <td>Form ID:</td>
+                    <td>{{formId}}&nbsp;</td>
+                </tr>
+                <tr >
+                    <td>Date/Time Received:</td>
+                    <td>{{timeLocalWithOffset submissionCompletedTimestamp}}&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Received From App:</td>
+                    <td>{{appCloudName}}&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Received From Device:</td>
+                    <td>{{deviceId}}&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Received From Ip:</td>
+                    <td>{{deviceIPAddress}}&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Edited:</td>
+                    <td>{{timeLocalWithOffset updatedTimestamp}}&nbsp;</td>
+
+                </tr>
+            </table>
+        {{/subexport}}
+      {{/if}}
+    </div>
+    <div class="span12">
+      {{#if sub}}
+        {{#sub}}
+            <h5 class="submissionheading"><i class="icon-info-sign"></i> Submission Information</h5>
+            <dl class="dl-horizontal">
+                <dt>Date/Time Received:</dt>
+                <dd>{{deviceFormTimestamp}}&nbsp;</dd>
+
+                <dt>Received From App:</dt>
+                <dd>{{appCloudName}}&nbsp;</dd>
+
+                <dt>Received From Device:</dt>
+                <dd>{{deviceId}}&nbsp;</dd>
+
+                <dt>Received From Ip:</dt>
+                <dd>{{deviceIPAddress}}&nbsp;</dd>
+
+                <dt>Edited:</dt>
+                <dd>{{updatedTimestamp}}&nbsp;</dd>
+
+            </dl>
+        {{/sub}}
+      {{/if}}
+    </div>
+  {{#if controls}}
+      <div class="span12 submission-buttons" style="padding:8px;">
+        {{#if editMode}}
+            <button class="btn btn-large btn-primary" id="cancelEdit" data-subid="{{_id}}" type="button">Cancel</button>
+            <button class="btn btn-large btn-danger" id="updateSubmission" data-subid="{{_id}}" type="button">Update Submission</button>
+        {{/if}}
+      </div>
+  {{/if}}
+</div>
