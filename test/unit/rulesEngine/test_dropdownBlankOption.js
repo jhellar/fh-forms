@@ -8,7 +8,7 @@ var formsRulesEngine = require('../../../lib/common/forms-rule-engine.js');
  * @param  {boolean} include_blank_option Expecting whether the blank option should available or not
  * @return {object}                      Full form JSON definition
  */
-function getMockDropdownForm(include_blank_option) {
+function getMockDropdownForm(include_blank_option, required) {
   return {
     "_id": "57287eb49b71a8c37fda4849",
     "name": "Test Dropdown Form",
@@ -17,7 +17,7 @@ function getMockDropdownForm(include_blank_option) {
     "pages": [{
       "_id": "57287eb49b71a8c37fda4848",
       "fields": [{
-        "required": true,
+        "required": required,
         "type": "dropdown",
         "name": "Dropdown",
         "fieldCode": null,
@@ -140,7 +140,7 @@ describe("Dropdown Field", function() {
 
   describe('Blank Option', function() {
 
-    it("Blank Option Enabled: Supplying an empty string is valid", function(done) {
+    it("Blank Option Enabled: Supplying an empty string is not valid for a required field", function(done) {
       var formFields = [
         {
           fieldId: dropdownFieldId,
@@ -150,7 +150,28 @@ describe("Dropdown Field", function() {
         }
       ];
 
-      var mockForm = getMockDropdownForm(true);
+      var mockForm = getMockDropdownForm(true, true);
+      var mockSubmission = getMockSubmission(formFields);
+      var engine = formsRulesEngine(mockForm);
+
+      engine.validateForm(mockSubmission, function(err, result) {
+        assert.ok(!err, "Expected no error ");
+        assert.ok(!result.validation.valid, "Expected The Submission To Be Invalid " + JSON.stringify(result));
+        done();
+      });
+    });
+
+    it("Blank Option Enabled: Supplying an empty string is valid for a non-required field", function(done) {
+      var formFields = [
+        {
+          fieldId: dropdownFieldId,
+          fieldValues:[
+            ""
+          ]
+        }
+      ];
+
+      var mockForm = getMockDropdownForm(true, false);
       var mockSubmission = getMockSubmission(formFields);
       var engine = formsRulesEngine(mockForm);
 
@@ -161,7 +182,7 @@ describe("Dropdown Field", function() {
       });
     });
 
-    it("Blank Option Enabled: Supplying no value is valid", function(done) {
+    it("Blank Option Enabled: Supplying no value is not valid for a required field", function(done) {
       var formFields = [
         {
           fieldId: dropdownFieldId,
@@ -169,22 +190,37 @@ describe("Dropdown Field", function() {
         }
       ];
 
-      var mockForm = getMockDropdownForm(true);
+      var mockForm = getMockDropdownForm(true, true);
       var mockSubmission = getMockSubmission(formFields);
 
       var engine = formsRulesEngine(mockForm);
       engine.validateForm(mockSubmission, function(err, result) {
         assert.ok(!err, "Expected no error ");
-        assert.ok(result.validation.valid, "Expected The Submission To Be Valid " + JSON.stringify(result));
+        assert.ok(!result.validation.valid, "Expected The Submission To Be Invalid " + JSON.stringify(result));
         done();
       });
     });
 
-    it("Blank Option Enabled: Supplying no field is valid", function(done) {
+    it("Blank Option Enabled: Supplying no field is not valid for a required field", function(done) {
       var formFields = [
       ];
 
-      var mockForm = getMockDropdownForm(true);
+      var mockForm = getMockDropdownForm(true, true);
+      var mockSubmission = getMockSubmission(formFields);
+
+      var engine = formsRulesEngine(mockForm);
+      engine.validateForm(mockSubmission, function(err, result) {
+        assert.ok(!err, "Expected no error ");
+        assert.ok(!result.validation.valid, "Expected The Submission To Be Invalid " + JSON.stringify(result));
+        done();
+      });
+    });
+
+    it("Blank Option Enabled: Supplying no field is valid for a non-required field", function(done) {
+      var formFields = [
+      ];
+
+      var mockForm = getMockDropdownForm(true, false);
       var mockSubmission = getMockSubmission(formFields);
 
       var engine = formsRulesEngine(mockForm);
@@ -205,7 +241,7 @@ describe("Dropdown Field", function() {
         }
       ];
 
-      var mockForm = getMockDropdownForm(false);
+      var mockForm = getMockDropdownForm(false, true);
       var mockSubmission = getMockSubmission(formFields);
 
       var engine = formsRulesEngine(mockForm);
@@ -224,7 +260,7 @@ describe("Dropdown Field", function() {
         }
       ];
 
-      var mockForm = getMockDropdownForm(false);
+      var mockForm = getMockDropdownForm(false, true);
       var mockSubmission = getMockSubmission(formFields);
 
       var engine = formsRulesEngine(mockForm);
