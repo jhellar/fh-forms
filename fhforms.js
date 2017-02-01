@@ -20,7 +20,10 @@ module.exports.init = function setFormsLogger(logger) {
   }
 
   //Want the logger to be set before doing any requires as there are logger.getLogger statements at the top.
+  module.exports.setupSharedMongoConnections = require('./lib/shared-mongo-connections');
   module.exports.core = require('./lib/forms.js');
   module.exports.middleware = require('./lib/middleware.js');
 };
 module.exports.CONSTANTS = require('./lib/common/constants');
+
+
