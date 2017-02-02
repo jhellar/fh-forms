@@ -21,12 +21,11 @@ var underTest = proxyquire('../../lib/shared-mongo-connections', {
 exports.testGetSharedMongodb = function(done) {
   var mongoString = "mongo://test.example.me/test";
   var config = {
-    mongo: {
-      admin_auth: {
-        user: 'test',
-        pass: 'test'
-      }
-    }
+    auth : {
+      user: 'test',
+      pass: 'test'
+    },
+    poolSize: 10
   };
   var mongoConnection = "mongoConnection";
   var mongooseConnection = "mongooseConnection";
