@@ -23,7 +23,8 @@
           },
           "name": "Section Break 1",
           "type": "sectionBreak",
-          "repeating": true
+          "repeating": true,
+          "required": true
         },
         {
           "_id": "numberfield1",
