@@ -10,7 +10,7 @@ var _ = require('underscore');
 var themeData = require('../Fixtures/theme.json');
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -18,14 +18,14 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();
   });
 };
 
-module.exports.testCloneTheme = function(finish){
+module.exports.test.testCloneTheme = function(finish){
   var testTheme = _.clone(themeData);
 
   var testOptions = _.clone(options);

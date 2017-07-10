@@ -55,9 +55,9 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
+module.exports.test = {};
 
-
-module.exports.testGetAllSubmissions = function(finish){
+module.exports.test.testGetAllSubmissions = function(finish){
 
   forms.getSubmissions(options, {}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -73,7 +73,7 @@ module.exports.testGetAllSubmissions = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsWithAppMap = function(finish){
+module.exports.test.testGetAllSubmissionsWithAppMap = function(finish){
 
   forms.getSubmissions(options, {appMap: TEST_APP_MAP}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -91,7 +91,7 @@ module.exports.testGetAllSubmissionsWithAppMap = function(finish){
 
 
 
-module.exports.testGetAllSubmissionsByApp = function(finish){
+module.exports.test.testGetAllSubmissionsByApp = function(finish){
 
   forms.getSubmissions(options, {appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -106,7 +106,7 @@ module.exports.testGetAllSubmissionsByApp = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsByForm = function(finish){
+module.exports.test.testGetAllSubmissionsByForm = function(finish){
 
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -121,7 +121,7 @@ module.exports.testGetAllSubmissionsByForm = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsByFormObject = function(finish){
+module.exports.test.testGetAllSubmissionsByFormObject = function(finish){
 
   forms.getForm({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id" : TEST_SUBMISSION_FORMID}, function(err, result){
     assert.ok(!err, "Unexpected Error When Getting A Form: ", err);
@@ -140,7 +140,7 @@ module.exports.testGetAllSubmissionsByFormObject = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
+module.exports.test.testGetAllSubmissionsByFormAndCheckFields = function(finish){
 
   forms.getSubmissions(options, {formId: TEST_SUBMISSION_FORMID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -184,7 +184,7 @@ module.exports.testGetAllSubmissionsByFormAndCheckFields = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsForNonExistantForm = function(finish){
+module.exports.test.testGetAllSubmissionsForNonExistantForm = function(finish){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -196,7 +196,7 @@ module.exports.testGetAllSubmissionsForNonExistantForm = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsForNonExistantApp = function(finish){
+module.exports.test.testGetAllSubmissionsForNonExistantApp = function(finish){
 
   forms.getSubmissions(options, {appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -208,7 +208,7 @@ module.exports.testGetAllSubmissionsForNonExistantApp = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsForNonExistantFormAndApp = function(finish){
+module.exports.test.testGetAllSubmissionsForNonExistantFormAndApp = function(finish){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID, appId: TEST_UNUSED_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -220,7 +220,7 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndApp = function(finish){
   });
 };
 
-module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(finish){
+module.exports.test.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(finish){
 
   forms.getSubmissions(options, {formId: TEST_UNUSED_FORMID, appId: TEST_SUBMISSION_APPID}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -232,7 +232,7 @@ module.exports.testGetAllSubmissionsForNonExistantFormAndGoodAppId = function(fi
   });
 };
 
-module.exports.testGetSubmissionsArraySubids = function(finish){
+module.exports.test.testGetSubmissionsArraySubids = function(finish){
 
   forms.getSubmissions(options, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
     assert.ok(!err); //, "should not have returned error: " + util.inspect(err));
@@ -245,7 +245,7 @@ module.exports.testGetSubmissionsArraySubids = function(finish){
 };
 
 //Testing that when a getSubmissions call is made, that the reduced payload is returned from the database.
-module.exports.testGetSubmissionsSmallPayload = function(finish){
+module.exports.test.testGetSubmissionsSmallPayload = function(finish){
   forms.getSubmissions(options, {subid: [TEST_SUBMISSION_ID]}, function (err, results){
     assert.ok(!err, "Expected No Error"); //, "should not have returned error: " + util.inspect(err));
     assert.ok(results, "Expected a result");  // should have returned results
@@ -261,7 +261,7 @@ module.exports.testGetSubmissionsSmallPayload = function(finish){
 };
 
 //Testing that when a getSubmissions call is made with the includeFullSubmission, that the full submission json response is returned from the database.
-module.exports.testGetSubmissionsIncludeFullSubmission = function(finish){
+module.exports.test.testGetSubmissionsIncludeFullSubmission = function(finish){
   var getSubmissionsOptions = _.extend({
     includeFullSubmission: true
   }, options);
@@ -279,7 +279,7 @@ module.exports.testGetSubmissionsIncludeFullSubmission = function(finish){
   });
 };
 
-module.exports.testGetSubmissionsPagination = function(finish){
+module.exports.test.testGetSubmissionsPagination = function(finish){
   function _getAndCheckSubmissionPages(page, limit, expectedCount, expectedPages, expectedTotal, cb){
     forms.getSubmissions(options, {paginate: {
       page: page,
@@ -352,7 +352,7 @@ function submitFullSubmission(cb){
   });
 }
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -371,7 +371,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();

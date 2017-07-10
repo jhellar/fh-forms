@@ -133,7 +133,7 @@ var TEST_PAGE1_NEW_FIELD = {
   "repeating":true
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -145,7 +145,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -171,7 +171,7 @@ function assertFormNamedFound(assert, name, msg, cb) {
   });
 }
 
-module.exports.testAddFormWithPagesWithFields = function(finish) {
+module.exports.test.testAddFormWithPagesWithFields = function(finish) {
   async.waterfall([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_2_PAGES_WITH_FIELDS.name, 'should not have found form - not added yet - found: '),
     function(cb) {

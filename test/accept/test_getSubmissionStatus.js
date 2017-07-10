@@ -37,7 +37,7 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -48,7 +48,7 @@ module.exports.setUp = function(finish){
   });
 }
 
-module.exports.testGetSubmissionStatusWorks = function(finish){
+module.exports.test.testGetSubmissionStatusWorks = function(finish){
 
   var  file1Details = {
     "fileName" : "test.pdf",
@@ -81,7 +81,7 @@ module.exports.testGetSubmissionStatusWorks = function(finish){
 }
 
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();

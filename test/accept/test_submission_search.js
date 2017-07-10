@@ -56,9 +56,9 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
+module.exports.test = {};
 
-
-module.exports.testSubmissionSearch = function(finish){
+module.exports.test.testSubmissionSearch = function(finish){
   forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[]}}, function (err, ok){
     assert.ok(! err, "no error should be returned for submission search " + util.inspect(err));
     finish();
@@ -81,7 +81,7 @@ function assertValueExists(subs, fieldId, value){
 
 }
 
-module.exports.testSubmissionSearchNumber = function (finish){
+module.exports.test.testSubmissionSearchNumber = function (finish){
   async.series([
     function testGreaterThan (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalNumberField,"restriction":"is greater than","value":99}]}}, function (err, ok){
@@ -134,7 +134,7 @@ module.exports.testSubmissionSearchNumber = function (finish){
 };
 
 
-module.exports.testSubmissionSearchMeta = function (finish){
+module.exports.test.testSubmissionSearchMeta = function (finish){
   async.series([
     function testSearchIpEquals (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[]},"queryMeta":{"clauses":[{"metaName": "deviceIPAddress",
@@ -187,7 +187,7 @@ module.exports.testSubmissionSearchMeta = function (finish){
 ], finish);
 };
 
-module.exports.testSubmissionSearchText = function (finish){
+module.exports.test.testSubmissionSearchText = function (finish){
   async.series(
    [
     function testEqualTo (callback){
@@ -255,7 +255,7 @@ module.exports.testSubmissionSearchText = function (finish){
   ,finish);
 };
 
-module.exports.testSubmissionSearchPaginate = function (finish) {
+module.exports.test.testSubmissionSearchPaginate = function (finish) {
 
   var query = {
     "formId": globalFormId,
@@ -324,7 +324,7 @@ module.exports.testSubmissionSearchPaginate = function (finish) {
   ], finish);
 };
 
-module.exports.testSubmissionSearchDate = function (finish){
+module.exports.test.testSubmissionSearchDate = function (finish){
   async.series([
     function testIsAt (callback){
       forms.submissionSearch({"uri": process.env.FH_DOMAIN_DB_CONN_URL},{"formId":globalFormId,"clauseOperator":"and","queryFields":{"clauses":[{"fieldId":globalDateField,"restriction":"is at","value":dateValue}]}}, function (err, ok){
@@ -363,7 +363,7 @@ module.exports.testSubmissionSearchDate = function (finish){
 };
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -405,7 +405,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();

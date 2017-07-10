@@ -14,7 +14,7 @@ var appId = "1234567892";
 var testThemeData = require('../Fixtures/theme.json');
 var testThemeId;
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err, util.inspect(err));
 
@@ -27,7 +27,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err, util.inspect(err));
     finish();
@@ -73,7 +73,7 @@ function setupTestGroups(userid, themeid, appid, cb) {
   });    
 }
 
-module.exports.testGetThemeWorksGroupRestrictions = function(finish){
+module.exports.test.testGetThemeWorksGroupRestrictions = function(finish){
   forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
@@ -156,7 +156,7 @@ module.exports.testGetThemeWorksGroupRestrictions = function(finish){
 };
 
 
-module.exports.testGetThemeWorks = function(finish){
+module.exports.test.testGetThemeWorks = function(finish){
   forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
@@ -167,7 +167,7 @@ module.exports.testGetThemeWorks = function(finish){
   });
 };
 
-module.exports.testGetThemeById = function(finish){
+module.exports.test.testGetThemeById = function(finish){
   assert.ok(testThemeId, "test no setup correctly - should have testThemeId: " + JSON.stringify(testThemeId));
   forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id": testThemeId}, function(err, result){
     assert.ok(!err, util.inspect(err));
@@ -179,14 +179,14 @@ module.exports.testGetThemeById = function(finish){
   });
 };
 
-module.exports.testGetThemeByIdNotExists = function(finish){
+module.exports.test.testGetThemeByIdNotExists = function(finish){
   forms.getTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "_id": '000000'}, function(err, result){
     assert.ok(err, 'Should have returned error');
     finish();
   });
 };
 
-module.exports.testGetThemeNoUri = function(finish){
+module.exports.test.testGetThemeNoUri = function(finish){
   forms.getTheme({}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
@@ -194,7 +194,7 @@ module.exports.testGetThemeNoUri = function(finish){
   });
 };
 
-module.exports.testGetThemeNoAppId = function(finish){
+module.exports.test.testGetThemeNoAppId = function(finish){
   forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
@@ -202,7 +202,7 @@ module.exports.testGetThemeNoAppId = function(finish){
   });
 };
 
-module.exports.testGetThemeNoAppExists = function(finish){
+module.exports.test.testGetThemeNoAppExists = function(finish){
   forms.getAppTheme({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(!result);

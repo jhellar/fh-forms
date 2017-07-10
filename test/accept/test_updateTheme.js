@@ -13,14 +13,14 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: 'foo@example
 var testThemeData = require('../Fixtures/theme.json');
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   connection = mongoose.createConnection(options.uri);
   models.init(connection);
   themeModel = models.get(connection, models.MODELNAMES.THEME);
   finish();
 }
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     forms.tearDownConnection(options, function(err) {
       assert.ok(!err);
@@ -29,7 +29,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.testCreateTheme = function(finish){
+module.exports.test.testCreateTheme = function(finish){
   forms.updateTheme(options, testThemeData, function(err, result){
     assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
     assert.ok(result);
@@ -52,7 +52,7 @@ function clearThemes(cb){
  * Test create theme with the same name.
  * @param finish
  */
-module.exports.testCreateThemeDuplicateName = function(finish){
+module.exports.test.testCreateThemeDuplicateName = function(finish){
   clearThemes(function(err){
     assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
@@ -81,7 +81,7 @@ module.exports.testCreateThemeDuplicateName = function(finish){
  * Test create theme with the same name but updating the same theme.
  * @param finish
  */
-module.exports.testCreateThemeDuplicateNameSameTheme = function(finish){
+module.exports.test.testCreateThemeDuplicateNameSameTheme = function(finish){
   clearThemes(function(err){
     assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
@@ -111,7 +111,7 @@ module.exports.testCreateThemeDuplicateNameSameTheme = function(finish){
   });
 };
 
-module.exports.testListTheme = function(finish) {
+module.exports.test.testListTheme = function(finish) {
   clearThemes(function(err){
     assert.ok(!err, "Unexpected error: " + util.inspect(err));
     forms.updateTheme(options, testThemeData, function(err, result){
@@ -129,7 +129,7 @@ module.exports.testListTheme = function(finish) {
   });
 };
 
-module.exports.testDeleteTheme = function(finish) {
+module.exports.test.testDeleteTheme = function(finish) {
   clearThemes(function(err){
     assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
@@ -147,7 +147,7 @@ module.exports.testDeleteTheme = function(finish) {
   });
 };
 
-module.exports.testGetTheme = function(finish) {
+module.exports.test.testGetTheme = function(finish) {
   clearThemes(function(err){
     assert.ok(!err, "Unexpected error: " + util.inspect(err));
 
@@ -166,7 +166,7 @@ module.exports.testGetTheme = function(finish) {
   });
 };
 
-module.exports.testUpdateTheme = function(finish){
+module.exports.test.testUpdateTheme = function(finish){
   var themeToUpdate = JSON.parse(JSON.stringify(testThemeData));  // clone it
   themeToUpdate.name = 'ThemeToUpdate';
 

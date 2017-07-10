@@ -79,7 +79,9 @@ var submission = {
   submissionCompletedTimestamp: new Date().toString()
 };
 
-module.exports.it_should_return_formatted_submission = function(finish) {
+module.exports.test = {};
+
+module.exports.test.it_should_return_formatted_submission = function(finish) {
   var formName = "test form name";
   var subscribers = "test1@example.com, tset2@example.com";
 

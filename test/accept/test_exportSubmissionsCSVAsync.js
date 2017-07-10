@@ -10,15 +10,15 @@ var util = require('util');
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
 
-module.exports = {
-  setUp: function(done) {
+module.exports.test = {
+  before: function(done) {
     initDatabase(assert, function(err) {
       assert.ok(!err, util.inspect(err));
 
       done();
     });
   },
-  tearDown: function(done) {
+  after: function(done) {
     forms.tearDownConnection(options, function(err) {
       assert.ok(!err, util.inspect(err));
       done();

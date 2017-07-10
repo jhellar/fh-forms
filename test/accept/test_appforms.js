@@ -31,7 +31,7 @@ var TEST_FORM_2 = {
     "pageRules": []
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -44,7 +44,7 @@ console.log('finishing appforms setUp');
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -63,7 +63,7 @@ function assertFormNamedNotFound(assert, name, msg, cb) {
   });
 }
 
-module.exports.it_should_save_app_forms = function(finish) {
+module.exports.test.it_should_save_app_forms = function(finish) {
 
   async.waterfall([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_1.name, 'should not have found form - not added yet - found: '),

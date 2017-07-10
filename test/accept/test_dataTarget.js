@@ -23,8 +23,8 @@ function verifyDataTargetJSON(expected, actual){
   assert.ok(_.isEqual(expected, _.omit(actual, "lastUpdated", "dateCreated")), "Expected objects to be equal. Expected: " + util.inspect(expected) + " Actual: " + util.inspect(_.omit(actual, "lastUpdated", "dateCreated")));
 }
 
-module.exports = {
-  "setUp": function(done){
+module.exports.test = {
+  "before": function(done){
     initDatabase(assert, function(err) {
       assert.ok(!err, "Unexpected Error " + util.inspect(err));
       connection = mongoose.createConnection(options.uri);
@@ -34,7 +34,7 @@ module.exports = {
       done();
     });
   },
-  "tearDown": function(done){
+  "after": function(done){
     //Remove Any Existing Data Targets
     DataTarget.remove({}, function(err){
       assert.ok(!err, "Unexpected Error " + util.inspect(err));
