@@ -190,7 +190,7 @@ var TEST_PAGE1_NEW_FIELD = {
 };
 
 
-module.exports.setUp = function (finish) {
+module.exports.test = {}; module.exports.test.before = function (finish) {
   initDatabase(assert, function (err) {
     assert.ok(!err);
     connection = mongoose.createConnection(process.env.FH_DOMAIN_DB_CONN_URL);
@@ -205,7 +205,7 @@ module.exports.setUp = function (finish) {
   });
 };
 
-module.exports.tearDown = function (finish) {
+module.exports.test.after = function (finish) {
   connection.close(function (err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -231,7 +231,7 @@ function assertFormNamedFound(assert, name, msg, cb) {
   });
 }
 
-module.exports.testUpdateFormWithPagesWithFields = function (finish) {
+module.exports.test.testUpdateFormWithPagesWithFields = function (finish) {
   var saveDeletedFieldId;
   async.waterfall([
     function (cb) {
@@ -335,7 +335,7 @@ module.exports.testUpdateFormWithPagesWithFields = function (finish) {
 };
 
 //When deleting fields, any page/field rules associated with the field should also be deleted.
-module.exports.testUpdateFormDeleteField = function (finish) {
+module.exports.test.testUpdateFormDeleteField = function (finish) {
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -515,7 +515,7 @@ module.exports.testUpdateFormDeleteField = function (finish) {
  * Updating a field code "fieldCode" should save the code to the database.
  * @param finish
  */
-module.exports.testUpdateFieldCode = function(finish){
+module.exports.test.testUpdateFieldCode = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -576,7 +576,7 @@ module.exports.testUpdateFieldCode = function(finish){
  * Updating a field code "fieldCode" with an empty string should not save the code as an empty string
  * @param finish
  */
-module.exports.testUpdateFieldCodeZeroLength = function(finish){
+module.exports.test.testUpdateFieldCodeZeroLength = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -638,7 +638,7 @@ module.exports.testUpdateFieldCodeZeroLength = function(finish){
  * Updating a field code "fieldCode" with a duplicate code should return an error
  * @param finish
  */
-module.exports.testUpdateFieldCodeDuplicate = function(finish){
+module.exports.test.testUpdateFieldCodeDuplicate = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -699,7 +699,7 @@ module.exports.testUpdateFieldCodeDuplicate = function(finish){
 *
 * @param finish
 */
-module.exports.updateFormWithMulitpleRuleTargets = function(finish){
+module.exports.test.updateFormWithMulitpleRuleTargets = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -818,7 +818,7 @@ module.exports.updateFormWithMulitpleRuleTargets = function(finish){
 /**
 * When setting any field to admin, if the rule is the target/subject of the rule, then the rule must be removed
 */
-module.exports.testUpdateFormWithAdminField = function(finish){
+module.exports.test.testUpdateFormWithAdminField = function(finish){
   async.waterfall([
     function (cb) {
       cleanUp(cb);
@@ -978,7 +978,7 @@ module.exports.testUpdateFormWithAdminField = function(finish){
 /**
 * When a field has been deleted and the rule has multiple targets, the target should be removed only.
 */
-module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
+module.exports.test.testUpdateFormDeleteFieldMultipleTargets = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -1082,7 +1082,7 @@ module.exports.testUpdateFormDeleteFieldMultipleTargets = function(finish){
 /**
 * When a field has been switched to admin with multiple rule targets, the target should be removed only.
 */
-module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
+module.exports.test.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -1187,7 +1187,7 @@ module.exports.testUpdateFormWithAdminFieldMultipleTargets = function(finish){
 /**
 * When a field has been deleted and condition contains the deleted field - single condition + no flag for deletion from user  - it should delete the field
 */
-module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish){
+module.exports.test.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -1292,7 +1292,7 @@ module.exports.testUpdateFormDeleteFieldSingleConditionNoFlag = function(finish)
 /**
 * When a field has been switched to admin, - multiple conditions + no flag for deletion from user  - it should update the field conditions.
 */
-module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish){
+module.exports.test.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -1403,7 +1403,7 @@ module.exports.testUpdateFormWithAdminMultipleConditionsNoFlag = function(finish
 /**
 * When a field has been deleted - multiple conditions + flag for deletion from user - it should delete the field
 */
-module.exports.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish){
+module.exports.test.testUpdateFormDeleteFieldMultipleConditionsFlag = function(finish){
   async.waterfall([
     function (cb) {
       //Cleaning forms and rules first
@@ -1523,7 +1523,7 @@ function checkEqual(expected, actual){
  * Test Form Updates For Fields That Use Data Sources
  * @param finish
  */
-module.exports.testFormWithDataSources = function(finish){
+module.exports.test.testFormWithDataSources = function(finish){
   var dropdownField = _.clone(handyFieldData.dropdownFieldData);
   var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
   var radioField = _.clone(handyFieldData.radioFieldData);
@@ -1760,7 +1760,7 @@ module.exports.testFormWithDataSources = function(finish){
  * Testing The Scenario Where A Form Is Deployed Containing Data Sources
  * @param finish
  */
-module.exports.testDeployFormWithDataSources = function(finish){
+module.exports.test.testDeployFormWithDataSources = function(finish){
   var checkboxesField = _.clone(handyFieldData.checkboxFieldData);
 
   var testDataSource = _.clone(testDataSourceData);
@@ -1882,7 +1882,7 @@ module.exports.testDeployFormWithDataSources = function(finish){
  * Testing The Case Where A Data Source/Target Does Not Exist
  * @param finish
  */
-module.exports.testFormWithDataSourcesNoDataSourceTarget = function(finish){
+module.exports.test.testFormWithDataSourcesNoDataSourceTarget = function(finish){
 
   var dropdownFieldNoDataSource = _.clone(handyFieldData.dropdownFieldData);
 
@@ -1931,7 +1931,7 @@ module.exports.testFormWithDataSourcesNoDataSourceTarget = function(finish){
  * Testing The Case Where No Cache Exists. This is the case where a form is being deployed to an mbaas and it needs to ensure that data source data exists.
  * @param finish
  */
-module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
+module.exports.test.testFormWithDataSourcesNoDataSourceCache = function(finish){
   var testDataSourceNoCache = _.clone(testDataSourceData);
   testDataSourceNoCache.name = "testDataSourceNoCache";
 
@@ -1980,7 +1980,7 @@ module.exports.testFormWithDataSourcesNoDataSourceCache = function(finish){
 /**
  * Testing The Case Where A Field Is Switched To A Static Field, but there is no field data
  */
-module.exports.testFormFieldChangeFromDataSourceToStaticNoFields = function(finish){
+module.exports.test.testFormFieldChangeFromDataSourceToStaticNoFields = function(finish){
   var testDataSource = _.clone(testDataSourceData);
   testDataSource.name = "testDataSourceToStatic";
 
@@ -2065,7 +2065,7 @@ module.exports.testFormFieldChangeFromDataSourceToStaticNoFields = function(fini
  * The updateForm function must manage the mapping of these temporray ids to new mongo ids.
  * @param finish
  */
-module.exports.testFormFieldRuleChangeWithTempIds = function(finish){
+module.exports.test.testFormFieldRuleChangeWithTempIds = function(finish){
 
   var testForm = {
     "name": "Simple Form with 1 pages with 1 field",

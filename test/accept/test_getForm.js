@@ -18,7 +18,7 @@ var ERROR_CODES = models.CONSTANTS.ERROR_CODES;
 var logger = require('../../lib/common/logger').getLogger();
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -29,14 +29,14 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     cleanUp(finish);
   });
 };
 
-module.exports.testGetFormWorksSinglePage = function(finish){
+module.exports.test.testGetFormWorksSinglePage = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
@@ -57,7 +57,7 @@ module.exports.testGetFormWorksSinglePage = function(finish){
 };
 
 //Testing that when a form is requested with admin fields, the admin fields should be returned
-module.exports.testGetFormWithAdminField = function(finish) {
+module.exports.test.testGetFormWithAdminField = function(finish) {
 
   async.waterfall([
     function getFormsList(cb) {
@@ -79,7 +79,7 @@ module.exports.testGetFormWithAdminField = function(finish) {
 
 };
 
-module.exports.testExportFormWorks = function(finish){
+module.exports.test.testExportFormWorks = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
@@ -96,7 +96,7 @@ module.exports.testExportFormWorks = function(finish){
   });
 };
 
-module.exports.testGetFormWorksAllForms = function(finish){
+module.exports.test.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err, util.inspect(err));
     assert.ok(result);
@@ -105,7 +105,7 @@ module.exports.testGetFormWorksAllForms = function(finish){
   });
 };
 
-module.exports.testGetFormWorksArrayOfFormIds = function(finish){
+module.exports.test.testGetFormWorksArrayOfFormIds = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     var formIdArray = [];
 
@@ -123,7 +123,7 @@ module.exports.testGetFormWorksArrayOfFormIds = function(finish){
   });
 };
 
-module.exports.testgetPopulatedFormListFails = function(finish){
+module.exports.test.testgetPopulatedFormListFails = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
 
     forms.getPopulatedFormList({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
@@ -138,7 +138,7 @@ module.exports.testgetPopulatedFormListFails = function(finish){
  *
  * @param finish
  */
-module.exports.testGetFormIncludingDataSourceData = function(finish){
+module.exports.test.testGetFormIncludingDataSourceData = function(finish){
   var testForm = simpleForm.getBaseForm();
   var testDropdownField = _.clone(handyFieldData.dropdownFieldData);
 

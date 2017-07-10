@@ -130,9 +130,9 @@ function verifyDataSourceResponse(expectedDataSource, expectedDataSourceData, ex
   verifyDataSourceJSON(expectedResponse, testResponse);
 }
 
-module.exports = {
-  "setUp": function(done){
-    logger.debug("setUp");
+module.exports.test = {
+  "before": function(done){
+    logger.debug("before");
     initDatabase(assert, function(err) {
       assert.ok(!err, "Unexpected Error " + util.inspect(err));
       connection = mongoose.createConnection(options.uri);
@@ -142,10 +142,10 @@ module.exports = {
       done();
     });
   },
-  "tearDown": function(done){
+  "after": function(done){
     //Remove Any Existing Data Sources
 
-    logger.debug("tearDown");
+    logger.debug("after");
 
     DataSource.remove({}, function(err){
       assert.ok(!err, "Unexpected Error " + util.inspect(err));

@@ -286,5 +286,6 @@ function initDatabase(assert, cb) {
 }
 
 module.exports.initDatabase = initDatabase;
+module.exports.cleanDatabase = cleanDatabase;
 
 

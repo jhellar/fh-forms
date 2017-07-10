@@ -19,7 +19,7 @@ var groupsModel;
 var appThemesModel;
 var testThemeData = require('../Fixtures/theme.json');
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   async.waterfall([
 
   function createConnection(callback){
@@ -111,7 +111,7 @@ module.exports.setUp = function(finish){
 
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -122,7 +122,7 @@ module.exports.tearDown = function(finish){
 };
 
 
-module.exports.it_should_delete_app_refs = function(finish) {
+module.exports.test.it_should_delete_app_refs = function(finish) {
   //set up has been done we have a form so can perform a delete app refs and assert all is as expected.
 
   var params = {

@@ -16,7 +16,7 @@ var TEST_THEME = require('../Fixtures/theme.json');
 var connection;
 var themeModel;
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -26,7 +26,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -36,7 +36,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.it_should_delete_a_theme_when_not_in_use = function(finish){
+module.exports.test.it_should_delete_a_theme_when_not_in_use = function(finish){
   forms.updateTheme(options, TEST_THEME, function(err, result){
     assert.ok(!err, 'should not have returned error: ' + util.inspect(err));
     assert.ok(result);
@@ -55,7 +55,7 @@ module.exports.it_should_delete_a_theme_when_not_in_use = function(finish){
   });
 };
 
-module.exports.it_should_not_delete_a_theme_when_in_use_by_an_app = function(finish){
+module.exports.test.it_should_not_delete_a_theme_when_in_use_by_an_app = function(finish){
   async.waterfall([
     function(cb){
       forms.updateTheme(options, TEST_THEME, function(err, result){

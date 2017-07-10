@@ -13,7 +13,7 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@ex
 var createdFormId, textFieldId, fileFieldId;
 var testFilePath = "./test/Fixtures/test.pdf";
 
-module.exports.setUp = function(done) {
+module.exports.test = {}; module.exports.test.before = function(done) {
 
   var form = simpleForm.getBaseForm();
   var textField = fieldData.textFieldData;
@@ -83,14 +83,14 @@ function completeSubmission(submissionId, cb) {
   });
 }
 
-module.exports.tearDown = function(done) {
+module.exports.test.after = function(done) {
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err, "Expected no error " + util.inspect(err));
     done();
   });
 };
 
-module.exports.testDeleteSubmission = function(finish) {
+module.exports.test.testDeleteSubmission = function(finish) {
   var submission = baseSubmission();
   submission.formId = createdFormId;
   submission.formFields = [{
@@ -156,7 +156,7 @@ module.exports.testDeleteSubmission = function(finish) {
     });
 };
 
-module.exports.testDeleteSubmissionSubmissionNotFound = function(finish) {
+module.exports.test.testDeleteSubmissionSubmissionNotFound = function(finish) {
   var submission = baseSubmission();
   submission.formId = createdFormId;
   submission.formFields = [{
@@ -179,7 +179,7 @@ module.exports.testDeleteSubmissionSubmissionNotFound = function(finish) {
     });
 };
 
-module.exports.testDeleteSubmissionWithoutFileFields = function(finish) {
+module.exports.test.testDeleteSubmissionWithoutFileFields = function(finish) {
   var submission = baseSubmission();
   submission.formId = createdFormId;
   submission.formFields = [{

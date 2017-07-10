@@ -16,7 +16,7 @@ var fieldModel;
 var pageModel;
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -28,7 +28,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -38,7 +38,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.it_should_set_app_theme = function(finish) {
+module.exports.test.it_should_set_app_theme = function(finish) {
 
   async.waterfall([
     function(cb) {
@@ -144,7 +144,7 @@ function setupTestData(cb) {
   });
 }
 
-module.exports.it_should_check_groups_when_setting_app_theme = function(finish) {
+module.exports.test.it_should_check_groups_when_setting_app_theme = function(finish) {
   async.waterfall([
     setupTestData,
     function (userAppAccess, userThemeAccess, userAppAndThemeAccess, userNoAccess, appid, themeid, cb) {

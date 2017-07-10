@@ -37,7 +37,7 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -50,7 +50,7 @@ module.exports.setUp = function(finish){
 
 
 
-module.exports.testUpdateSubmissionFile = function(finish){
+module.exports.test.testUpdateSubmissionFile = function(finish){
 
   var submission = testSubmitFormBaseInfo;
   submission.formId = globalFormId;
@@ -190,7 +190,7 @@ function verifyUpdatedFile(fileName, fileType, fileGroupId, placeholderId, submi
 }
 
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(process.env.FH_DOMAIN_DB_CONN_URL, function(err) {
     assert.ok(!err);
     finish();

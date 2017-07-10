@@ -42,7 +42,7 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -53,7 +53,7 @@ module.exports.setUp = function(finish){
   });
 }
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();
@@ -64,7 +64,7 @@ module.exports.tearDown = function(finish){
 
 //////////////////////// Testing all of the field types for valid and invalid parameters
 
-module.exports.testSubmitText = function(finish){
+module.exports.test.testSubmitText = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -80,7 +80,7 @@ module.exports.testSubmitText = function(finish){
   });
 };
 
-module.exports.testSubmitTextTooShort = function(finish){
+module.exports.test.testSubmitTextTooShort = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -96,7 +96,7 @@ module.exports.testSubmitTextTooShort = function(finish){
   });
 }
 
-module.exports.testSubmitTextTooLong = function(finish){
+module.exports.test.testSubmitTextTooLong = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -116,7 +116,7 @@ module.exports.testSubmitTextTooLong = function(finish){
 
 
 
-module.exports.testSubmitTextArea = function(finish){
+module.exports.test.testSubmitTextArea = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -132,7 +132,7 @@ module.exports.testSubmitTextArea = function(finish){
   });
 };
 
-module.exports.testSubmitTextAreaTooLong = function(finish){
+module.exports.test.testSubmitTextAreaTooLong = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -148,7 +148,7 @@ module.exports.testSubmitTextAreaTooLong = function(finish){
   });
 };
 
-module.exports.testSubmitTextAreaTooShort = function(finish){
+module.exports.test.testSubmitTextAreaTooShort = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -167,7 +167,7 @@ module.exports.testSubmitTextAreaTooShort = function(finish){
 
 
 
-module.exports.testSubmitFile = function(finish){
+module.exports.test.testSubmitFile = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -201,7 +201,7 @@ module.exports.testSubmitFile = function(finish){
   });
 };
 
-module.exports.testSubmitFileWrongPlaceholder = function(finish){
+module.exports.test.testSubmitFileWrongPlaceholder = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -236,7 +236,7 @@ module.exports.testSubmitFileWrongPlaceholder = function(finish){
 
 
 
-module.exports.testSubmitRadio = function(finish){
+module.exports.test.testSubmitRadio = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -254,7 +254,7 @@ module.exports.testSubmitRadio = function(finish){
   });
 };
 
-module.exports.testSubmitRadioWrongOption = function(finish){
+module.exports.test.testSubmitRadioWrongOption = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -273,7 +273,7 @@ module.exports.testSubmitRadioWrongOption = function(finish){
 };
 
 
-module.exports.testSubmitCheckBox = function(finish){
+module.exports.test.testSubmitCheckBox = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -291,7 +291,7 @@ module.exports.testSubmitCheckBox = function(finish){
   });
 };
 
-module.exports.testSubmitCheckBoxWrongOption = function(finish){
+module.exports.test.testSubmitCheckBoxWrongOption = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -307,7 +307,7 @@ module.exports.testSubmitCheckBoxWrongOption = function(finish){
   });
 };
 
-module.exports.testSubmitCheckBoxTooFewOptions = function(finish){
+module.exports.test.testSubmitCheckBoxTooFewOptions = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -323,7 +323,7 @@ module.exports.testSubmitCheckBoxTooFewOptions = function(finish){
   });
 };
 
-module.exports.testSubmitCheckBoxTooManyOptions = function(finish){
+module.exports.test.testSubmitCheckBoxTooManyOptions = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -345,7 +345,7 @@ module.exports.testSubmitCheckBoxTooManyOptions = function(finish){
 
 
 
-module.exports.testSubmitNumber = function(finish){
+module.exports.test.testSubmitNumber = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -363,7 +363,7 @@ module.exports.testSubmitNumber = function(finish){
   });
 };
 
-module.exports.testSubmitNumberNotANumber = function(finish){
+module.exports.test.testSubmitNumberNotANumber = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -379,7 +379,7 @@ module.exports.testSubmitNumberNotANumber = function(finish){
   });
 };
 
-module.exports.testSubmitNumberTooBig = function(finish){
+module.exports.test.testSubmitNumberTooBig = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -395,7 +395,7 @@ module.exports.testSubmitNumberTooBig = function(finish){
   });
 };
 
-module.exports.testSubmitNumberTooSmall = function(finish){
+module.exports.test.testSubmitNumberTooSmall = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -414,7 +414,7 @@ module.exports.testSubmitNumberTooSmall = function(finish){
 
 
 
-module.exports.testSubmitLocationLatLong = function(finish){
+module.exports.test.testSubmitLocationLatLong = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -432,7 +432,7 @@ module.exports.testSubmitLocationLatLong = function(finish){
   });
 };
 
-module.exports.testSubmitLocationLatLongInvalid = function(finish){
+module.exports.test.testSubmitLocationLatLongInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -452,7 +452,7 @@ module.exports.testSubmitLocationLatLongInvalid = function(finish){
 
 
 
-module.exports.testSubmitLocationNorthEast = function(finish){
+module.exports.test.testSubmitLocationNorthEast = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -470,7 +470,7 @@ module.exports.testSubmitLocationNorthEast = function(finish){
   });
 };
 
-module.exports.testSubmitLocationNorthEastInvalid = function(finish){
+module.exports.test.testSubmitLocationNorthEastInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -488,7 +488,7 @@ module.exports.testSubmitLocationNorthEastInvalid = function(finish){
 
 
 
-module.exports.testSubmitDate = function(finish){
+module.exports.test.testSubmitDate = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -504,7 +504,7 @@ module.exports.testSubmitDate = function(finish){
   });
 };
 
-module.exports.testSubmitDateInvalid = function(finish){
+module.exports.test.testSubmitDateInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -521,7 +521,7 @@ module.exports.testSubmitDateInvalid = function(finish){
 };
 
 
-module.exports.testSubmitDateTime = function(finish){
+module.exports.test.testSubmitDateTime = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -538,7 +538,7 @@ module.exports.testSubmitDateTime = function(finish){
   });
 };
 
-module.exports.testSubmitDateTimeInvalid = function(finish){
+module.exports.test.testSubmitDateTimeInvalid = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -555,7 +555,7 @@ module.exports.testSubmitDateTimeInvalid = function(finish){
 };
 
 
-module.exports.testSaveRequiredFields = function(finish){
+module.exports.test.testSaveRequiredFields = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredFormId;
 
@@ -575,7 +575,7 @@ module.exports.testSaveRequiredFields = function(finish){
 };
 
 
-module.exports.testDidNotSaveRequiredField = function(finish){
+module.exports.test.testDidNotSaveRequiredField = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredFormId;
 
@@ -591,7 +591,7 @@ module.exports.testDidNotSaveRequiredField = function(finish){
   });
 };
 
-module.exports.testDidNotSaveRequiredFieldFormUpdated = function(finish){
+module.exports.test.testDidNotSaveRequiredFieldFormUpdated = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredFormId;
 
@@ -623,7 +623,7 @@ module.exports.testDidNotSaveRequiredFieldFormUpdated = function(finish){
   });
 };
 
-module.exports.testSaveRequiredFieldsFormUpdated = function(finish){
+module.exports.test.testSaveRequiredFieldsFormUpdated = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = requiredForm2Id;
 
@@ -651,7 +651,7 @@ module.exports.testSaveRequiredFieldsFormUpdated = function(finish){
 
 
 //MATRIX FIELDS ARE NOT DEFINED IN APPFORMS. Not included
-//module.exports.testSubmitMatrix = function(finish){
+//module.exports.test.testSubmitMatrix = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -689,7 +689,7 @@ module.exports.testSaveRequiredFieldsFormUpdated = function(finish){
 //  });
 //};
 //
-//module.exports.testSubmitMatrixInvalidRow = function(finish){
+//module.exports.test.testSubmitMatrixInvalidRow = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -727,7 +727,7 @@ module.exports.testSaveRequiredFieldsFormUpdated = function(finish){
 //  });
 //};
 //
-//module.exports.testSubmitMatrixInvalidCol = function(finish){
+//module.exports.test.testSubmitMatrixInvalidCol = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -765,7 +765,7 @@ module.exports.testSaveRequiredFieldsFormUpdated = function(finish){
 //  });
 //};
 //
-//module.exports.testSubmitMatrixInvalidMissingValue = function(finish){
+//module.exports.test.testSubmitMatrixInvalidMissingValue = function(finish){
 //  var submission = testSubmitFormBaseInfo;
 //  submission.formId = testBigFormId;
 //
@@ -863,7 +863,7 @@ function addNewField(assert, formId, fieldRequired, cb){
   });
 }
 
-module.exports.testSubmitDropdown = function(finish){
+module.exports.test.testSubmitDropdown = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -877,7 +877,7 @@ module.exports.testSubmitDropdown = function(finish){
   });
 };
 
-module.exports.testSubmitDropdownWrongOption = function(finish){
+module.exports.test.testSubmitDropdownWrongOption = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -893,7 +893,7 @@ module.exports.testSubmitDropdownWrongOption = function(finish){
   });
 };
 
-module.exports.testSubmitUpdate = function(finish){
+module.exports.test.testSubmitUpdate = function(finish){
   var submission = testSubmitFormBaseInfo;
   submission.formId = testBigFormId;
 
@@ -963,7 +963,7 @@ module.exports.testSubmitUpdate = function(finish){
   });
 };
 
-module.exports.testSubmitUpdateFileField = function(finish){
+module.exports.test.testSubmitUpdateFileField = function(finish){
   var submission = _.omit(testSubmitFormBaseInfo, "_id");
   submission.formId = testBigFormId;
 

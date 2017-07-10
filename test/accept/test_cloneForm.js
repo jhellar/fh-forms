@@ -13,18 +13,18 @@ var cleanUp = require('../Fixtures/cleanup.js');
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   cleanUp(finish);
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();
   });
 };
 
-module.exports.testCloneForm = function(finish){
+module.exports.test.testCloneForm = function(finish){
   var testForm = simpleForm.getBaseForm();
   testForm.pages = [{
     fields: []

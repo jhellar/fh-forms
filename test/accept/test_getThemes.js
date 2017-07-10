@@ -13,7 +13,7 @@ var appId = "123456789";
 var testThemeId;
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   createTestData(assert, function(err, themeId){
     assert.ok(!err);
     testThemeId = themeId;
@@ -21,14 +21,14 @@ module.exports.setUp = function(finish){
   });
 }
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();
   });
 }
 
-module.exports.testGetThemesWorks = function(finish){
+module.exports.test.testGetThemesWorks = function(finish){
   forms.getThemes({"uri" : process.env.FH_DOMAIN_DB_CONN_URL}, function(err, themes){
     if(err) console.log(err);
     assert.ok(!err);

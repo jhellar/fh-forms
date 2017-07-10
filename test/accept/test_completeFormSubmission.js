@@ -36,7 +36,7 @@ var testSubmitFormBaseInfo = {
 };
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -47,7 +47,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.testCompleteSubmissionNoSubmissionId = function(finish){
+module.exports.test.testCompleteSubmissionNoSubmissionId = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : undefined}}, function(err, result){
@@ -59,7 +59,7 @@ module.exports.testCompleteSubmissionNoSubmissionId = function(finish){
   });
 }
 
-module.exports.testCompleteSubmissionWrongSubmissionId = function(finish){
+module.exports.test.testCompleteSubmissionWrongSubmissionId = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : "SOMEWRONGID"}}, function(err, result){
@@ -71,7 +71,7 @@ module.exports.testCompleteSubmissionWrongSubmissionId = function(finish){
   });
 }
 
-module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
+module.exports.test.testCompleteSubmissionFileNotUploaded = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {"skipOne": true}, function(submissionId){
     //Form data submitted with all files, now complete the
     forms.completeFormSubmission({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission": {"submissionId" : submissionId}}, function(err, result){
@@ -90,7 +90,7 @@ module.exports.testCompleteSubmissionFileNotUploaded = function(finish){
 }
 
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();
