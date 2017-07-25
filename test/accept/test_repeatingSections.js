@@ -3,6 +3,46 @@ var formFixture = require('../Fixtures/repeatingSectionsForm2');
 var assert = require('assert');
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 
+var tests = [
+  {
+    name: 'it_should_create_valid_field_rule',
+    ruleType: 'fieldRules',
+    sources: [1],
+    target: 2,
+    ruleValid: true
+  }, {
+    name: 'it_should_not_create_invalid_field_rule_target_not_in_repeating_section',
+    ruleType: 'fieldRules',
+    sources: [1],
+    target: 0,
+    ruleValid: false
+  }, {
+    name: 'it_should_not_create_invalid_field_rule_target_in_different_repeating_section',
+    ruleType: 'fieldRules',
+    sources: [1],
+    target: 5,
+    ruleValid: false
+  }, {
+    name: 'it_should_not_create_invalid_field_rule_sources_in_different_repeating_sections',
+    ruleType: 'fieldRules',
+    sources: [1, 5],
+    target: 2,
+    ruleValid: false
+  }, {
+    name: 'it_should_create_valid_page_rule',
+    ruleType: 'pageRules',
+    sources: [7],
+    target: 1,
+    ruleValid: true
+  }, {
+    name: 'it_should_create_valid_page_rule_source_in_repeating_section',
+    ruleType: 'pageRules',
+    sources: [1],
+    target: 1,
+    ruleValid: false
+  }
+];
+
 var form;
 
 module.exports.repeating_sections = {};
@@ -14,48 +54,20 @@ module.exports.repeating_sections.before = function(finish) {
   });
 };
 
-module.exports.repeating_sections.it_should_create_valid_rule = function(finish) {
-  form.fieldRules = [getFieldRule([1], 2)];
-  forms.updateForm(options, form, function(error, f) {
-    assert.ok(!error);
-    assert.equal(f.fieldRules.length, 1);
-    finish();
-  });
-};
+tests.forEach(function(test) {
+  module.exports.repeating_sections[test.name] = function(finish) {
+    form[test.ruleType] = [getRule(test.sources, test.target, test.ruleType === 'pageRules')];
+    forms.updateForm(options, form, function(error, f) {
+      assert.ok(!error);
+      assert.equal(f[test.ruleType].length, test.ruleValid ? 1 : 0);
+      finish();
+    });
+  };
+});
 
-module.exports.repeating_sections.it_should_not_create_invalid_rule1 = function(finish) {
-  form.fieldRules = [getFieldRule([1], 0)];
-  forms.updateForm(options, form, function(error, f) {
-    assert.ok(!error);
-    assert.equal(f.fieldRules.length, 0);
-    finish();
-  });
-};
-
-module.exports.repeating_sections.it_should_not_create_invalid_rule2 = function(finish) {
-  form.fieldRules = [getFieldRule([1], 5)];
-  forms.updateForm(options, form, function(error, f) {
-    assert.ok(!error);
-    assert.equal(f.fieldRules.length, 0);
-    finish();
-  });
-};
-
-module.exports.repeating_sections.it_should_not_create_invalid_rule3 = function(finish) {
-  form.fieldRules = [getFieldRule([1, 5], 2)];
-  forms.updateForm(options, form, function(error, f) {
-    assert.ok(!error);
-    assert.equal(f.fieldRules.length, 0);
-    finish();
-  });
-};
-
-function getFieldRule(sources, target) {
+function getRule(sources, target, pageRule) {
   var rule = {
-    "type": "hide",
-    "targetField": [
-      form.pages[0].fields[target]._id
-    ],
+    "type": "show",
     "ruleConditionalStatements": [],
     "ruleConditionalOperator": "and",
     "relationType": "and"
@@ -67,5 +79,10 @@ function getFieldRule(sources, target) {
       "sourceValue": "a"
     });
   });
+  if (pageRule) {
+    rule.targetPage = form.pages[target]._id;
+  } else {
+    rule.targetField = form.pages[0].fields[target]._id;
+  }
   return rule;
 }

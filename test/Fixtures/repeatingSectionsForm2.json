@@ -52,6 +52,28 @@
           "name": "Text Field 3",
           "required": true,
           "type": "number"
+        },
+        {
+          "fieldOptions": {},
+          "name": "Section Break 3",
+          "type": "sectionBreak",
+          "repeating": false,
+          "required": true
+        },
+        {
+          "fieldOptions": {},
+          "name": "Text Field 4",
+          "required": true,
+          "type": "number"
+        }
+      ]
+    }, {
+      "fields": [
+        {
+          "fieldOptions": {},
+          "name": "Text Field Page 2",
+          "required": true,
+          "type": "number"
         }
       ]
     }
