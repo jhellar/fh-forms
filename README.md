@@ -1,5 +1,7 @@
 # fh-forms
 
+[![Build Status](https://travis-ci.org/feedhenry/fh-forms.svg?branch=master)](https://travis-ci.org/feedhenry/fh-forms) [![Coverage Status](https://coveralls.io/repos/github/feedhenry/fh-forms/badge.svg?branch=master)](https://coveralls.io/github/feedhenry/fh-forms?branch=master)
+
 FeedHenry Cloud API for form submissions.
 
 ## Installation
