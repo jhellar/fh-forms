@@ -59,7 +59,7 @@ function setupTestGroups(allowedUser1, allowedUser2, form1Id, form2Id, cb) {
   });    
 }
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -72,7 +72,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -117,7 +117,7 @@ function createForms(cb) {
   });
 }
 
-module.exports.it_should_not_delete_form_without_group_access = function(finish) {
+module.exports.test.it_should_not_delete_form_without_group_access = function(finish) {
   async.waterfall([
     createForms,
     function deleteForm1(form1id, form2id, form1acces, form1and2access, noaccess, cb) {
@@ -138,7 +138,7 @@ module.exports.it_should_not_delete_form_without_group_access = function(finish)
   });
 };
 
-module.exports.it_should_delete_form_without_group_restrictions = function(finish) {
+module.exports.test.it_should_delete_form_without_group_restrictions = function(finish) {
   async.waterfall([
     createForms,
     function deleteForm1(form1id, form2id, form1acces, form1and2access, noaccess, cb) {
@@ -159,7 +159,7 @@ module.exports.it_should_delete_form_without_group_restrictions = function(finis
   });
 };
 
-module.exports.it_should_delete_form_when_in_allowed_group = function(finish) {
+module.exports.test.it_should_delete_form_when_in_allowed_group = function(finish) {
   async.waterfall([
     createForms,
     function deleteForm1(form1id, form2id, form1acces, form1and2access, noaccess, cb) {

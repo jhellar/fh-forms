@@ -18,7 +18,7 @@ var appId = "123456789";
 
 var zipPath = path.join('.', 'test', 'Fixtures', 'forms_Export.zip')
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -31,7 +31,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err){
     forms.tearDownConnection(options, function(err) {
       assert.ok(!err);
@@ -40,7 +40,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.testExportForms = function(finish){
+module.exports.test.testExportForms = function(finish){
   var target = fs.createWriteStream(zipPath);
 
   forms.exportForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function (err, zipStream) {

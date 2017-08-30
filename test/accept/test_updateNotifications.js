@@ -14,7 +14,7 @@ var fieldModel;
 var pageModel;
 
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(OPTIONS.uri);
@@ -24,7 +24,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(OPTIONS, function (err) {
@@ -34,7 +34,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.it_should_set_form_notifications = function(finish) {
+module.exports.test.it_should_set_form_notifications = function(finish) {
 
   var simpleForm = {
     "name": "Notifications Test Form",

@@ -255,9 +255,7 @@ function setUpDatabase(assert, callback) {
     },
     function (db, cb) {
       db.removeUser(testsConfig.dbUser, function (err) {
-        assert.ok(!err, err);
-
-        cb(err, db);
+        cb(null, db);
       });
     },
     function (db, cb) {
@@ -286,5 +284,6 @@ function initDatabase(assert, cb) {
 }
 
 module.exports.initDatabase = initDatabase;
+module.exports.cleanDatabase = cleanDatabase;
 
 

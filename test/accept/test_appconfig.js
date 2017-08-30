@@ -40,7 +40,7 @@ var TEST_GROUP_APP1 = '12345';
 var TEST_GROUP_USER1 = 'testuser67890';
 var TEST_GROUP_USER_NOACCESS = 'testuser9999';
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -56,7 +56,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.deleteGroup(options, {_id: createdGroup._id}, function(err){
     assert.ok(!err, 'Error in tearDon.deleteGroup(): ' + util.inspect(err));
     createdGroup = null;
@@ -70,7 +70,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.it_should_CRUD_appconfig = function(finish) {
+module.exports.test.it_should_CRUD_appconfig = function(finish) {
 
   async.series([
     function getAppconfig2(cb) {
@@ -217,7 +217,7 @@ module.exports.it_should_CRUD_appconfig = function(finish) {
   });
 };
 
-module.exports.test_import_app_config = function(finish){
+module.exports.test.test_import_app_config = function(finish){
 
   var testConfig = _.clone(TEST_APP_CONFIG);
 

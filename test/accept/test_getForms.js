@@ -16,7 +16,7 @@ var connection;
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@example.com"};
 var appId = "123456789";
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -36,7 +36,7 @@ function cleanUp(cb){
   });
 }
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err){
     if(err) console.log(err);
     forms.tearDownConnection(options, function(err) {
@@ -46,7 +46,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.testGetFormsWorks = function(finish){
+module.exports.test.testGetFormsWorks = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": appId}, function(err, result){
     assert.ok(!err);
 
@@ -60,7 +60,7 @@ module.exports.testGetFormsWorks = function(finish){
   });
 };
 
-module.exports.testGetFormsNoUri = function(finish){
+module.exports.test.testGetFormsNoUri = function(finish){
   forms.getForms({}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
@@ -68,7 +68,7 @@ module.exports.testGetFormsNoUri = function(finish){
   });
 }
 
-module.exports.testGetFormsNoAppId = function(finish){
+module.exports.test.testGetFormsNoAppId = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(err); // Should get an error here.
     assert.ok(!result);
@@ -76,7 +76,7 @@ module.exports.testGetFormsNoAppId = function(finish){
   });
 }
 
-module.exports.testGetFormsNoAppExists = function(finish){
+module.exports.test.testGetFormsNoAppExists = function(finish){
   forms.getForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "appId": "theWrongId"}, function(err, result){
     assert.ok(!err);
     assert.ok(Array.isArray(result));
@@ -85,7 +85,7 @@ module.exports.testGetFormsNoAppExists = function(finish){
   });
 }
 
-module.exports.testGetFormWorksAllForms = function(finish){
+module.exports.test.testGetFormWorksAllForms = function(finish){
   forms.getAllForms({"uri": process.env.FH_DOMAIN_DB_CONN_URL}, function(err, result){
     assert.ok(!err);
     assert.ok(result);
@@ -105,7 +105,7 @@ module.exports.testGetFormWorksAllForms = function(finish){
  * This will allow clients to determine if the form has been updated or not.
  * @param finish
  */
-module.exports.testGetFormsDataSourceUpdated = function (finish) {
+module.exports.test.testGetFormsDataSourceUpdated = function (finish) {
   var testForm = simpleForm.getBaseForm()
   var testDropdownField = _.clone(handyFieldData.dropdownFieldData);
 

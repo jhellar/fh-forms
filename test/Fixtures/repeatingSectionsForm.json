@@ -1,0 +1,48 @@
+{
+  "name": "Repeating Sections Form",
+  "description": "This form has repeating sections.",
+  "lastUpdated": "2013-10-16 06:13:52",
+  "pages": [
+    {
+      "_id": "page1id",
+      "fields": [
+        {
+          "_id": "sectionbreakfield1",
+          "fieldOptions": {
+            "definition":{
+              "maxRepeat":3,
+              "minRepeat":2
+            }
+          },
+          "name": "Section Break 1",
+          "type": "sectionBreak",
+          "repeating": true,
+          "required": true
+        },
+        {
+          "_id": "numberfield1",
+          "fieldOptions": {},
+          "name": "Text Field 2",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "_id": "textareafield1",
+          "fieldOptions": {},
+          "name": "Text Field Area 1",
+          "required": true,
+          "type": "textarea"
+        },
+        {
+          "_id": "textareafield2",
+          "fieldOptions": {},
+          "name": "Text Field Area 2",
+          "required": false,
+          "type": "textarea"
+        }
+      ]
+    }
+  ],
+  "fieldRules": [],
+  "pageRules": []
+}

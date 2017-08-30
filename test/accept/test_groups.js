@@ -66,7 +66,7 @@ var TEST_FORM_2 = {
     "theme": {}
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -108,7 +108,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -118,7 +118,7 @@ module.exports.tearDown = function(finish){
   });
 };
 
-module.exports.it_should_crud_groups = function(finish) {
+module.exports.test.it_should_crud_groups = function(finish) {
 
   async.waterfall([
     function(cb) {
@@ -201,7 +201,7 @@ module.exports.it_should_crud_groups = function(finish) {
   });
 };
 
-module.exports.it_should_validate_groups = function(finish) {
+module.exports.test.it_should_validate_groups = function(finish) {
   var connections = {mongooseConnection: connection};
 
   async.waterfall([
@@ -272,7 +272,7 @@ module.exports.it_should_validate_groups = function(finish) {
   });
 };
 
-module.exports.it_should_get_groups = function(finish) {
+module.exports.test.it_should_get_groups = function(finish) {
   var connections = {mongooseConnection: connection};
 
   async.waterfall([
@@ -358,7 +358,7 @@ module.exports.it_should_get_groups = function(finish) {
   });
 };
 
-module.exports.it_should_addto_groups = function(finish) {
+module.exports.test.it_should_addto_groups = function(finish) {
   var connections = {mongooseConnection: connection};
 
   async.waterfall([
@@ -499,7 +499,7 @@ module.exports.it_should_addto_groups = function(finish) {
   });
 };
 
-module.exports.it_should_deletefrom_groups = function(finish) {
+module.exports.test.it_should_deletefrom_groups = function(finish) {
   var connections = {mongooseConnection: connection};
 
   async.waterfall([

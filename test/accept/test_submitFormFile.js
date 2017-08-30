@@ -40,7 +40,7 @@ var testSubmitFormBaseInfo = {
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -51,7 +51,7 @@ module.exports.setUp = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileWorks = function(finish){
+module.exports.test.testSubmitFormFileWorks = function(finish){
   submitDataAndTest(assert, "fileField", "test.pdf", testFilePath, {}, function(err){
     assert.ok(!err);
 
@@ -60,7 +60,7 @@ module.exports.testSubmitFormFileWorks = function(finish){
 }
 
 
-module.exports.testSubmitFormPhotoWorks = function(finish){
+module.exports.test.testSubmitFormPhotoWorks = function(finish){
   submitDataAndTest(assert, "photoField", "test.jpg", testPhotoPath, {}, function(err){
     assert.ok(!err);
 
@@ -68,7 +68,7 @@ module.exports.testSubmitFormPhotoWorks = function(finish){
   });
 }
 
-module.exports.testSubmitFormSignatureWorks = function(finish){
+module.exports.test.testSubmitFormSignatureWorks = function(finish){
   submitDataAndTest(assert, "signatureField", "test.jpg", testSignaturePath, {}, function(err){
     assert.ok(!err);
 
@@ -76,7 +76,7 @@ module.exports.testSubmitFormSignatureWorks = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileNoParams = function(finish){
+module.exports.test.testSubmitFormFileNoParams = function(finish){
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : undefined}, function(err, result){
     assert.ok(err);
     assert.ok(!result);
@@ -85,7 +85,7 @@ module.exports.testSubmitFormFileNoParams = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileNoFieldId = function(finish){
+module.exports.test.testSubmitFormFileNoFieldId = function(finish){
   var testFileSubmission = {"submissionId" : testSubmissionId, "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -95,7 +95,7 @@ module.exports.testSubmitFormFileNoFieldId = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileNoSubmissionId = function(finish){
+module.exports.test.testSubmitFormFileNoSubmissionId = function(finish){
   var testFileSubmission = { "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -105,7 +105,7 @@ module.exports.testSubmitFormFileNoSubmissionId = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileBadSubmissionId = function(finish){
+module.exports.test.testSubmitFormFileBadSubmissionId = function(finish){
   var testFileSubmission = {"submissionId" : "IAMNOTASUBMISSIONID", "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -116,7 +116,7 @@ module.exports.testSubmitFormFileBadSubmissionId = function(finish){
 }
 
 
-module.exports.testSubmitFormFileNoFileId = function(finish){
+module.exports.test.testSubmitFormFileNoFileId = function(finish){
   var testFileSubmission = {"submissionId" : testSubmissionId, "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -126,7 +126,7 @@ module.exports.testSubmitFormFileNoFileId = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileBadFileId = function(finish){
+module.exports.test.testSubmitFormFileBadFileId = function(finish){
   var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "theWrongFileIdSomehow", "fieldId": globalFieldIds["fileField"], "fileStream" : testFilePath};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -136,7 +136,7 @@ module.exports.testSubmitFormFileBadFileId = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileFileNoFileStream = function(finish){
+module.exports.test.testSubmitFormFileFileNoFileStream = function(finish){
   var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"]};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -146,7 +146,7 @@ module.exports.testSubmitFormFileFileNoFileStream = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileFileBadFileStream = function(finish){
+module.exports.test.testSubmitFormFileFileBadFileStream = function(finish){
   var testFileSubmission = {"submissionId" : testSubmissionId, "fileId": "filePlaceHolder123456", "fieldId": globalFieldIds["fileField"], "fileStream" : "NOTASTREAM"};
   forms.submitFormFile({"uri": process.env.FH_DOMAIN_DB_CONN_URL, "submission" : testFileSubmission}, function(err, result){
     assert.ok(err);
@@ -156,7 +156,7 @@ module.exports.testSubmitFormFileFileBadFileStream = function(finish){
   });
 }
 
-module.exports.testSubmitFormFileFileIdDoesNotExist = function(finish){
+module.exports.test.testSubmitFormFileFileIdDoesNotExist = function(finish){
   var submission = testSubmitFormBaseInfo;
   var  file1Details = {
     "fileName" : "test",
@@ -194,7 +194,7 @@ module.exports.testSubmitFormFileFileIdDoesNotExist = function(finish){
 }
 
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.tearDownConnection(options, function(err) {
     assert.ok(!err);
     finish();

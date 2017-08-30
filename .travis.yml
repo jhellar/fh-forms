@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - '4'
+sudo: false
+services:
+  - mongodb
+before_script:
+  - mongo admin --eval 'db.createUser({user:"admin",pwd:"admin",roles:[{role:"userAdminAnyDatabase",db:"admin"}]});'
+script:
+  - grunt
+  - grunt coverallsio

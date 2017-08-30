@@ -1,0 +1,83 @@
+{
+  "name": "Repeating Sections Form",
+  "description": "This form has repeating sections.",
+  "lastUpdated": "2013-10-16 06:13:52",
+  "pages": [
+    {
+      "fields": [
+        {
+          "fieldOptions": {
+            "definition":{
+              "maxRepeat":3,
+              "minRepeat":2
+            }
+          },
+          "name": "Section Break 1",
+          "type": "sectionBreak",
+          "repeating": true,
+          "required": true
+        },
+        {
+          "fieldOptions": {},
+          "name": "Text Field 2",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "fieldOptions": {},
+          "name": "Text Field Area 1",
+          "required": true,
+          "type": "textarea"
+        },
+        {
+          "fieldOptions": {},
+          "name": "Text Field Area 2",
+          "required": false,
+          "type": "textarea"
+        },
+        {
+          "fieldOptions": {
+            "definition":{
+              "maxRepeat":3,
+              "minRepeat":2
+            }
+          },
+          "name": "Section Break 2",
+          "type": "sectionBreak",
+          "repeating": true,
+          "required": true
+        },
+        {
+          "fieldOptions": {},
+          "name": "Text Field 3",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "fieldOptions": {},
+          "name": "Section Break 3",
+          "type": "sectionBreak",
+          "repeating": false,
+          "required": true
+        },
+        {
+          "fieldOptions": {},
+          "name": "Text Field 4",
+          "required": true,
+          "type": "number"
+        }
+      ]
+    }, {
+      "fields": [
+        {
+          "fieldOptions": {},
+          "name": "Text Field Page 2",
+          "required": true,
+          "type": "number"
+        }
+      ]
+    }
+  ],
+  "fieldRules": [],
+  "pageRules": []
+}

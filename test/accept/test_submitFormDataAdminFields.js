@@ -15,7 +15,7 @@ var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL, userEmail: "testUser@ex
 
 var createdFormId, textFieldId, adminTextFieldId;
 
-module.exports.setUp = function(done) {
+module.exports.test = {}; module.exports.test.before = function(done) {
 
   var testFormWithAdminFields = simpleForm.getBaseForm();
 
@@ -75,7 +75,7 @@ function completeSubmission(submissionId, cb) {
   });
 }
 
-module.exports.tearDown = function(done) {
+module.exports.test.after = function(done) {
 
   //Closing the mongo connection
   forms.tearDownConnection(options, function(err) {
@@ -86,7 +86,7 @@ module.exports.tearDown = function(done) {
 
 
 //Testing that when a submission is made with an admin field, the admin field should be included in the submission JSON
-module.exports.testSubmitFormDataWithAdminFields = function(done) {
+module.exports.test.testSubmitFormDataWithAdminFields = function(done) {
   var submission = baseSubmission();
 
   submission.formId = createdFormId;
@@ -131,7 +131,7 @@ module.exports.testSubmitFormDataWithAdminFields = function(done) {
 };
 
 //Testing that updating admin fields is persisted to the submission
-module.exports.testUpdateSubmissionWithAdminFields = function(done) {
+module.exports.test.testUpdateSubmissionWithAdminFields = function(done) {
   var submission = baseSubmission();
 
   submission.formId = createdFormId;

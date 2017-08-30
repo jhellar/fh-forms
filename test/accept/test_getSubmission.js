@@ -45,7 +45,9 @@ var testSubmitFormBaseInfo = {
   }]
 };
 
-module.exports.testGetSubmission = function(finish){
+module.exports.test = {};
+
+module.exports.test.testGetSubmission = function(finish){
 
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, results){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -58,7 +60,7 @@ module.exports.testGetSubmission = function(finish){
   });
 };
 
-module.exports.testGetSubmissionsAndCheckFields = function(finish){
+module.exports.test.testGetSubmissionsAndCheckFields = function(finish){
 
   forms.getSubmission(options, {_id: TEST_SUBMISSION_ID}, function (err, result){
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
@@ -73,7 +75,7 @@ module.exports.testGetSubmissionsAndCheckFields = function(finish){
   });
 };
 
-module.exports.testGetInvalidSubmission = function(finish){
+module.exports.test.testGetInvalidSubmission = function(finish){
 
   forms.getSubmission(options, {_id: TEST_UNUSED_FORMID}, function (err, results){
     assert.ok(err, "should have returned error: " + util.inspect(err));
@@ -81,7 +83,7 @@ module.exports.testGetInvalidSubmission = function(finish){
   });
 };
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err){
     assert.ok(!err);
 
@@ -120,7 +122,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   forms.deleteSubmission(options, {_id: TEST_SUBMISSION_ID}, function(err) {
     assert.ok(!err, "should not have returned error: " + util.inspect(err));
     forms.tearDownConnection(options, function(err) {

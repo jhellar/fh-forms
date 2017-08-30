@@ -88,7 +88,7 @@ var TEST_UPDATED_PAGE3 = {
 };
 var TEST_PAGE_NAMES_AFTER_UPDATE = [TEST_PAGE_NAME2,TEST_PAGE_NAME3];
 
-module.exports.setUp = function(finish){
+module.exports.test = {}; module.exports.test.before = function(finish){
   initDatabase(assert, function(err) {
     assert.ok(!err);
     connection = mongoose.createConnection(options.uri);
@@ -98,7 +98,7 @@ module.exports.setUp = function(finish){
   });
 };
 
-module.exports.tearDown = function(finish){
+module.exports.test.after = function(finish){
   connection.close(function(err) {
     assert.ok(!err);
     forms.tearDownConnection(options, function (err) {
@@ -127,7 +127,7 @@ function assertFormNamedFound(assert, name, msg, cb) {
   });
 }
 
-module.exports.testUpdateForm = function(finish){
+module.exports.test.testUpdateForm = function(finish){
   var myOrigForm = JSON.parse(JSON.stringify(TEST_FORM_SIMPLE_TO_BE_UPDATED));
   var myUpdForm = JSON.parse(JSON.stringify(TEST_FORM_SIMPLE_TO_BE_UPDATED));
   myOrigForm.name += "Original " + Date.now();
@@ -161,7 +161,7 @@ module.exports.testUpdateForm = function(finish){
   });
 };
 
-module.exports.testAddForm = function(finish) {
+module.exports.test.testAddForm = function(finish) {
   async.series([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_SIMPLE.name, 'should not have found form - not added yet - found: '),
     function(cb) {
@@ -188,7 +188,7 @@ module.exports.testAddForm = function(finish) {
  * Testing Adding a form with a duplicate name.
  *
  */
-module.exports.testAddFormDuplicateName = function(finish){
+module.exports.test.testAddFormDuplicateName = function(finish){
   async.series([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_SIMPLE.name, 'should not have found form - not added yet - found: '),
     function(cb) {
@@ -216,7 +216,7 @@ module.exports.testAddFormDuplicateName = function(finish){
  * Testing Adding a form with a duplicate name but it is the same form. This is a legal update.
  *
  */
-module.exports.testAddFormDuplicateNameSameForm = function(finish){
+module.exports.test.testAddFormDuplicateNameSameForm = function(finish){
   var formId = null;
   async.series([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_SIMPLE.name, 'should not have found form - not added yet - found: '),
@@ -256,7 +256,7 @@ module.exports.testAddFormDuplicateNameSameForm = function(finish){
   });
 };
 
-module.exports.testAddFormWith2EmptyPages = function(finish) {
+module.exports.test.testAddFormWith2EmptyPages = function(finish) {
   async.waterfall([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_2EMPTY_PAGES.name, 'should not have found form - not added yet - found: '),
     function(cb) {
@@ -289,7 +289,7 @@ module.exports.testAddFormWith2EmptyPages = function(finish) {
   });
 };
 
-module.exports.testUpdateFormWith2EmptyPages = function(finish) {
+module.exports.test.testUpdateFormWith2EmptyPages = function(finish) {
   async.waterfall([
     async.apply(assertFormNamedNotFound, assert, TEST_FORM_UPDATE_2EMPTY_PAGES.name, 'should not have found form - not added yet - found: '),
     function(cb) {
@@ -355,7 +355,7 @@ module.exports.testUpdateFormWith2EmptyPages = function(finish) {
   });
 };
 
-module.exports.testInValidForm1 = function(finish){
+module.exports.test.testInValidForm1 = function(finish){
   async.series([
     function(cb) {
       forms.updateForm(options, TEST_FORM_EMPTY_OBJ, function(err, doc){
@@ -369,7 +369,7 @@ module.exports.testInValidForm1 = function(finish){
   });
 };
 
-module.exports.testInValidForm2 = function(finish){
+module.exports.test.testInValidForm2 = function(finish){
   async.series([
     function(cb) {
       forms.updateForm(options, null, function(err, doc){
@@ -383,7 +383,7 @@ module.exports.testInValidForm2 = function(finish){
   });
 };
 
-module.exports.testInValidForm3 = function(finish){
+module.exports.test.testInValidForm3 = function(finish){
   async.series([
     function(cb) {
       forms.updateForm(options, TEST_FORM_NO_DESCR, function(err, doc){
@@ -398,7 +398,7 @@ module.exports.testInValidForm3 = function(finish){
 };
 
 
-module.exports.testInValidForm4 = function(finish){
+module.exports.test.testInValidForm4 = function(finish){
   async.series([
     function(cb) {
       forms.updateForm(options, TEST_FORM_NO_NAME, function(err, doc){

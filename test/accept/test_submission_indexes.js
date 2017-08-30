@@ -7,7 +7,7 @@ var models = require('../../lib/common/models')();
 
 var options = {'uri': process.env.FH_DOMAIN_DB_CONN_URL};
 
-module.exports = {
+module.exports.test = {
   "It Should Have Indexes On submissionStartedTimestamp and submissionCompletedTimestamp": function(done){
     var connection = mongoose.createConnection(options.uri);
     var _dbConnection;

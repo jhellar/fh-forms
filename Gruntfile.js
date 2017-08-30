@@ -41,17 +41,26 @@ module.exports = function(grunt) {
     unit: '<%= _unit_runner %> <%= _unit_args %>',
     unit_cover: 'istanbul cover --dir cov-unit <%= _unit_runner %> -- <%= _unit_args %>',
 
-    _accept_runner: 'turbo',
-    _accept_args: '--setUp ./test/setup.js --tearDown ./test/setup.js ./test/accept --series=true',
+    _accept_runner: '_mocha',
+    _accept_args: '-A -u exports --recursive -t 10000 ./test/setup_accept.js ./test/accept',
     accept: ['mongo ./test/setup_mongo.js', '<%= _accept_runner %> <%= _accept_args %>'],
-    accept_cover: ['mongo ./test/setup_mongo.js', 'istanbul cover --dir cov-accept <%= _accept_runner %> -- <%= _accept_args %>']
+    accept_cover: ['mongo ./test/setup_mongo.js', 'istanbul cover --dir cov-accept <%= _accept_runner %> -- <%= _accept_args %>'],
+
+    coveralls: {
+      target: {
+        src: 'coverage/lcov.info'
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-fh-build');
+  grunt.loadNpmTasks('grunt-coveralls');
 
   grunt.registerTask('buildClient', ['browserify:rulesEngine', 'concat']);
+
+  grunt.registerTask('coverallsio', ['fh:coverage', 'coveralls']);
 
   grunt.registerTask('dist', ['buildClient', 'fh:dist']);
   grunt.registerTask('default', ['eslint', 'fh-test', 'dist']);
